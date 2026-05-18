@@ -8,11 +8,11 @@
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#F7F6F3;color:#1A1A18;font-size:14px;padding:2rem}
 .tl-wrap{max-width:780px;margin:0 auto;padding:1rem 0 2rem}
-.tl-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:14px}
+.tl-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:10px}
 .tl-header-left h2{font-size:22px;font-weight:500;margin:0;color:#1A1A18}
 .tl-header-left span{font-size:14px;color:#888780}
 .lang-toggle{display:flex;gap:6px}
-.lang-btn{font-size:14px;font-weight:500;padding:5px 14px;border-radius:6px;border:0.5px solid #C8C6BF;background:#fff;color:#444441;cursor:pointer;transition:all .15s}
+.lang-btn{font-size:14px;font-weight:500;padding:5px 12px;border-radius:6px;border:0.5px solid #C8C6BF;background:#fff;color:#444441;cursor:pointer;transition:all .15s}
 .lang-btn.active{background:#1A1A18;color:#fff;border-color:#1A1A18}
 .tl-date{font-size:14px;font-weight:500;color:#888780;letter-spacing:.04em;margin:1.5rem 0 6px 36px;text-transform:uppercase}
 .tl-row{display:flex;gap:0;align-items:stretch}
@@ -21,18 +21,18 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .tl-line{width:1px;background:#E5E3DC;flex:1;margin-top:4px}
 .tl-card{flex:1;background:#FFFFFF;border:0.5px solid #E5E3DC;border-radius:8px;margin-bottom:8px;overflow:hidden;cursor:pointer;transition:border-color .15s}
 .tl-card:hover{border-color:#C8C6BF}
-.tl-card-head{display:flex;align-items:center;justify-content:space-between;padding:14px 14px}
+.tl-card-head{display:flex;align-items:center;justify-content:space-between;padding:12px 14px}
 .tl-card-left{display:flex;align-items:center;gap:10px}
 .tl-badge{font-size:14px;font-weight:500;padding:3px 8px;border-radius:4px;flex-shrink:0}
 .tl-title{font-size:16px;font-weight:500;color:#1A1A18}
 .tl-sub{font-size:14px;color:#888780;margin-top:1px}
 .tl-chevron{font-size:18px;color:#888780;transition:transform .2s;flex-shrink:0;line-height:1}
 .tl-card.open .tl-chevron{transform:rotate(180deg)}
-.tl-detail{display:none;border-top:0.5px solid #E5E3DC;padding:14px 14px 14px}
+.tl-detail{display:none;border-top:0.5px solid #E5E3DC;padding:12px 14px 14px}
 .tl-card.open .tl-detail{display:block}
 .tl-detail ul{margin:0;padding:0 0 0 16px;list-style:none}
 .tl-detail ul li{font-size:14px;color:#444441;line-height:1.7;padding:1px 0;position:relative}
-.tl-detail ul li::before{content:"·";position:absolute;left:-14px;color:#888780}
+.tl-detail ul li::before{content:"·";position:absolute;left:-12px;color:#888780}
 .tl-decision{background:#FAEEDA;color:#633806;font-size:14px;padding:2px 7px;border-radius:4px;display:inline-block;margin:6px 0 2px}
 .tl-milestone{background:#E1F5EE;color:#085041;font-size:14px;padding:2px 7px;border-radius:4px;display:inline-block;margin:6px 0 2px}
 .tl-section-label{font-size:14px;font-weight:500;color:#888780;margin:8px 0 3px;display:block}
@@ -357,13 +357,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <div class="tl-detail">
     <span class="tl-section-label">已锁定的设计决策</span>
     <ul>
-      <li>wall[0] = 0.2mm 外壁喷嘴；wall[1+] = 0.4mm 内壁喷嘴</li>
-      <li>相同颜色且相同材料时最少2条壁；否则允许1条</li>
+      <li>wall[0] = 0.2mm 外墙挤出口；wall[1+] = 0.4mm 内壁挤出口</li>
+      <li>相同颜色且相同材料时，最少 2 条总墙壁；否则允许 1 条</li>
       <li>仅在 wall[0] 和 wall[1] 之间进行坡度补偿间隙</li>
-      <li>累加器同步：当0.2层累计高度超过0.4喷嘴最大层高时触发0.4喷嘴</li>
-      <li>颜色到喷嘴优先级：颜色匹配 → 最小喷嘴=外壁 → 挤出机0兜底</li>
-      <li>颜色深度：最小值=喷嘴直径；薄截面=渗透或50/50分割</li>
-      <li>逐补丁喷嘴覆盖：global=YES遵循混合逻辑；global=NO单喷嘴拥有整个补丁</li>
+      <li>累加器同步：当 0.2 层累计高度超过 0.4 挤出口最大层高时触发 0.4 挤出口</li>
+      <li>颜色到挤出口优先级：颜色匹配 → 最小挤出口=外墙 → 挤出机 0 兜底</li>
+      <li>颜色深度：最小值=挤出口直径；薄截面=渗透或 50/50 分割</li>
+      <li>每区域挤出口覆盖：global=YES 遵循混合逻辑；global=NO 单挤出口拥有整个区域</li>
     </ul>
     <div class="tl-decision">决策变更</div>
     <ul>
@@ -372,15 +372,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </ul>
     <span class="tl-section-label">构建环境</span>
     <ul>
-      <li>需要 VS2019 · CMake 3.29 · 构建脚本：build_and_run.bat</li>
-      <li>PATH 中的 Strawberry Perl 会导致 CMake 版本冲突 — 修复：覆盖 PATH</li>
+      <li>需要 VS2019 · CMake 3.29 · 创建脚本：build_and_run.bat</li>
+      <li>系统路径中的 Strawberry Perl 会导致 CMake 版本冲突 — 修复：覆盖系统路径</li>
       <li>DLL 策略：从已安装的 Snapmaker_Orca\ 复制所有文件，除了 Snapmaker_Orca.dll</li>
     </ul>
   </div>
 </div>
 </div>
 
-<div class="tl-date">第一阶段 — 配置与流水线脚手架</div>
+<div class="tl-date">第一阶段 — 配置与流水线脚手架（OW=外墙，IW=内壁，ALH=自适应层高）</div>
 <div class="tl-row">
 <div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
@@ -389,7 +389,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <span class="tl-section-label">NozzleLayerPlanner.hpp/.cpp</span>
     <ul>
       <li>SyncPoint 结构体：z、accumulated_height、accumulated_layers、gap_offset、expanding、outer_wall_extruder</li>
-      <li>plan() 消耗 ALH 层高，生成同步点</li>
+      <li>plan() 消耗 ALH（自适应层高，Adaptive Layer Height）层高数据，生成同步点</li>
       <li>二分查找：sync_point_at()、outer_wall_extruder_at()、gap_offset_at()</li>
     </ul>
     <span class="tl-section-label">ColorDepthProcessor.hpp/.cpp</span>
@@ -400,11 +400,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </ul>
     <span class="tl-section-label">NozzleVerifyDialog.hpp/.cpp</span>
     <ul>
-      <li>显示 T1–T4 喷嘴尺寸、材料名称、颜色色块</li>
-      <li>验证按钮连接至 MainFrame 打印按钮门控 · update_extruders() 在重新切片时重建UI</li>
+      <li>显示工作头 1–4（T1–T4）挤出口尺寸、材料名称、颜色色块</li>
+      <li>验证按钮连接至 MainFrame 打印按钮门控 · update_extruders() 在重新切片时重建 UI</li>
     </ul>
     <div class="tl-milestone">里程碑</div>
-    <ul><li>3个文件均已注册至 CMakeLists，构建零错误</li></ul>
+    <ul><li>3 个文件均已注册至 CMakeLists，构建零错误</li></ul>
   </div>
 </div>
 </div>
@@ -421,15 +421,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </ul>
     <span class="tl-section-label">Tab.cpp</span>
     <ul>
-      <li>多材料标签页中新增"混合喷嘴"选项组：outer_wall_loops、outer_wall_layer_height_max、outer_wall_seam_position</li>
+      <li>多材料标签页中新增"混合挤出口"选项组：outer_wall_loops、outer_wall_layer_height_max、outer_wall_seam_position</li>
     </ul>
     <div class="tl-milestone">里程碑</div>
-    <ul><li>应用启动 · 多材料标签稳定 · 混合喷嘴组可见 · 切片无错误</li></ul>
+    <ul><li>应用启动 · 多材料标签稳定 · 混合挤出口组可见 · 切片无错误</li></ul>
   </div>
 </div>
 </div>
 
-<div class="tl-date">第二阶段 — 检测 · 2026年5月16日</div>
+<div class="tl-date">第二阶段 — 自动检测 · 2026年5月16日</div>
 <div class="tl-row">
 <div class="tl-spine"><div class="tl-dot" style="background:#0F6E56"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
@@ -439,10 +439,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <ul>
       <li>在 full_fff_config() 末尾计算 has_mixed_nozzle_sizes：任意值与 values[0] 差值 > 1e-4 → mixed=true</li>
       <li>永远不由用户设置 — 始终在配置组装时推导</li>
-      <li>混合模式下 outer_wall_loops 钳制为 wall_loops（带空值检查）</li>
+      <li>混合模式下 outer_wall_loops 封顶为 wall_loops（带空值检查）</li>
     </ul>
     <div class="tl-milestone">里程碑</div>
-    <ul><li>混合喷嘴自动检测 · 切片时 outer_wall_loops 自动钳制</li></ul>
+    <ul><li>混合挤出口自动检测 · 切片时 outer_wall_loops 自动封顶</li></ul>
   </div>
 </div>
 </div>
@@ -462,7 +462,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 </div>
 
-<div class="tl-date">第三阶段 — 喷嘴验证对话框 + 打印门控 — 5月16–17日</div>
+<div class="tl-date">第三阶段 — 挤出口验证对话框 + 打印门控 — 5月16–17日</div>
 <div class="tl-row">
 <div class="tl-spine"><div class="tl-dot" style="background:#BA7517"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
@@ -470,33 +470,33 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <div class="tl-detail">
     <span class="tl-section-label">Plater.cpp</span>
     <ul>
-      <li>on_slicing_completed() 中启用混合喷嘴检测</li>
+      <li>on_slicing_completed() 中启用混合挤出口检测</li>
       <li>耗材颜色从 full_config() filament_colour 向量读取（按值存储，避免悬空指针）</li>
       <li>重新切片时调用 update_extruders() 刷新材料名称和颜色</li>
     </ul>
     <span class="tl-section-label">MainFrame.hpp/.cpp</span>
     <ul>
-      <li>get_enable_print_status()：添加喷嘴验证门控 · get_enable_slice_status()：不添加门控</li>
+      <li>get_enable_print_status()：添加挤出口验证门控 · get_enable_slice_status()：不添加门控</li>
     </ul>
     <div class="tl-milestone">里程碑</div>
-    <ul><li>对话框显示 T1–T4 喷嘴尺寸、材料名称、耗材颜色 · 打印按钮需点击验证后才可用</li></ul>
+    <ul><li>对话框显示工作头 1–4（T1–T4）挤出口尺寸、材料名称、耗材颜色 · 打印按钮需点击验证后才可用</li></ul>
   </div>
 </div>
 </div>
 
-<div class="tl-date">第四阶段 — 外壁/内壁刀路分离 + UI + 线宽 — 5月17日 ✅</div>
+<div class="tl-date">第四阶段 — 外墙/内壁挤出路径分离 + UI + 线宽 — 5月17日 ✅（OW=外墙，IW=内壁）</div>
 <div class="tl-row">
 <div class="tl-spine"><div class="tl-dot" style="background:#1A7A4A"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
   <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">第4a阶段</span><div><div class="tl-title">inner_wall_filament 字段 + UI</div><div class="tl-sub">内壁新增挤出机选择器，下拉列表已注册</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <ul>
-      <li>inner_wall_filament (coInt)：gui_type=i_enum_open，min=1，默认值=1 · wall_loops 标签 → "总壁数" · wall_filament 标签 → "外壁"</li>
+      <li>inner_wall_filament (coInt)：gui_type=i_enum_open，min=1，默认值=1 · wall_loops 标签 → "总墙壁数" · wall_filament 标签 → "外墙"</li>
       <li>添加至 Filament for Features 组 · 注册至 dynamic_filament_list_1_based · 添加至 toggle_line 循环</li>
       <li>fdm_process_U1.json："inner_wall_filament":"2"</li>
     </ul>
     <div class="tl-milestone">里程碑</div>
-    <ul><li>内壁下拉列表显示挤出机列表 · 默认挤出机2</li></ul>
+    <ul><li>内壁下拉列表显示挤出机列表 · 默认挤出机 2</li></ul>
   </div>
 </div>
 </div>
@@ -504,7 +504,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div class="tl-row">
 <div class="tl-spine"><div class="tl-dot" style="background:#1A7A4A"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">第4b–c阶段</span><div><div class="tl-title">PrintRegion 路由 + GCode.cpp 周界分割</div><div class="tl-sub">frExternalPerimeter → wall_filament · frPerimeter → inner_wall_filament</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">第4b–c阶段</span><div><div class="tl-title">PrintRegion 挤出路径规划 + GCode.cpp 周界分割</div><div class="tl-sub">frExternalPerimeter → wall_filament · frPerimeter → inner_wall_filament</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <span class="tl-section-label">PrintRegion.cpp + ToolOrdering.cpp</span>
     <ul>
@@ -513,11 +513,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </ul>
     <span class="tl-section-label">GCode.cpp — process_layer()</span>
     <ul>
-      <li>若为 PERIMETERS 且内外壁耗材不同且 can_sort()：erExternalPerimeter → 外壁挤出机；erPerimeter → 内壁挤出机</li>
+      <li>若为 PERIMETERS 且内外壁耗材不同且 can_sort()：erExternalPerimeter → 外墙挤出机；erPerimeter → 内壁挤出机</li>
       <li>直接推入 reg.perimeters — 避免拥有临时集合（堆损坏修复）</li>
     </ul>
     <div class="tl-milestone">里程碑</div>
-    <ul><li>外壁白色（挤出机1），内壁黄色（挤出机2） · 无崩溃</li></ul>
+    <ul><li>外墙白色（挤出机 1），内壁黄色（挤出机 2） · 无崩溃</li></ul>
   </div>
 </div>
 </div>
@@ -525,15 +525,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div class="tl-row">
 <div class="tl-spine"><div class="tl-dot" style="background:#1A7A4A"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">第4d阶段</span><div><div class="tl-title">支持 OW &gt; 1 — PerimeterGenerator 循环标记</div><div class="tl-sub">outer_wall_loops 驱动经典路径和 Arachne 路径中的 erExternalPerimeter 分配</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">第4d阶段</span><div><div class="tl-title">支持 OW &gt; 1 — PerimeterGenerator 循环标记</div><div class="tl-sub">outer_wall_loops 驱动 classic 和 Arachne 路径中的 erExternalPerimeter 分配</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <ul>
-      <li>经典路径：is_external = loop.depth &lt; std::max(1, outer_wall_loops)</li>
+      <li>classic 路径：is_external = loop.depth &lt; std::max(1, outer_wall_loops)</li>
       <li>Arachne 路径：is_external = (int)extrusion->inset_idx &lt; std::max(1, outer_wall_loops)</li>
-      <li>PresetBundle：切片时将 outer_wall_loops 钳制为 wall_loops</li>
+      <li>PresetBundle：切片时将 outer_wall_loops 封顶为 wall_loops</li>
     </ul>
     <div class="tl-milestone">里程碑</div>
-    <ul><li>OW=1 至 OW=wall_loops 全部正常 · OW > wall_loops 静默钳制</li></ul>
+    <ul><li>OW=1 至 OW=wall_loops 全部正常 · OW > wall_loops 自动封顶</li></ul>
   </div>
 </div>
 </div>
@@ -541,12 +541,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div class="tl-row">
 <div class="tl-spine"><div class="tl-dot" style="background:#1A7A4A"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">第4e阶段</span><div><div class="tl-title">逐喷嘴线宽缩放</div><div class="tl-sub">PrintRegion::flow() 按挤出机喷嘴直径重新缩放线宽</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">第4e阶段</span><div><div class="tl-title">逐挤出口线宽缩放</div><div class="tl-sub">PrintRegion::flow() 按挤出机出口直径重新缩放线宽</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <span class="tl-section-label">根本原因 + 修复 — PrintRegion.cpp</span>
     <ul>
-      <li>预设线宽在到达 flow() 之前已按喷嘴1解析 — 百分比标志丢失</li>
-      <li>修复：恢复比例 = config_width / nozzle[0]，再乘以正确挤出机的喷嘴直径</li>
+      <li>预设线宽在到达 flow() 之前已按挤出口 1 解析 — 百分比标志丢失</li>
+      <li>修复：恢复比例 = config_width / nozzle[0]，再乘以正确挤出机的出口直径</li>
       <li>应用于：frExternalPerimeter、frPerimeter、frInfill、frSolidInfill、frTopSolidInfill</li>
     </ul>
     <span class="tl-section-label">fdm_process_U1.json — 所有线宽 → 百分比</span>
@@ -554,7 +554,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <li>outer_wall_line_width "105%" · inner_wall_line_width "110%" · 实心/稀疏填充 "110%" · 支撑 "105%"</li>
     </ul>
     <div class="tl-milestone">里程碑</div>
-    <ul><li>外壁：0.21mm · 内壁：0.44mm · 实心填充：0.88mm · 预览正确显示每挤出机不同线宽</li></ul>
+    <ul><li>外墙：0.21mm · 内壁：0.44mm · 实心填充：0.88mm · 预览正确显示每挤出机不同线宽</li></ul>
   </div>
 </div>
 </div>
@@ -562,43 +562,43 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div class="tl-row">
 <div class="tl-spine"><div class="tl-dot" style="background:#1A7A4A"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">第4f阶段</span><div><div class="tl-title">UI 修复 — 提示文本、标签验证、喷嘴同步、对话框颜色</div><div class="tl-sub">多项 UI 润色完成</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">第4f阶段</span><div><div class="tl-title">UI 修复 — 提示文本、标签验证、挤出口同步、对话框颜色</div><div class="tl-sub">多项 UI 润色完成</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <ul>
-      <li>提示文本修复：删除 inner_wall_filament 和 outer_wall_loops 中的错误"仅在混合喷嘴时生效"说明</li>
+      <li>提示文本修复：删除 inner_wall_filament 和 outer_wall_loops 中的"仅在混合挤出口时生效"错误说明</li>
       <li>outer_wall_loops 标签：当值 > wall_loops 时变红（wxColour 0xE0,0x20,0x20），与橙色"已修改"状态有区别</li>
-      <li>U1 喷嘴直径：移除同步对话框和同步循环；每个喷嘴直接写入 nozzle_diameter[i]；下拉列表加载时读取 nozzle_diameter[i]</li>
+      <li>U1 挤出机出口直径：移除同步对话框和同步循环；每个挤出口直接写入 nozzle_diameter[i]；下拉列表加载时读取 nozzle_diameter[i]</li>
       <li>NozzleVerifyDialog：耗材颜色现从 full_config() filament_colour 向量读取（按值存储，非悬空指针）</li>
     </ul>
     <div class="tl-milestone">里程碑</div>
-    <ul><li>颜色色块与侧边栏匹配 · 每个喷嘴可独立设置 · outer_wall_loops 标签验证正常</li></ul>
+    <ul><li>颜色色块与侧边栏匹配 · 每个挤出口可独立设置 · outer_wall_loops 标签验证正常</li></ul>
   </div>
 </div>
 </div>
 
-<div class="tl-date">第五阶段 — 颜色补丁流水线 — 5月17日 🔄 进行中</div>
+<div class="tl-date">第五阶段 — 着色区域流水线 — 5月17日 🔄 进行中</div>
 <div class="tl-row">
 <div class="tl-spine"><div class="tl-dot" style="background:#0B3D91"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-blue">第5阶段</span><div><div class="tl-title">颜色补丁循环 — 正确架构</div><div class="tl-sub">失败方法后确定的最终设计 · 字段已添加 · 流水线待实现</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-blue">第5阶段</span><div><div class="tl-title">着色区域循环 — 正确架构</div><div class="tl-sub">失败方法后确定的最终设计 · 字段已添加 · 流水线待实现</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <span class="tl-section-label">目标</span>
     <ul>
-      <li>将面A涂红（耗材4）→ 只有面A上的外N条壁循环打印红色；内壁循环 + 填充 = 基础耗材</li>
+      <li>将面 A 涂红（耗材 4）→ 只有面 A 上最外 N 条壁循环打印红色；内壁循环 + 填充 = 基础耗材</li>
       <li>N = color_patch_loops[filament_id - 1]，按耗材可配置</li>
     </ul>
     <span class="tl-section-label">失败方案 — 勿重试</span>
     <ul>
       <li>❌ ColorDepthProcessor 二维内缩偏移 — 对垂直面偏移轴向错误</li>
-      <li>❌ 仅覆盖 PerimeterGenerator 循环角色 — 涂色区域仍创建独立体，带有自己的填充，红色填满内部</li>
-      <li>❌ 固定mm深度 — 概念错误；深度应以壁循环数而非mm计</li>
+      <li>❌ 仅覆盖 PerimeterGenerator 循环角色 — 着色区域仍创建独立体，带有自己的填充，红色填满内部</li>
+      <li>❌ 固定 mm 深度 — 概念错误；深度应以壁循环数而非 mm 计</li>
     </ul>
     <span class="tl-section-label">正确架构（尚未实现）</span>
     <ul>
       <li>multi_material_segmentation_by_painting 将整个涂色体积分配给涂色耗材 — 这造成"独立体"问题</li>
-      <li>正确做法：仅用涂色区域边界识别哪些周界循环接触涂色面</li>
-      <li>在 GCode.cpp ~第4202行：扩展混合喷嘴分割，检查循环与涂色区域边界的邻接关系</li>
-      <li>接触边界的循环（最外N条）→ 涂色耗材；所有其他循环 + 所有填充 → 基础耗材</li>
+      <li>正确做法：仅用着色区域边界识别哪些周界循环接触涂色面</li>
+      <li>在 GCode.cpp 约第 4202 行：扩展混合挤出口分割，检查循环与着色区域边界的邻接关系</li>
+      <li>接触边界的循环（最外 N 条）→ 涂色耗材；所有其他循环 + 所有填充 → 基础耗材</li>
     </ul>
     <span class="tl-section-label">已完成</span>
     <ul>
@@ -606,9 +606,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </ul>
     <span class="tl-section-label">下一步</span>
     <ul>
-      <li>GCode.cpp：逐层对涂色区域边界多边形进行循环邻接检查</li>
-      <li>涂色区域的填充 → 始终路由至基础耗材</li>
-      <li>涂色工具UI：在笔刷大小后添加"补丁循环数"微调控件</li>
+      <li>GCode.cpp：逐层对着色区域边界多边形进行循环邻接检查</li>
+      <li>着色区域的填充 → 始终路径规划至基础耗材</li>
+      <li>涂色工具 UI：在笔刷大小后添加"区域循环数"微调控件</li>
     </ul>
   </div>
 </div>
@@ -621,11 +621,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-gray">TODO</span><div><div class="tl-title">剩余事项</div><div class="tl-sub">Wiki、重命名、已知问题、第五阶段剩余</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <ul>
-      <li>GitHub Wiki：解释混合喷嘴外壁/内壁行为与原版 OrcaSlicer 的区别</li>
+      <li>GitHub Wiki：解释混合挤出口外墙/内壁行为与原版 OrcaSlicer 的区别</li>
       <li>项目重命名为 FOrcaSlicer（Flexible OrcaSlicer）— 代码库重命名 + 品牌更新</li>
       <li>outer_wall_loops：UI 无硬性上限（标签变红作为警告 — 已接受）</li>
       <li>NozzleVerifyDialog 颜色：耗材更改后需重新切片才更新</li>
-      <li>第五阶段剩余：GCode.cpp 邻接检查 · 填充路由 · 工具UI · 薄截面检测 · 间隙所有权 · 颜色到喷嘴优先级</li>
+      <li>第五阶段剩余：GCode.cpp 邻接检查 · 填充路径规划 · 工具 UI · 薄截面检测 · 间隙所有权 · 颜色到挤出口优先级</li>
     </ul>
   </div>
 </div>
