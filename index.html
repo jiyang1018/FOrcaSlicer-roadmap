@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FOrcaSlicer Dev Roadmap</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#F7F6F3;color:#1A1A18;font-size:14px;padding:2rem}
+.tl-wrap{max-width:780px;margin:0 auto;padding:1rem 0 2rem}
+.tl-header{display:flex;align-items:center;gap:10px;margin-bottom:1.5rem}
+.tl-header h2{font-size:16px;font-weight:500;margin:0;color:#1A1A18}
+.tl-header span{font-size:12px;color:#888780}
+.tl-date{font-size:11px;font-weight:500;color:#888780;letter-spacing:.04em;margin:1.5rem 0 6px 36px;text-transform:uppercase}
+.tl-row{display:flex;gap:0;align-items:stretch}
+.tl-spine{display:flex;flex-direction:column;align-items:center;width:36px;flex-shrink:0}
+.tl-dot{width:10px;height:10px;border-radius:50%;margin-top:16px;flex-shrink:0}
+.tl-line{width:1px;background:#E5E3DC;flex:1;margin-top:4px}
+.tl-card{flex:1;background:#FFFFFF;border:0.5px solid #E5E3DC;border-radius:8px;margin-bottom:8px;overflow:hidden;cursor:pointer;transition:border-color .15s}
+.tl-card:hover{border-color:#C8C6BF}
+.tl-card-head{display:flex;align-items:center;justify-content:space-between;padding:12px 14px}
+.tl-card-left{display:flex;align-items:center;gap:10px}
+.tl-badge{font-size:11px;font-weight:500;padding:3px 8px;border-radius:4px;flex-shrink:0}
+.tl-title{font-size:13px;font-weight:500;color:#1A1A18}
+.tl-sub{font-size:12px;color:#888780;margin-top:1px}
+.tl-chevron{font-size:18px;color:#888780;transition:transform .2s;flex-shrink:0;line-height:1}
+.tl-card.open .tl-chevron{transform:rotate(180deg)}
+.tl-detail{display:none;border-top:0.5px solid #E5E3DC;padding:12px 14px 14px}
+.tl-card.open .tl-detail{display:block}
+.tl-detail ul{margin:0;padding:0 0 0 16px;list-style:none}
+.tl-detail ul li{font-size:12px;color:#444441;line-height:1.7;padding:1px 0;position:relative}
+.tl-detail ul li::before{content:"·";position:absolute;left:-12px;color:#888780}
+.tl-decision{background:#FAEEDA;color:#633806;font-size:11px;padding:2px 7px;border-radius:4px;display:inline-block;margin:6px 0 2px}
+.tl-milestone{background:#E1F5EE;color:#085041;font-size:11px;padding:2px 7px;border-radius:4px;display:inline-block;margin:6px 0 2px}
+.tl-section-label{font-size:11px;font-weight:500;color:#888780;margin:8px 0 3px;display:block}
+.tl-status{display:flex;align-items:center;gap:6px;margin-top:10px;padding-top:8px;border-top:0.5px solid #E5E3DC;font-size:12px}
+.badge-purple{background:#EEEDFE;color:#3C3489}
+.badge-teal{background:#E1F5EE;color:#085041}
+.badge-amber{background:#FAEEDA;color:#633806}
+.badge-gray{background:#F1EFE8;color:#444441}
+.badge-coral{background:#FAECE7;color:#712B13}
+.badge-green{background:#D4F0E0;color:#0A4A30}
+.badge-blue{background:#E3F0FD;color:#0B3D91}
+</style>
+</head>
+<body>
+<div class="tl-wrap">
+<div class="tl-header">
+  <div>
+    <h2>FOrcaSlicer — Flexible OrcaSlicer dev roadmap</h2>
+    <span>Snapmaker U1 · OrcaSlicer fork · May 15–17 2026 · click any card to expand</span>
+  </div>
+</div>
+
+<div class="tl-date">May 15, 2026 — session start</div>
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#888780"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head">
+    <div class="tl-card-left">
+      <span class="tl-badge badge-gray">Setup</span>
+      <div><div class="tl-title">Architecture &amp; repo decisions</div><div class="tl-sub">Design goals, hardware constraints, repo selection</div></div>
+    </div>
+    <span class="tl-chevron">▾</span>
+  </div>
+  <div class="tl-detail">
+    <span class="tl-section-label">Design decisions locked</span>
+    <ul>
+      <li>wall[0] = 0.2mm outer nozzle; wall[1+] = 0.4mm inner nozzle</li>
+      <li>Min 2 walls when same color AND material; 1 wall allowed otherwise</li>
+      <li>Slope-compensated gap between wall[0] and wall[1] only</li>
+      <li>Accumulator sync: 0.4 nozzle fires when next 0.2 layer pushes accumulated height above 0.4 max</li>
+      <li>Top/bottom: flat surfaces follow top/bottom settings; non-flat follows wall rules</li>
+      <li>Color-to-nozzle priority: color match → smallest nozzle = outer → extruder 0 fallback</li>
+      <li>Color depth: min = nozzle diameter; thin section = bleed-through or 50/50 split</li>
+      <li>Per-patch nozzle override: global=YES follows mixed logic; global=NO single nozzle owns patch</li>
+    </ul>
+    <div class="tl-decision">Decision change</div>
+    <ul>
+      <li>Started on OrcaSlicer-FullSpectrum fork, later pivoted to Snapmaker Orca due to cleaner Filament for Features UI</li>
+      <li>FullSpectrum had resolved_model_config_for_tab stripping sparse_infill_filament — unfixable cleanly</li>
+    </ul>
+    <span class="tl-section-label">Build environment</span>
+    <ul>
+      <li>VS2019 required — build script hardcoded</li>
+      <li>CMake 3.29 works (repo requires 3.13–3.31)</li>
+      <li>Strawberry Perl in PATH causes CMake version conflict — fix: override PATH</li>
+      <li>Sentry cmake fix: changed Visual Studio 17 2022 → Visual Studio 16 2019</li>
+      <li>DLL strategy: copy all from installed Snapmaker_Orca\ except Snapmaker_Orca.dll</li>
+      <li>Build script: build_and_run.bat — builds, copies DLLs, launches snapmaker-orca.exe</li>
+    </ul>
+  </div>
+</div>
+</div>
+
+<div class="tl-date">Phase 1 — config + pipeline scaffold</div>
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head">
+    <div class="tl-card-left">
+      <span class="tl-badge badge-purple">Phase 1a</span>
+      <div><div class="tl-title">New files — NozzleLayerPlanner, ColorDepthProcessor, NozzleVerifyDialog</div><div class="tl-sub">Core logic classes, all building cleanly</div></div>
+    </div>
+    <span class="tl-chevron">▾</span>
+  </div>
+  <div class="tl-detail">
+    <span class="tl-section-label">NozzleLayerPlanner.hpp/.cpp</span>
+    <ul>
+      <li>SyncPoint struct: z, accumulated_height, accumulated_layers, gap_offset, expanding, outer_wall_extruder</li>
+      <li>plan() consumes ALH layer heights, produces sync points</li>
+      <li>Binary search queries: sync_point_at(), outer_wall_extruder_at(), gap_offset_at()</li>
+      <li>Gap offset formula: trapezoid area = inner_nozzle_dia × accumulated_height at 100% flow</li>
+    </ul>
+    <span class="tl-section-label">ColorDepthProcessor.hpp/.cpp</span>
+    <ul>
+      <li>apply_depth(): per-layer ClipperUtils offset — built but not yet correctly wired (see Phase 5)</li>
+      <li>detect_thin_sections(): stubbed, returns empty</li>
+      <li>ThinSectionBehavior: BleedThrough | Split50_50</li>
+      <li>inward_offset(): uses scaled&lt;float&gt;() for correct Clipper unit conversion</li>
+    </ul>
+    <span class="tl-section-label">NozzleVerifyDialog.hpp/.cpp</span>
+    <ul>
+      <li>Shows T1–T4 nozzle sizes, material names, color swatches</li>
+      <li>Verify button wires to MainFrame print button gate</li>
+      <li>Close handler: Hide() not destroy so it can be reshown</li>
+      <li>update_extruders() rebuilds UI on reslice with fresh extruder info</li>
+    </ul>
+    <div class="tl-milestone">Milestone</div>
+    <ul><li>All 3 files registered in CMakeLists and building with zero errors</li></ul>
+  </div>
+</div>
+</div>
+
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head">
+    <div class="tl-card-left">
+      <span class="tl-badge badge-purple">Phase 1b</span>
+      <div><div class="tl-title">PrintConfig — new fields</div><div class="tl-sub">hpp macros + cpp registrations</div></div>
+    </div>
+    <span class="tl-chevron">▾</span>
+  </div>
+  <div class="tl-detail">
+    <span class="tl-section-label">Fields added</span>
+    <ul>
+      <li>outer_wall_loops (coInt, after wall_loops)</li>
+      <li>outer_wall_layer_height_max (coFloat, after outer_wall_loops)</li>
+      <li>outer_wall_seam_position (coEnum SeamPosition, after seam_position)</li>
+      <li>has_mixed_nozzle_sizes (coBool, after nozzle_diameter)</li>
+      <li>filament_color_depth (coFloat, after filament_colour) — kept as placeholder</li>
+    </ul>
+    <div class="tl-milestone">Milestone</div>
+    <ul><li>App launches without crash · all new config fields accessible</li></ul>
+  </div>
+</div>
+</div>
+
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head">
+    <div class="tl-card-left">
+      <span class="tl-badge badge-purple">Phase 1c–d</span>
+      <div><div class="tl-title">Pipeline hooks + Tab UI</div><div class="tl-sub">PrintObject, PerimeterGenerator, Strength + Multimaterial tabs</div></div>
+    </div>
+    <span class="tl-chevron">▾</span>
+  </div>
+  <div class="tl-detail">
+    <span class="tl-section-label">PrintObject.cpp</span>
+    <ul>
+      <li>NozzleLayerPlanner constructed and planned after "Generating walls" log line</li>
+      <li>Exception handling: silently continues if planner fails</li>
+    </ul>
+    <span class="tl-section-label">Tab.cpp</span>
+    <ul>
+      <li>outer_wall_loops added to Strength tab (later removed to avoid duplicate — lives in Multimaterial only)</li>
+      <li>Mixed Nozzle optgroup added to Multimaterial tab: outer_wall_loops, outer_wall_layer_height_max, outer_wall_seam_position</li>
+      <li>toggle_option() calls force fields visible in toggle_print_fff_options()</li>
+    </ul>
+    <div class="tl-milestone">Milestone</div>
+    <ul><li>Multimaterial tab stable · Mixed Nozzle group visible · Slices without errors</li></ul>
+  </div>
+</div>
+</div>
+
+<div class="tl-date">Phase 2 — detection, notifications — May 16</div>
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#0F6E56"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head">
+    <div class="tl-card-left">
+      <span class="tl-badge badge-teal">Phase 2a</span>
+      <div><div class="tl-title">PresetBundle auto-detection</div><div class="tl-sub">has_mixed_nozzle_sizes computed automatically from nozzle_diameter vector</div></div>
+    </div>
+    <span class="tl-chevron">▾</span>
+  </div>
+  <div class="tl-detail">
+    <span class="tl-section-label">PresetBundle.cpp</span>
+    <ul>
+      <li>has_mixed_nozzle_sizes computed at end of full_fff_config() before return</li>
+      <li>Compares nozzle_diameter values: any differ from values[0] by > 1e-4 → mixed=true</li>
+      <li>Never user-set — always derived at config assembly time</li>
+      <li>outer_wall_loops clamped to wall_loops when mixed (null-checked)</li>
+    </ul>
+    <div class="tl-milestone">Milestone</div>
+    <ul><li>Mixed nozzle auto-detected · outer_wall_loops clamped at slice time</li></ul>
+  </div>
+</div>
+</div>
+
+<div class="tl-date">Repo pivot — May 16, 2026</div>
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#BA7517"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head">
+    <div class="tl-card-left">
+      <span class="tl-badge badge-amber">Pivot</span>
+      <div><div class="tl-title">Fork from Snapmaker Orca instead of FullSpectrum</div><div class="tl-sub">Cleaner base, Filament for Features already working</div></div>
+    </div>
+    <span class="tl-chevron">▾</span>
+  </div>
+  <div class="tl-detail">
+    <span class="tl-section-label">Reason for pivot</span>
+    <ul>
+      <li>FullSpectrum fork had unresolvable resolved_model_config_for_tab filtering issue</li>
+      <li>sparse_infill_filament impossible to show in Multimaterial tab</li>
+      <li>Snapmaker Orca is the actual target hardware — cleaner starting point</li>
+    </ul>
+    <span class="tl-section-label">Migration</span>
+    <ul>
+      <li>Cloned Snapmaker/OrcaSlicer main branch</li>
+      <li>Reused FullSpectrum deps build (same deps, saved ~60 min)</li>
+      <li>DLL workaround: use installed Snapmaker_Orca DLLs except Snapmaker_Orca.dll</li>
+      <li>Saved as %USERPROFILE%\SnapmakerOrcaDLLs\ (without Snapmaker_Orca.dll)</li>
+    </ul>
+  </div>
+</div>
+</div>
+
+<div class="tl-date">Phase 3 — NozzleVerifyDialog + print gate — May 16–17, 2026</div>
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#BA7517"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head">
+    <div class="tl-card-left">
+      <span class="tl-badge badge-amber">Phase 3</span>
+      <div><div class="tl-title">NozzleVerifyDialog fully wired + print gate</div><div class="tl-sub">Dialog shows after slice, print button gated until verify</div></div>
+    </div>
+    <span class="tl-chevron">▾</span>
+  </div>
+  <div class="tl-detail">
+    <span class="tl-section-label">Plater.cpp</span>
+    <ul>
+      <li>Mixed nozzle detection enabled in on_slicing_completed()</li>
+      <li>Extruder list built from nozzle_diameter values + filament_presets names</li>
+      <li>Filament color read from full_config() filament_colour vector (hex alpha stripped)</li>
+      <li>update_extruders() called on re-slice to refresh material names and colors</li>
+      <li>mainframe->set_nozzle_verified(true) and set_nozzle_verify_required() calls active</li>
+    </ul>
+    <span class="tl-section-label">MainFrame.hpp/.cpp</span>
+    <ul>
+      <li>m_nozzle_verify_required, m_nozzle_verified members added</li>
+      <li>get_enable_print_status(): nozzle verify gate added</li>
+      <li>get_enable_slice_status(): gate NOT added — slice must always be available</li>
+    </ul>
+    <div class="tl-milestone">Milestone</div>
+    <ul>
+      <li>Dialog shows T1–T4 with nozzle sizes, material names, filament colors after slicing</li>
+      <li>Print button disabled until Verify clicked · Slice plate always enabled</li>
+    </ul>
+  </div>
+</div>
+</div>
+
+<div class="tl-date">Phase 4 — OW/IW toolpath split + UI + line widths — May 17, 2026 ✅</div>
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#1A7A4A"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head">
+    <div class="tl-card-left">
+      <span class="tl-badge badge-green">Phase 4a</span>
+      <div><div class="tl-title">inner_wall_filament field + UI</div><div class="tl-sub">New extruder selector for inner walls, dropdown registered</div></div>
+    </div>
+    <span class="tl-chevron">▾</span>
+  </div>
+  <div class="tl-detail">
+    <span class="tl-section-label">PrintConfig.hpp + PrintConfig.cpp</span>
+    <ul>
+      <li>inner_wall_filament (coInt) added after wall_filament, gui_type=i_enum_open, min=1, default=1</li>
+      <li>wall_loops label → "Overall wall loops"</li>
+      <li>wall_filament label → "Outer walls"</li>
+    </ul>
+    <span class="tl-section-label">Tab.cpp</span>
+    <ul>
+      <li>inner_wall_filament added to Filament for Features group after wall_filament</li>
+    </ul>
+    <span class="tl-section-label">Plater.cpp + ConfigManipulation.cpp</span>
+    <ul>
+      <li>inner_wall_filament registered with dynamic_filament_list_1_based</li>
+      <li>inner_wall_filament added to toggle_line loop</li>
+    </ul>
+    <span class="tl-section-label">fdm_process_U1.json</span>
+    <ul>
+      <li>"inner_wall_filament":"2" added to preset defaults</li>
+    </ul>
+    <div class="tl-milestone">Milestone</div>
+    <ul><li>Inner walls dropdown shows extruder list · defaults to extruder 2</li></ul>
+  </div>
+</div>
+</div>
+
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#1A7A4A"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head">
+    <div class="tl-card-left">
+      <span class="tl-badge badge-green">Phase 4b–c</span>
+      <div><div class="tl-title">PrintRegion routing + GCode.cpp perimeter split</div><div class="tl-sub">frExternalPerimeter → wall_filament, frPerimeter → inner_wall_filament</div></div>
+    </div>
+    <span class="tl-chevron">▾</span>
+  </div>
+  <div class="tl-detail">
+    <span class="tl-section-label">PrintRegion.cpp</span>
+    <ul>
+      <li>extruder(): frExternalPerimeter → wall_filament; frPerimeter → inner_wall_filament</li>
+      <li>collect_object_printing_extruders(): adds both wall_filament and inner_wall_filament</li>
+    </ul>
+    <span class="tl-section-label">ToolOrdering.cpp</span>
+    <ul>
+      <li>inner_wall_filament added only when actual erPerimeter entities exist on that layer</li>
+      <li>Prevents empty tool changes at geometry transitions (cone tips etc.)</li>
+    </ul>
+    <span class="tl-section-label">GCode.cpp — process_layer()</span>
+    <ul>
+      <li>Before by_extruder map: if PERIMETERS and inner≠outer filament and can_sort()</li>
+      <li>erExternalPerimeter → outer_ext island; erPerimeter → inner_ext island</li>
+      <li>did_mixed_split flag: if true, skips normal append</li>
+      <li>Direct push to reg.perimeters — avoids owning temp collections (heap corruption fix)</li>
+    </ul>
+    <div class="tl-milestone">Milestone</div>
+    <ul><li>Filament view shows outer walls white (ext 1), inner walls yellow (ext 2) · no crashes</li></ul>
+  </div>
+</div>
+</div>
+
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#1A7A4A"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head">
+    <div class="tl-card-left">
+      <span class="tl-badge badge-green">Phase 4d</span>
+      <div><div class="tl-title">OW > 1 support — PerimeterGenerator loop tagging</div><div class="tl-sub">outer_wall_loops drives erExternalPerimeter in classic + Arachne paths</div></div>
+    </div>
+    <span class="tl-chevron">▾</span>
+  </div>
+  <div class="tl-detail">
+    <span class="tl-section-label">PerimeterGenerator.cpp — classic path</span>
+    <ul>
+      <li>outer_wall_loops_count = std::max(1, config->outer_wall_loops.value)</li>
+      <li>is_external = loop.depth &lt; outer_wall_loops_count</li>
+    </ul>
+    <span class="tl-section-label">PerimeterGenerator.cpp — Arachne path</span>
+    <ul>
+      <li>outer_wall_loops = std::max(1, config->outer_wall_loops.value)</li>
+      <li>is_external = (int)extrusion->inset_idx &lt; outer_wall_loops</li>
+    </ul>
+    <span class="tl-section-label">PresetBundle.cpp</span>
+    <ul>
+      <li>outer_wall_loops clamped to wall_loops at slice time (null-checked)</li>
+    </ul>
+    <div class="tl-milestone">Milestone</div>
+    <ul><li>OW=1 through OW=wall_loops all work · OW > wall_loops silently clamped</li></ul>
+  </div>
+</div>
+</div>
+
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#1A7A4A"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head">
+    <div class="tl-card-left">
+      <span class="tl-badge badge-green">Phase 4e</span>
+      <div><div class="tl-title">Per-nozzle line width scaling</div><div class="tl-sub">PrintRegion::flow() rescales widths per extruder nozzle diameter</div></div>
+    </div>
+    <span class="tl-chevron">▾</span>
+  </div>
+  <div class="tl-detail">
+    <span class="tl-section-label">Root cause</span>
+    <ul>
+      <li>Line widths in fdm_process_U1.json were absolute values (0.42mm) sized for 0.4mm nozzle</li>
+      <li>When loaded as process preset, percentage is resolved against nozzle 1 before reaching flow()</li>
+      <li>config_width arrives at PrintRegion::flow() already as absolute, percent flag = false</li>
+    </ul>
+    <span class="tl-section-label">Fix — PrintRegion.cpp</span>
+    <ul>
+      <li>After config_width lookup, if has_mixed_nozzle_sizes and role is perimeter or infill:</li>
+      <li>Recover ratio: config_width.value / nozzle_diameter[0] (nozzle used during preset resolution)</li>
+      <li>Rescale: config_width.value = ratio * correct_extruder_nozzle_diameter</li>
+      <li>Applied to: frExternalPerimeter, frPerimeter, frInfill, frSolidInfill, frTopSolidInfill</li>
+    </ul>
+    <span class="tl-section-label">fdm_process_U1.json</span>
+    <ul>
+      <li>outer_wall_line_width → "105%"</li>
+      <li>inner_wall_line_width → "110%"</li>
+      <li>internal_solid_infill_line_width → "110%"</li>
+      <li>sparse_infill_line_width → "110%"</li>
+      <li>top_surface_line_width → "105%"</li>
+      <li>line_width → "110%"</li>
+      <li>support_line_width → "105%"</li>
+    </ul>
+    <div class="tl-milestone">Milestone</div>
+    <ul>
+      <li>Outer wall: 0.21mm (105% of 0.2mm nozzle) · Inner wall: 0.44mm (110% of 0.4mm) · Solid infill: 0.88mm (110% of 0.8mm)</li>
+      <li>Preview correctly shows different line widths per extruder</li>
+    </ul>
+  </div>
+</div>
+</div>
+
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#1A7A4A"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head">
+    <div class="tl-card-left">
+      <span class="tl-badge badge-green">Phase 4f</span>
+      <div><div class="tl-title">UI fixes — tooltips, label validation, nozzle sync, dialog colors</div><div class="tl-sub">Multiple UI polish items completed</div></div>
+    </div>
+    <span class="tl-chevron">▾</span>
+  </div>
+  <div class="tl-detail">
+    <span class="tl-section-label">Tooltip fixes (PrintConfig.cpp)</span>
+    <ul>
+      <li>inner_wall_filament: removed false "only active when mixed nozzle sizes" claim</li>
+      <li>outer_wall_loops: removed false "smallest nozzle" and "only active when mixed nozzle sizes" claims</li>
+    </ul>
+    <span class="tl-section-label">outer_wall_loops validation (Tab.cpp decorate())</span>
+    <ul>
+      <li>Inside main loop, before set_label_colour(): if opt.first == "outer_wall_loops" and value > wall_loops</li>
+      <li>Override color to static wxColour(0xE0, 0x20, 0x20) — distinct red vs orange "modified" state</li>
+    </ul>
+    <span class="tl-section-label">Nozzle diameter independence (Plater.cpp)</span>
+    <ul>
+      <li>U1: removed sync dialog and sync loop — each nozzle writes directly to nozzle_diameter[i] vector</li>
+      <li>Calls get_tab(TYPE_PRINTER)->update() to propagate without reloading preset</li>
+      <li>Non-U1 printers retain original get_similar_printer_preset + sync behavior</li>
+      <li>Dropdown initialization reads nozzle_diameter[i] on load so values match preset</li>
+    </ul>
+    <span class="tl-section-label">NozzleVerifyDialog filament colors (Plater.cpp)</span>
+    <ul>
+      <li>Replaced per-preset filament_colour lookup (was null — coFloat in filament preset, not coStrings)</li>
+      <li>Now reads from full_config() filament_colour vector at index i</li>
+      <li>Stores DynamicPrintConfig by value to avoid dangling pointer on temp</li>
+    </ul>
+    <div class="tl-milestone">Milestone</div>
+    <ul>
+      <li>Color swatches in NozzleVerifyDialog match sidebar filament colors</li>
+      <li>Each nozzle diameter independently settable · presets load correct values per nozzle</li>
+      <li>outer_wall_loops label turns red when > wall_loops</li>
+    </ul>
+  </div>
+</div>
+</div>
+
+<div class="tl-date">Phase 5 — Color patch pipeline — May 17, 2026 🔄 In progress</div>
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#0B3D91"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head">
+    <div class="tl-card-left">
+      <span class="tl-badge badge-blue">Phase 5 — design</span>
+      <div><div class="tl-title">Color patch loop — correct architecture</div><div class="tl-sub">Finalized design after failed approaches</div></div>
+    </div>
+    <span class="tl-chevron">▾</span>
+  </div>
+  <div class="tl-detail">
+    <span class="tl-section-label">Goal</span>
+    <ul>
+      <li>Paint face A red with filament 4 → only the outer N wall loops on face A print red</li>
+      <li>Inner loops and all infill remain base filament (continuous with rest of model)</li>
+      <li>N = color_patch_loops[filament_id - 1], configurable per filament</li>
+    </ul>
+    <span class="tl-section-label">Failed approaches (do not retry)</span>
+    <ul>
+      <li>❌ ColorDepthProcessor 2D inward offset on segmented regions — offsets the wrong axis for vertical faces</li>
+      <li>❌ PerimeterGenerator loop role overriding alone — painted region still creates a separate body with its own infill; red fills the interior</li>
+      <li>❌ Fixed mm depth offset — conceptually wrong; depth should be in wall loops not mm</li>
+    </ul>
+    <span class="tl-section-label">Correct architecture (not yet implemented)</span>
+    <ul>
+      <li>multi_material_segmentation_by_painting assigns entire painted volume to painted filament — this creates the separate body problem</li>
+      <li>Correct fix: use painted region boundary only to identify which perimeter loops touch the painted face</li>
+      <li>In GCode.cpp ~line 4202 (the mixed nozzle perimeter split): extend to check loop adjacency against painted region boundary</li>
+      <li>Loops touching painted face boundary (outermost N) → painted filament; all other loops and all infill → base filament</li>
+      <li>Infill must always go to base filament — painted regions should NOT have their own infill body</li>
+    </ul>
+    <span class="tl-section-label">What's already done</span>
+    <ul>
+      <li>color_patch_loops (coInts) added to GCodeConfig in PrintConfig.hpp and PrintConfig.cpp</li>
+      <li>Added to init_filament_option_keys() so it resizes with extruder count</li>
+      <li>Default = 1 loop per filament</li>
+      <li>ColorDepthProcessor.hpp/.cpp preserved — may be useful for thin section detection later</li>
+    </ul>
+    <span class="tl-section-label">Known limitations accepted</span>
+    <ul>
+      <li>color_patch_loops is per-filament, not per-patch — all faces painted with same filament share loop count</li>
+      <li>Per-patch loop count deferred to future (requires FacetsAnnotation extension)</li>
+    </ul>
+    <span class="tl-section-label">Next steps</span>
+    <ul>
+      <li>In GCode.cpp process_layer(): for painted regions (wall_filament > 1), check each perimeter loop against the painted region boundary polygon at that layer</li>
+      <li>Loops that intersect boundary → painted filament for outer N loops, base for rest</li>
+      <li>Infill of painted regions → always route to base filament (extruder 1)</li>
+      <li>Add "Patch loops" spinner to painting gizmo panel (GLGizmoMmuSegmentation) after pen size</li>
+      <li>Wire spinner to color_patch_loops[selected_filament - 1] in config</li>
+    </ul>
+  </div>
+</div>
+</div>
+
+<div class="tl-date">Outstanding / TODO</div>
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#B4B2A9"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head">
+    <div class="tl-card-left">
+      <span class="tl-badge badge-gray">TODO</span>
+      <div><div class="tl-title">Remaining items</div><div class="tl-sub">Wiki, rename, known issues</div></div>
+    </div>
+    <span class="tl-chevron">▾</span>
+  </div>
+  <div class="tl-detail">
+    <span class="tl-section-label">Documentation</span>
+    <ul>
+      <li>GitHub wiki page explaining mixed nozzle OW/IW behavior vs stock OrcaSlicer</li>
+    </ul>
+    <span class="tl-section-label">Project rename</span>
+    <ul>
+      <li>Rename to FOrcaSlicer (Flexible OrcaSlicer) — repo rename + branding update</li>
+    </ul>
+    <span class="tl-section-label">Known issues (accepted, low priority)</span>
+    <ul>
+      <li>outer_wall_loops UI allows values > wall_loops — label turns red as warning, no hard cap in UI</li>
+      <li>NozzleVerifyDialog color doesn't update until fresh reslice after filament change</li>
+      <li>outer_wall_loops startup warnings ("No outer_wall_loops in ConfigOptionsGroup") — harmless</li>
+    </ul>
+    <span class="tl-section-label">Phase 5 remaining</span>
+    <ul>
+      <li>GCode.cpp loop adjacency check against painted region boundary</li>
+      <li>Infill of painted regions routed to base filament</li>
+      <li>Painting gizmo UI: "Patch loops" spinner</li>
+      <li>detect_thin_sections() implementation in ColorDepthProcessor</li>
+      <li>Gap ownership at patch boundaries</li>
+      <li>Color-to-nozzle priority logic</li>
+    </ul>
+  </div>
+</div>
+</div>
+
+</div>
+<script>
+function toggle(card){card.classList.toggle('open')}
+</script>
+</body>
+</html>
