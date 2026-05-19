@@ -52,7 +52,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div class="tl-header">
   <div class="tl-header-left">
     <h2 id="main-title">FOrcaSlicer — Flexible OrcaSlicer dev roadmap</h2>
-    <span id="main-sub">Snapmaker U1 · OrcaSlicer fork · May 15–17 2026 · click any card to expand</span>
+    <span id="main-sub">Snapmaker U1 · OrcaSlicer fork · May 15–18 2026 · click any card to expand</span>
   </div>
   <div class="lang-toggle">
     <button class="lang-btn active" onclick="setLang('en')">EN</button>
@@ -290,38 +290,52 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 </div>
 
-<div class="tl-date">Phase 5 — Color patch pipeline — May 17 🔄 In progress</div>
+<div class="tl-date">Phase 5 — Color patch pipeline — May 18 🔄 In progress</div>
 <div class="tl-row">
 <div class="tl-spine"><div class="tl-dot" style="background:#0B3D91"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-blue">Phase 5</span><div><div class="tl-title">Color patch loop — correct architecture</div><div class="tl-sub">Finalized design after failed approaches · field added · pipeline pending</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-blue">Phase 5</span><div><div class="tl-title">Color patch loop — convex surfaces working</div><div class="tl-sub">Shell strip geometry correct for flat/convex faces · concave in progress</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <span class="tl-section-label">Goal</span>
     <ul>
       <li>Paint face A red (filament 4) → only outer N wall loops on face A print red; inner loops + infill = base filament</li>
-      <li>N = color_patch_loops[filament_id - 1], configurable per filament</li>
+      <li>Overall model dimensions unchanged — red loops replace outermost N black loops spatially</li>
+      <li>N = color_patch_loops[filament_id - 1], configurable per filament, default = 1</li>
+    </ul>
+    <span class="tl-section-label">Geometry — confirmed correct behavior</span>
+    <ul>
+      <li>Convex outer face (cube): 1 red line on painted face only, white loops + infill fill interior ✅</li>
+      <li>Convex curved face (sphere): correct ✅</li>
+      <li>Corner behavior: outermost loop = full corner; inner loops retreat along angle bisector — falls out naturally from Clipper offset ✅</li>
+      <li>GCode confirmed: T3 prints 1 straight line per layer on painted face only ✅</li>
+    </ul>
+    <span class="tl-section-label">Architecture implemented</span>
+    <ul>
+      <li>Layer.hpp: color_patch_regions (vector&lt;ExPolygons&gt;) added — stores shell strip per extruder per layer</li>
+      <li>PrintObjectSlice.cpp apply_mm_segmentation(): stolen region shrunk to shell strip (N × nozzle_d × 1.2 wide); inner core returned to base region after all regions processed</li>
+      <li>Shell strip clipped to model surface boundary using parent_layer_region.raw_slices — removes interior segmentation cut edges</li>
+      <li>PerimeterGenerator.hpp/cpp: color_patch_regions pointer added; process_classic() limits loop_number to color_patch_loops when processing painted shell region</li>
+      <li>LayerRegion.cpp: color_patch_regions wired from layer to PerimeterGenerator</li>
+      <li>PrintConfig.cpp: color_patch_loops default value set (ConfigOptionInts(1,1))</li>
     </ul>
     <span class="tl-section-label">Failed approaches — do not retry</span>
     <ul>
       <li>❌ ColorDepthProcessor 2D inward offset — wrong axis for vertical faces</li>
       <li>❌ PerimeterGenerator loop role overriding alone — painted region still creates body with its own infill</li>
-      <li>❌ Fixed mm depth — conceptually wrong; depth should be in wall loops not mm</li>
+      <li>❌ Boundary clipping via lslices surface strip — too thin, misses shell strip intersection</li>
+      <li>❌ Boundary clipping via expanded/shrunk model_boundary — fails for concave (torus inner hole)</li>
+      <li>❌ surface_adjacent (expand outside strip inward) — clips too aggressively</li>
+      <li>❌ diff_ex(shell_strip, model_interior) — interior cut sides still survive near boundary</li>
     </ul>
-    <span class="tl-section-label">Correct architecture (not yet implemented)</span>
+    <span class="tl-section-label">Known issue — concave surfaces</span>
     <ul>
-      <li>multi_material_segmentation_by_painting creates the "separate body" problem — use boundary only, not full region</li>
-      <li>In GCode.cpp ~line 4202: extend mixed nozzle split to check loop adjacency against painted region boundary</li>
-      <li>Loops touching boundary (outermost N) → painted filament; all other loops + all infill → base filament</li>
+      <li>Torus inner face (concave): red still shows as wedge outline instead of single line</li>
+      <li>Root cause: raw_slices for base region at concave layers may already exclude the hole boundary — investigating whether raw_slices is populated before apply_mm_segmentation runs</li>
+      <li>Next: verify raw_slices content at mid-height torus layers; if empty, alternative source needed for pre-segmentation geometry</li>
     </ul>
-    <span class="tl-section-label">What's done</span>
+    <span class="tl-section-label">Committed</span>
     <ul>
-      <li>color_patch_loops (coInts) in GCodeConfig · added to init_filament_option_keys() · default = 1</li>
-    </ul>
-    <span class="tl-section-label">Next steps</span>
-    <ul>
-      <li>GCode.cpp: loop adjacency check against painted region boundary polygon per layer</li>
-      <li>Infill of painted regions → always base filament</li>
-      <li>Painting gizmo UI: "Patch loops" spinner after pen size</li>
+      <li>git: "Phase 5 WIP: color patch shell strip working for convex surfaces, concave in progress"</li>
     </ul>
   </div>
 </div>
@@ -338,7 +352,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <li>Rename project to FOrcaSlicer — repo rename + branding</li>
       <li>outer_wall_loops: no hard UI cap (label turns red as warning — accepted)</li>
       <li>NozzleVerifyDialog color doesn't update until fresh reslice after filament change</li>
-      <li>Phase 5: GCode.cpp adjacency check · infill routing · gizmo UI · thin section detection · gap ownership · color-to-nozzle priority</li>
+      <li>Phase 5 remaining: concave surface fix (torus inner face) · loop_width from actual flow spacing not nozzle_d×1.2 · color_patch_loops UI in painting gizmo · test 2 adjacent painted faces · thin section behavior</li>
+      <li>Phase 5 debug printf still in PrintObjectSlice.cpp — remove before final commit</li>
     </ul>
   </div>
 </div>
@@ -576,39 +591,52 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 </div>
 
-<div class="tl-date">第五阶段 — 着色区域流水线 — 5月17日 🔄 进行中</div>
+<div class="tl-date">第五阶段 — 着色区域流水线 — 5月18日 🔄 进行中</div>
 <div class="tl-row">
 <div class="tl-spine"><div class="tl-dot" style="background:#0B3D91"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-blue">第5阶段</span><div><div class="tl-title">着色区域循环 — 正确架构</div><div class="tl-sub">失败方法后确定的最终设计 · 字段已添加 · 流水线待实现</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-blue">第5阶段</span><div><div class="tl-title">着色区域循环 — 凸面已实现</div><div class="tl-sub">平面/凸面壳带几何正确 · 凹面进行中</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <span class="tl-section-label">目标</span>
     <ul>
       <li>将面 A 涂红（耗材 4）→ 只有面 A 上最外 N 条壁循环打印红色；内壁循环 + 填充 = 基础耗材</li>
-      <li>N = color_patch_loops[filament_id - 1]，按耗材可配置</li>
+      <li>模型整体尺寸不变 — 红色循环在空间上替换最外 N 条黑色循环</li>
+      <li>N = color_patch_loops[filament_id - 1]，按耗材可配置，默认值 = 1</li>
+    </ul>
+    <span class="tl-section-label">几何 — 已验证正确行为</span>
+    <ul>
+      <li>凸面外表面（立方体）：涂色面仅 1 条红线，白色循环 + 填充填满内部 ✅</li>
+      <li>凸曲面（球体）：正确 ✅</li>
+      <li>转角行为：最外层循环 = 完整转角；内层循环沿角平分线退缩 — 由 Clipper 偏移自然产生 ✅</li>
+      <li>GCode 已验证：T3 每层仅在涂色面打印 1 条直线 ✅</li>
+    </ul>
+    <span class="tl-section-label">已实现架构</span>
+    <ul>
+      <li>Layer.hpp：新增 color_patch_regions (vector&lt;ExPolygons&gt;) — 按挤出口按层存储壳带</li>
+      <li>PrintObjectSlice.cpp apply_mm_segmentation()：stolen 区域缩减为壳带（宽度 = N × nozzle_d × 1.2）；所有区域处理完成后将内核归还至基础区域</li>
+      <li>壳带使用 parent_layer_region.raw_slices 裁剪至模型表面边界 — 去除分割产生的内部截面边</li>
+      <li>PerimeterGenerator.hpp/cpp：添加 color_patch_regions 指针；process_classic() 处理着色壳区域时将 loop_number 限制为 color_patch_loops</li>
+      <li>LayerRegion.cpp：color_patch_regions 从 layer 传入 PerimeterGenerator</li>
+      <li>PrintConfig.cpp：color_patch_loops 默认值已设置（ConfigOptionInts(1,1)）</li>
     </ul>
     <span class="tl-section-label">失败方案 — 勿重试</span>
     <ul>
       <li>❌ ColorDepthProcessor 二维内缩偏移 — 对垂直面偏移轴向错误</li>
-      <li>❌ 仅覆盖 PerimeterGenerator 循环角色 — 着色区域仍创建独立体，带有自己的填充，红色填满内部</li>
-      <li>❌ 固定 mm 深度 — 概念错误；深度应以壁循环数而非 mm 计</li>
+      <li>❌ 仅覆盖 PerimeterGenerator 循环角色 — 着色区域仍创建独立体，带有自己的填充</li>
+      <li>❌ 通过 lslices 表面带裁剪边界 — 太薄，与壳带交集为空</li>
+      <li>❌ 通过扩展/收缩 model_boundary 裁剪边界 — 凹面失败（环形内孔）</li>
+      <li>❌ surface_adjacent（外部带向内扩展）— 裁剪过于激进</li>
+      <li>❌ diff_ex(shell_strip, model_interior) — 内部截面边仍靠近边界存活</li>
     </ul>
-    <span class="tl-section-label">正确架构（尚未实现）</span>
+    <span class="tl-section-label">已知问题 — 凹面</span>
     <ul>
-      <li>multi_material_segmentation_by_painting 将整个涂色体积分配给涂色耗材 — 这造成"独立体"问题</li>
-      <li>正确做法：仅用着色区域边界识别哪些周界循环接触涂色面</li>
-      <li>在 GCode.cpp 约第 4202 行：扩展混合挤出口分割，检查循环与着色区域边界的邻接关系</li>
-      <li>接触边界的循环（最外 N 条）→ 涂色耗材；所有其他循环 + 所有填充 → 基础耗材</li>
+      <li>环形内表面（凹面）：红色仍显示为楔形轮廓而非单条线</li>
+      <li>根本原因：凹面层基础区域的 raw_slices 可能在 apply_mm_segmentation 运行前已不含孔边界 — 正在排查</li>
+      <li>下一步：验证环形中间层 raw_slices 内容；若为空，需寻找分割前几何的替代来源</li>
     </ul>
-    <span class="tl-section-label">已完成</span>
+    <span class="tl-section-label">已提交</span>
     <ul>
-      <li>color_patch_loops (coInts) 已添加至 GCodeConfig · 已加入 init_filament_option_keys() · 默认值=1</li>
-    </ul>
-    <span class="tl-section-label">下一步</span>
-    <ul>
-      <li>GCode.cpp：逐层对着色区域边界多边形进行循环邻接检查</li>
-      <li>着色区域的填充 → 始终路径规划至基础耗材</li>
-      <li>涂色工具 UI：在笔刷大小后添加"区域循环数"微调控件</li>
+      <li>git: "Phase 5 WIP: color patch shell strip working for convex surfaces, concave in progress"</li>
     </ul>
   </div>
 </div>
@@ -625,7 +653,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <li>项目重命名为 FOrcaSlicer（Flexible OrcaSlicer）— 代码库重命名 + 品牌更新</li>
       <li>outer_wall_loops：UI 无硬性上限（标签变红作为警告 — 已接受）</li>
       <li>NozzleVerifyDialog 颜色：耗材更改后需重新切片才更新</li>
-      <li>第五阶段剩余：GCode.cpp 邻接检查 · 填充路径规划 · 工具 UI · 薄截面检测 · 间隙所有权 · 颜色到挤出口优先级</li>
+      <li>第五阶段剩余：凹面修复（环形内表面）· loop_width 改用实际流量间距而非 nozzle_d×1.2 · 涂色工具 UI 中的 color_patch_loops 控件 · 两相邻涂色面测试 · 薄截面行为</li>
+      <li>PrintObjectSlice.cpp 中调试用 printf 尚未清除 — 最终提交前移除</li>
     </ul>
   </div>
 </div>
@@ -647,10 +676,10 @@ function setLang(lang){
   var s=document.getElementById('main-sub');
   if(lang==='zh'){
     t.textContent='FOrcaSlicer — 灵活版 OrcaSlicer 开发路线图';
-    s.textContent='Snapmaker U1 · OrcaSlicer 分支 · 2026年5月15–17日 · 点击任意卡片展开';
+    s.textContent='Snapmaker U1 · OrcaSlicer 分支 · 2026年5月15–18日 · 点击任意卡片展开';
   } else {
     t.textContent='FOrcaSlicer — Flexible OrcaSlicer dev roadmap';
-    s.textContent='Snapmaker U1 · OrcaSlicer fork · May 15–17 2026 · click any card to expand';
+    s.textContent='Snapmaker U1 · OrcaSlicer fork · May 15–18 2026 · click any card to expand';
   }
 }
 </script>
