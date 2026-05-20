@@ -68,12 +68,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div class="tl-row">
 <div class="tl-spine"><div class="tl-dot" style="background:#888780"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-gray">Setup</span><div><div class="tl-title">Architecture &amp; repo decisions</div><div class="tl-sub">Design goals, hardware constraints, repo selection</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-gray">Setup</span><div><div class="tl-title">Architecture & repo decisions</div><div class="tl-sub">Design goals, hardware constraints, repo selection</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
+    <div class="tl-decision">Decision change</div>
     <span class="tl-section-label">Design decisions locked</span>
     <ul>
       <li>wall[0] = 0.2mm outer nozzle; wall[1+] = 0.4mm inner nozzle</li>
-      <li>Min 2 walls when same color AND material; 1 wall allowed otherwise</li>
+      <li>Min 2 walls if color or material is different; 1 wall allowed otherwise</li>
       <li>Slope-compensated gap between wall[0] and wall[1] only</li>
       <li>Accumulator sync: 0.4 nozzle fires when next 0.2 layer pushes accumulated height above 0.4 max</li>
       <li>Color-to-nozzle priority: color match → smallest nozzle = outer → extruder 0 fallback</li>
@@ -81,7 +82,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <li>Per-patch nozzle override: global=YES follows mixed logic; global=NO single nozzle owns patch</li>
       <li>Priority hierarchy locked: CL (color patch loops) &gt; OW (outer wall) &gt; IW (inner wall)</li>
     </ul>
-    <div class="tl-decision">Decision change</div>
     <ul>
       <li>Started on OrcaSlicer-FullSpectrum fork, later pivoted to Snapmaker Orca due to cleaner Filament for Features UI</li>
       <li>FullSpectrum had resolved_model_config_for_tab stripping sparse_infill_filament — unfixable cleanly</li>
@@ -100,7 +100,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div class="tl-row">
 <div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-purple">Phase 1a</span><div><div class="tl-title">New files — NozzleLayerPlanner, ColorDepthProcessor, NozzleVerifyDialog</div><div class="tl-sub">Core logic classes, all building cleanly</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-purple">Phase 1</span><div><div class="tl-title">New files — NozzleLayerPlanner, ColorDepthProcessor, NozzleVerifyDialog</div><div class="tl-sub">Core logic classes, all building cleanly</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <span class="tl-section-label">NozzleLayerPlanner.hpp/.cpp</span>
     <ul>
@@ -119,8 +119,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <li>Shows T1–T4 nozzle sizes, material names, color swatches</li>
       <li>Verify button wires to MainFrame print button gate · update_extruders() rebuilds on reslice</li>
     </ul>
+    <ul>
+      <li>All 3 files registered in CMakeLists and building with zero errors</li>
+    </ul>
     <div class="tl-milestone">Milestone</div>
-    <ul><li>All 3 files registered in CMakeLists and building with zero errors</li></ul>
   </div>
 </div>
 </div>
@@ -128,7 +130,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div class="tl-row">
 <div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-purple">Phase 1b–d</span><div><div class="tl-title">PrintConfig fields + Pipeline hooks + Tab UI</div><div class="tl-sub">New config fields, PrintObject, PerimeterGenerator, Multimaterial tab</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-purple">Phase 1</span><div><div class="tl-title">PrintConfig fields + Pipeline hooks + Tab UI</div><div class="tl-sub">New config fields, PrintObject, PerimeterGenerator, Multimaterial tab</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <span class="tl-section-label">Fields added</span>
     <ul>
@@ -139,8 +141,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <ul>
       <li>Mixed Nozzle optgroup in Multimaterial tab: outer_wall_loops, outer_wall_layer_height_max, outer_wall_seam_position</li>
     </ul>
+    <ul>
+      <li>App launches · Multimaterial tab stable · Mixed Nozzle group visible · Slices without errors</li>
+    </ul>
     <div class="tl-milestone">Milestone</div>
-    <ul><li>App launches · Multimaterial tab stable · Mixed Nozzle group visible · Slices without errors</li></ul>
   </div>
 </div>
 </div>
@@ -153,12 +157,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <div class="tl-detail">
     <span class="tl-section-label">PresetBundle.cpp</span>
     <ul>
-      <li>has_mixed_nozzle_sizes computed at end of full_fff_config(): any nozzle differs from values[0] by > 1e-4 → mixed=true</li>
+      <li>has_mixed_nozzle_sizes computed at end of full_fff_config(): any nozzle differs from values[0] by &gt; 1e-4 → mixed=true</li>
       <li>Never user-set — always derived at config assembly time</li>
       <li>outer_wall_loops clamped to wall_loops when mixed (null-checked)</li>
     </ul>
+    <ul>
+      <li>Mixed nozzle auto-detected · outer_wall_loops clamped at slice time</li>
+    </ul>
     <div class="tl-milestone">Milestone</div>
-    <ul><li>Mixed nozzle auto-detected · outer_wall_loops clamped at slice time</li></ul>
   </div>
 </div>
 </div>
@@ -167,7 +173,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div class="tl-row">
 <div class="tl-spine"><div class="tl-dot" style="background:#BA7517"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-amber">Pivot</span><div><div class="tl-title">Fork from Snapmaker Orca instead of FullSpectrum</div><div class="tl-sub">Cleaner base, Filament for Features already working</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-amber">Phase 3</span><div><div class="tl-title">Fork from Snapmaker Orca instead of FullSpectrum</div><div class="tl-sub">Cleaner base, Filament for Features already working</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <ul>
       <li>FullSpectrum: unresolvable resolved_model_config_for_tab filtering — sparse_infill_filament couldn't show in Multimaterial tab</li>
@@ -194,8 +200,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <ul>
       <li>get_enable_print_status(): nozzle verify gate added · get_enable_slice_status(): gate NOT added</li>
     </ul>
+    <ul>
+      <li>Dialog shows T1–T4 with nozzle sizes, material names, filament colors · Print gated until Verify</li>
+    </ul>
     <div class="tl-milestone">Milestone</div>
-    <ul><li>Dialog shows T1–T4 with nozzle sizes, material names, filament colors · Print gated until Verify</li></ul>
   </div>
 </div>
 </div>
@@ -204,15 +212,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div class="tl-row">
 <div class="tl-spine"><div class="tl-dot" style="background:#1A7A4A"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">Phase 4a</span><div><div class="tl-title">inner_wall_filament field + UI</div><div class="tl-sub">New extruder selector for inner wall, dropdown registered</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">Phase 4</span><div><div class="tl-title">inner_wall_filament field + UI</div><div class="tl-sub">New extruder selector for inner wall, dropdown registered</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <ul>
       <li>inner_wall_filament (coInt): gui_type=i_enum_open, min=1, default=1 · wall_loops label → "All walls" · wall_filament label → "Outer wall"</li>
       <li>Added to Filament for Features group · registered to dynamic_filament_list_1_based · added to toggle_line loop</li>
       <li>fdm_process_U1.json: "inner_wall_filament":"2"</li>
     </ul>
+    <ul>
+      <li>Inner wall dropdown shows extruder list · default extruder 2</li>
+    </ul>
     <div class="tl-milestone">Milestone</div>
-    <ul><li>Inner wall dropdown shows extruder list · default extruder 2</li></ul>
   </div>
 </div>
 </div>
@@ -220,7 +230,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div class="tl-row">
 <div class="tl-spine"><div class="tl-dot" style="background:#1A7A4A"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">Phase 4b–c</span><div><div class="tl-title">PrintRegion toolpath routing + GCode.cpp perimeter split</div><div class="tl-sub">frExternalPerimeter → wall_filament · frPerimeter → inner_wall_filament</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">Phase 4</span><div><div class="tl-title">PrintRegion toolpath routing + GCode.cpp perimeter split</div><div class="tl-sub">frExternalPerimeter → wall_filament · frPerimeter → inner_wall_filament</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <span class="tl-section-label">PrintRegion.cpp + ToolOrdering.cpp</span>
     <ul>
@@ -232,36 +242,39 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <li>If PERIMETERS and inner/outer filaments differ and can_sort(): erExternalPerimeter → outer wall extruder; erPerimeter → inner wall extruder</li>
       <li>Push directly into reg.perimeters — avoids owning temporary collections (heap corruption fix)</li>
     </ul>
+    <ul>
+      <li>Outer wall white (extruder 1), inner wall yellow (extruder 2) · No crashes</li>
+    </ul>
     <div class="tl-milestone">Milestone</div>
-    <ul><li>Outer wall white (extruder 1), inner wall yellow (extruder 2) · No crashes</li></ul>
   </div>
 </div>
 </div>
 
 <div class="tl-row">
-<div class="tl-spine"><div class="tl-dot" style="background:#1A7A4A"></div><div class="tl-line"></div></div>
+<div class="tl-spine"><div class="tl-dot" style="background:#888780"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">Phase 4d–f</span><div><div class="tl-title">OW&gt;1, per-nozzle line width, UI polish</div><div class="tl-sub">outer_wall_loops drives loop tagging · line widths rescaled per extruder nozzle diameter</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-gray">Setup</span><div><div class="tl-title">OW>1, per-nozzle line width, UI polish</div><div class="tl-sub">outer_wall_loops drives loop tagging · line widths rescaled per extruder nozzle diameter</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <ul>
-      <li>classic path: is_external = loop.depth &lt; std::max(1, outer_wall_loops)</li>
-      <li>Arachne path: is_external = (int)extrusion->inset_idx &lt; std::max(1, outer_wall_loops)</li>
+      <li>classic path: is_external = loop.depth < std::max(1, outer_wall_loops)</li>
+      <li>Arachne path: is_external = (int)extrusion->inset_idx < std::max(1, outer_wall_loops)</li>
       <li>PrintRegion.cpp flow(): ratio = config_width / nozzle[0]; rescaled = ratio × actual_nozzle_diameter</li>
       <li>fdm_process_U1.json: all line widths converted to percentages</li>
-      <li>outer_wall_loops label turns red when value &gt; wall_loops (distinct from orange "modified" state)</li>
+      <li>outer_wall_loops label turns red when value > wall_loops (distinct from orange "modified" state)</li>
       <li>U1 nozzle diameters: sync dialog removed; each extruder writes nozzle_diameter[i] independently</li>
     </ul>
-    <div class="tl-milestone">Milestone</div>
-    <ul><li>Color swatches match sidebar · Each nozzle independently settable · outer_wall_loops label validation works</li></ul>
+    <ul>
+      <li>Color swatches match sidebar · Each nozzle independently settable · outer_wall_loops label validation works</li>
+    </ul>
   </div>
 </div>
 </div>
 
 <div class="tl-date">Phase 5 — Color patch pipeline — May 18–19 🔄 In progress</div>
 <div class="tl-row">
-<div class="tl-spine"><div class="tl-dot" style="background:#0B3D91"></div><div class="tl-line"></div></div>
+<div class="tl-spine"><div class="tl-dot" style="background:#888780"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-blue">Phase 5a</span><div><div class="tl-title">Color patch — convex + concave surfaces working ✅</div><div class="tl-sub">Committed ba3d32bc68 — single red arc on painted face, inner core correct</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-gray">Setup</span><div><div class="tl-title">Color patch — convex + concave surfaces working ✅</div><div class="tl-sub">Committed ba3d32bc68 — single red arc on painted face, inner core correct</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <span class="tl-section-label">What works at commit ba3d32bc68</span>
     <ul>
@@ -274,7 +287,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </ul>
     <span class="tl-section-label">Architecture at committed state</span>
     <ul>
-      <li>Layer.hpp: color_patch_regions (vector&lt;ExPolygons&gt;) — shell strip per extruder per layer</li>
+      <li>Layer.hpp: color_patch_regions (vector<ExPolygons>) — shell strip per extruder per layer</li>
       <li>PrintObjectSlice.cpp apply_mm_segmentation(): shell_strip = intersection(full_model_boundary_strip, stolen_expanded); inner core returned to base region</li>
       <li>PerimeterGenerator: loop_number overridden to patch_loops-1; is_color_patch suppresses infill</li>
       <li>color_patch_loops default: {1,1,1,1} for 4-head U1</li>
@@ -284,16 +297,16 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 
 <div class="tl-row">
-<div class="tl-spine"><div class="tl-dot" style="background:#0B3D91"></div><div class="tl-line"></div></div>
+<div class="tl-spine"><div class="tl-dot" style="background:#888780"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-red">Phase 5b</span><div><div class="tl-title">Full-wrap cylinder — root cause identified, pivot to new architecture</div><div class="tl-sub">stolen pipeline fundamentally wrong for full-wrap — new color_patch_strip approach planned</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-gray">Setup</span><div><div class="tl-title">Full-wrap cylinder — root cause identified, pivot to new architecture</div><div class="tl-sub">stolen pipeline fundamentally wrong for full-wrap — new color_patch_strip approach planned</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <span class="tl-section-label">Problem discovered</span>
     <ul>
       <li>When entire cylinder side painted red (CL=4, AW=2): expected 4 red loops + 2 white loops + white infill</li>
       <li>Actual result: 1 red loop + 3 white loops, no infill — broken regardless of approach tried</li>
       <li>Root cause: the original stolen pipeline extends the painted volume all the way to the model center — stolen = full cross-section for a fully painted face, not just the outer CL loops</li>
-      <li>mine = diff(layer_slice, segmented.expolygons) removes the full painted depth from white — white loses its AW loops too when painted volume &gt; wall thickness</li>
+      <li>mine = diff(layer_slice, segmented.expolygons) removes the full painted depth from white — white loses its AW loops too when painted volume > wall thickness</li>
     </ul>
     <span class="tl-section-label">Key findings from investigation</span>
     <ul>
@@ -305,7 +318,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </ul>
     <span class="tl-section-label">Failed approaches during Phase 5b — do not retry</span>
     <ul>
-      <li>❌ Erode full_model by CL×loop_width to get boundary strip — collapses thin walls (AW=2 wall = 0.8mm, CL×0.4mm = 1.6mm &gt; wall)</li>
+      <li>❌ Erode full_model by CL×loop_width to get boundary strip — collapses thin walls (AW=2 wall = 0.8mm, CL×0.4mm = 1.6mm > wall)</li>
       <li>❌ Erode stolen directly — produces holey annular ring, red prints outer+inner boundary only</li>
       <li>❌ Area threshold (stolen_area ≥ 85% full_area) to detect full-wrap — threshold unstable</li>
       <li>❌ Subtract color_patch_regions from base_dst in restore block — over-subtracts when shell_strip = full wall</li>
@@ -319,7 +332,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <li>color_patch_loops stays in PrintConfig (per-filament)</li>
       <li>UI: MMU gizmo panel gets "Original" / "Color Patch" toggle at top; CL slider only shown in Color Patch mode</li>
       <li>When color_patch_mode=true: new color_patch_strip computed as intersection(full_model_CL_boundary, painted_faces); replaces what stolen puts in by_region for painted extruder; mine subtracts color_patch_strip (not full segmented.expolygons) so white keeps its AW loops</li>
-      <li>Priority rule: CL &gt; OW &gt; IW — color patch loops are outermost regardless of AW setting</li>
+      <li>Priority rule: CL > OW > IW — color patch loops are outermost regardless of AW setting</li>
     </ul>
     <span class="tl-section-label">Current state (May 19)</span>
     <ul>
@@ -346,9 +359,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 <div class="tl-date">Outstanding / TODO</div>
 <div class="tl-row">
-<div class="tl-spine"><div class="tl-dot" style="background:#B4B2A9"></div></div>
+<div class="tl-spine"><div class="tl-dot" style="background:#888780"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-gray">TODO</span><div><div class="tl-title">Remaining items</div><div class="tl-sub">Wiki, rename, known issues, Phase 5 remaining</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-gray">Setup</span><div><div class="tl-title">Remaining items</div><div class="tl-sub">Wiki, rename, known issues, Phase 5 remaining</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <ul>
       <li>GitHub wiki: mixed nozzle OW/IW behavior vs stock OrcaSlicer</li>
@@ -364,7 +377,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 </div>
 
-</div><!-- end EN -->
+</div><!-- end EN --><!-- end EN -->
 
 <!-- ============================================================ CHINESE ============================================================ -->
 <div lang-content="zh">
@@ -373,20 +386,20 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div class="tl-row">
 <div class="tl-spine"><div class="tl-dot" style="background:#888780"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-gray">初始化</span><div><div class="tl-title">架构与代码库决策</div><div class="tl-sub">设计目标、硬件约束、代码库选择</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-gray">Setup</span><div><div class="tl-title">架构与代码库决策</div><div class="tl-sub">设计目标、硬件约束、代码库选择</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
+    <div class="tl-decision">决策变更</div>
     <span class="tl-section-label">已锁定的设计决策</span>
     <ul>
       <li>wall[0] = 0.2mm 外墙挤出口；wall[1+] = 0.4mm 内壁挤出口</li>
-      <li>相同颜色且相同材料时，最少 2 条总墙壁；否则允许 1 条</li>
+      <li>颜色或材料不同时最少 2 条总墙壁；否则允许 1 条</li>
       <li>仅在 wall[0] 和 wall[1] 之间进行坡度补偿间隙</li>
       <li>累加器同步：当 0.2 层累计高度超过 0.4 挤出口最大层高时触发 0.4 挤出口</li>
       <li>颜色到挤出口优先级：颜色匹配 → 最小挤出口=外墙 → 挤出机 0 兜底</li>
-      <li>颜色深度：最小值=挤出口直径；薄截面=渗透或 50/50 分割</li>
+      <li>颜色深度：最小值=挤出口直径；薄截面=完全渗透或 50/50 分割</li>
       <li>每区域挤出口覆盖：global=YES 遵循混合逻辑；global=NO 单挤出口拥有整个区域</li>
       <li>优先级层次已锁定：CL（着色区域循环数）&gt; OW（外墙）&gt; IW（内壁）</li>
     </ul>
-    <div class="tl-decision">决策变更</div>
     <ul>
       <li>最初基于 OrcaSlicer-FullSpectrum 分支，后因 Filament for Features UI 更清晰改用 Snapmaker Orca</li>
       <li>FullSpectrum 存在 resolved_model_config_for_tab 过滤 sparse_infill_filament 的问题，无法干净修复</li>
@@ -401,11 +414,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 </div>
 
-<div class="tl-date">第一阶段 — 配置方案与流水线框架（OW=外墙，IW=内壁，ALH=自适应层高）</div>
+<div class="tl-date">第一阶段 — 配置方案与流水线框架（ALH=自适应层高）</div>
 <div class="tl-row">
 <div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-purple">第1a阶段</span><div><div class="tl-title">新文件 — NozzleLayerPlanner、ColorDepthProcessor、NozzleVerifyDialog</div><div class="tl-sub">核心逻辑类，全部构建成功</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-purple">Phase 1</span><div><div class="tl-title">新文件 — NozzleLayerPlanner、ColorDepthProcessor、NozzleVerifyDialog</div><div class="tl-sub">核心逻辑类，全部构建成功</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <span class="tl-section-label">NozzleLayerPlanner.hpp/.cpp</span>
     <ul>
@@ -424,8 +437,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <li>显示工作头 T1–T4 挤出口尺寸、材料名称、颜色色块</li>
       <li>验证按钮连接至 MainFrame 打印按钮门控 · 重新切片时调用 update_extruders()</li>
     </ul>
+    <ul>
+      <li>3 个文件均已注册至 CMakeLists，构建零错误</li>
+    </ul>
     <div class="tl-milestone">里程碑</div>
-    <ul><li>3 个文件均已注册至 CMakeLists，构建零错误</li></ul>
   </div>
 </div>
 </div>
@@ -433,7 +448,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div class="tl-row">
 <div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-purple">第1b–d阶段</span><div><div class="tl-title">PrintConfig 字段 + 流水线钩子 + Tab UI</div><div class="tl-sub">新配置字段、PrintObject、PerimeterGenerator、多材料标签页</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-purple">Phase 1</span><div><div class="tl-title">PrintConfig 字段 + 流水线钩子 + Tab UI</div><div class="tl-sub">新配置字段、PrintObject、PerimeterGenerator、多材料标签页</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <span class="tl-section-label">新增字段</span>
     <ul>
@@ -444,8 +459,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <ul>
       <li>多材料标签页中新增"混合挤出口"选项组：outer_wall_loops、outer_wall_layer_height_max、outer_wall_seam_position</li>
     </ul>
+    <ul>
+      <li>应用启动 · 多材料标签稳定 · 混合挤出口组可见 · 切片无错误</li>
+    </ul>
     <div class="tl-milestone">里程碑</div>
-    <ul><li>应用启动 · 多材料标签稳定 · 混合挤出口组可见 · 切片无错误</li></ul>
   </div>
 </div>
 </div>
@@ -454,16 +471,18 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div class="tl-row">
 <div class="tl-spine"><div class="tl-dot" style="background:#0F6E56"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-teal">第2阶段</span><div><div class="tl-title">PresetBundle 自动检测</div><div class="tl-sub">has_mixed_nozzle_sizes 自动从 nozzle_diameter 向量计算</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-teal">Phase 2</span><div><div class="tl-title">PresetBundle 自动检测</div><div class="tl-sub">has_mixed_nozzle_sizes 自动从 nozzle_diameter 向量计算</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <span class="tl-section-label">PresetBundle.cpp</span>
     <ul>
-      <li>在 full_fff_config() 末尾计算 has_mixed_nozzle_sizes：任意值与 values[0] 差值 > 1e-4 → mixed=true</li>
+      <li>在 full_fff_config() 末尾计算 has_mixed_nozzle_sizes：任意值与 values[0] 差值 &gt; 1e-4 → mixed=true</li>
       <li>永远不由用户设置 — 始终在配置组装时推导</li>
       <li>混合模式下 outer_wall_loops 封顶为 wall_loops（带空值检查）</li>
     </ul>
+    <ul>
+      <li>混合挤出口自动检测 · 切片时 outer_wall_loops 自动封顶</li>
+    </ul>
     <div class="tl-milestone">里程碑</div>
-    <ul><li>混合挤出口自动检测 · 切片时 outer_wall_loops 自动封顶</li></ul>
   </div>
 </div>
 </div>
@@ -472,7 +491,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div class="tl-row">
 <div class="tl-spine"><div class="tl-dot" style="background:#BA7517"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-amber">切换</span><div><div class="tl-title">从 FullSpectrum 切换至 Snapmaker Orca 分支</div><div class="tl-sub">更干净的基础，Filament for Features 已可用</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-amber">Phase 3</span><div><div class="tl-title">从 FullSpectrum 切换至 Snapmaker Orca 分支</div><div class="tl-sub">更干净的基础，Filament for Features 已可用</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <ul>
       <li>FullSpectrum 存在无法解决的 resolved_model_config_for_tab 过滤问题 — sparse_infill_filament 无法在多材料标签中显示</li>
@@ -487,7 +506,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div class="tl-row">
 <div class="tl-spine"><div class="tl-dot" style="background:#BA7517"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-amber">第3阶段</span><div><div class="tl-title">NozzleVerifyDialog 完整连接 + 打印门控</div><div class="tl-sub">切片后显示对话框，打印按钮需验证后才可用</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-amber">Phase 3</span><div><div class="tl-title">NozzleVerifyDialog 完整连接 + 打印门控</div><div class="tl-sub">切片后显示对话框，打印按钮需验证后才可用</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <span class="tl-section-label">Plater.cpp</span>
     <ul>
@@ -499,38 +518,81 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <ul>
       <li>get_enable_print_status()：添加挤出口验证门控 · get_enable_slice_status()：不添加门控</li>
     </ul>
+    <ul>
+      <li>对话框显示工作头 T1–T4 挤出口尺寸、材料名称、耗材颜色 · 打印按钮需点击验证后才可用</li>
+    </ul>
     <div class="tl-milestone">里程碑</div>
-    <ul><li>对话框显示 T1–T4 挤出口尺寸、材料名称、耗材颜色 · 打印按钮需点击验证后才可用</li></ul>
   </div>
 </div>
 </div>
 
-<div class="tl-date">第四阶段 — 外墙/内壁挤出路径分离 + UI + 线宽 — 5月17日 ✅</div>
+<div class="tl-date">第四阶段 — OW/IW 挤出路径分离 + UI + 逐挤出口线宽 — 5月17日 ✅（OW=外墙，IW=内壁）</div>
 <div class="tl-row">
 <div class="tl-spine"><div class="tl-dot" style="background:#1A7A4A"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">第4a–f阶段</span><div><div class="tl-title">inner_wall_filament · 路径规划 · OW>1 · 逐挤出口线宽 · UI 润色</div><div class="tl-sub">外墙/内壁完整分离，各挤出口独立线宽</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">Phase 4</span><div><div class="tl-title">inner_wall_filament 字段 + UI</div><div class="tl-sub">内壁新增挤出机选择器，下拉列表已注册</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <ul>
-      <li>inner_wall_filament (coInt)：gui_type=i_enum_open，默认值=1，fdm_process_U1.json 默认为挤出机 2</li>
-      <li>PrintRegion.cpp: frExternalPerimeter → wall_filament；frPerimeter → inner_wall_filament</li>
-      <li>GCode.cpp process_layer()：按 erExternalPerimeter/erPerimeter 分配到各挤出机，直接推入 reg.perimeters</li>
-      <li>PerimeterGenerator: is_external = loop.depth &lt; max(1, outer_wall_loops)（classic 路径）</li>
-      <li>PrintRegion::flow()：config_width / nozzle[0] × 目标挤出口直径 — 百分比线宽重新推导</li>
-      <li>fdm_process_U1.json：所有线宽改为百分比格式</li>
-      <li>outer_wall_loops 标签当值 > wall_loops 时变红；U1 挤出口直径独立设置</li>
+      <li>inner_wall_filament (coInt)：gui_type=i_enum_open，min=1，默认值=1 · wall_loops 标签 → "All walls" · wall_filament 标签 → "Outer wall"</li>
+      <li>添加至 Filament for Features 组 · 注册至 dynamic_filament_list_1_based · 添加至 toggle_line 循环</li>
+      <li>fdm_process_U1.json："inner_wall_filament":"2"</li>
+    </ul>
+    <ul>
+      <li>内壁下拉列表显示挤出机列表 · 默认挤出机 2</li>
     </ul>
     <div class="tl-milestone">里程碑</div>
-    <ul><li>外墙白色（挤出机1）、内壁黄色（挤出机2）、各挤出口线宽正确 · 预览与 GCode 均已验证</li></ul>
+  </div>
+</div>
+</div>
+
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#1A7A4A"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">Phase 4</span><div><div class="tl-title">PrintRegion 挤出路径规划 + GCode.cpp 周界分割</div><div class="tl-sub">frExternalPerimeter → wall_filament · frPerimeter → inner_wall_filament</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-detail">
+    <span class="tl-section-label">PrintRegion.cpp + ToolOrdering.cpp</span>
+    <ul>
+      <li>extruder()：frExternalPerimeter → wall_filament；frPerimeter → inner_wall_filament</li>
+      <li>仅在该层存在实际 erPerimeter 实体时才添加 inner_wall_filament — 防止锥顶处产生空换料动作</li>
+    </ul>
+    <span class="tl-section-label">GCode.cpp — process_layer()</span>
+    <ul>
+      <li>若为 PERIMETERS 且内外壁耗材不同且 can_sort()：erExternalPerimeter → 外墙挤出机；erPerimeter → 内壁挤出机</li>
+      <li>直接推入 reg.perimeters — 避免拥有临时集合（堆损坏修复）</li>
+    </ul>
+    <ul>
+      <li>外墙白色（挤出机 1），内壁黄色（挤出机 2） · 无崩溃</li>
+    </ul>
+    <div class="tl-milestone">里程碑</div>
+  </div>
+</div>
+</div>
+
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#888780"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-gray">Setup</span><div><div class="tl-title">OW>1、逐挤出口线宽、UI 润色</div><div class="tl-sub">outer_wall_loops 驱动循环标记 · 线宽按挤出机出口直径重新缩放</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-detail">
+    <ul>
+      <li>classic 路径：is_external = loop.depth < std::max(1, outer_wall_loops)</li>
+      <li>Arachne 路径：is_external = (int)extrusion->inset_idx < std::max(1, outer_wall_loops)</li>
+      <li>PrintRegion.cpp flow()：比例 = config_width / nozzle[0]；重新缩放 = 比例 × actual_nozzle_diameter</li>
+      <li>fdm_process_U1.json：所有线宽转换为百分比格式</li>
+      <li>当 outer_wall_loops 标签值 > wall_loops 时变红（与橙色"已修改"状态有区别）</li>
+      <li>U1 挤出机出口直径：同步对话框已移除；每个挤出口独立写入 nozzle_diameter[i]</li>
+    </ul>
+    <ul>
+      <li>颜色色块与侧边栏匹配 · 每个挤出口可独立设置 · outer_wall_loops 标签验证正常</li>
+    </ul>
   </div>
 </div>
 </div>
 
 <div class="tl-date">第五阶段 — 着色区域流水线 — 5月18–19日 🔄 进行中</div>
 <div class="tl-row">
-<div class="tl-spine"><div class="tl-dot" style="background:#0B3D91"></div><div class="tl-line"></div></div>
+<div class="tl-spine"><div class="tl-dot" style="background:#888780"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-blue">第5a阶段</span><div><div class="tl-title">凸面与凹面均已正确工作 ✅</div><div class="tl-sub">已提交 ba3d32bc68 — 涂色面单条红线，内核正确</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-gray">Setup</span><div><div class="tl-title">着色区域 — 凸面与凹面均已正确工作 ✅</div><div class="tl-sub">已提交 ba3d32bc68 — 涂色面单条红线，内核正确</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <span class="tl-section-label">提交 ba3d32bc68 时的工作状态</span>
     <ul>
@@ -541,37 +603,54 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <li>MMU 工具面板中的 CL 滑块 UI ✅</li>
       <li>GCode 已验证：T3 每层打印正确循环数 ✅</li>
     </ul>
+    <span class="tl-section-label">提交时的架构</span>
+    <ul>
+      <li>Layer.hpp：color_patch_regions（vector<ExPolygons>）— 每挤出口每层的壳带</li>
+      <li>PrintObjectSlice.cpp apply_mm_segmentation()：shell_strip = intersection(full_model_boundary_strip, stolen_expanded)；内部部分归还給主体区域</li>
+      <li>PerimeterGenerator：loop_number 覆盖为 patch_loops-1；is_color_patch 抑制填充</li>
+      <li>color_patch_loops 默认值：{1,1,1,1}（适配 U1 四工作头）</li>
+    </ul>
   </div>
 </div>
 </div>
 
 <div class="tl-row">
-<div class="tl-spine"><div class="tl-dot" style="background:#0B3D91"></div><div class="tl-line"></div></div>
+<div class="tl-spine"><div class="tl-dot" style="background:#888780"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-red">第5b阶段</span><div><div class="tl-title">全包裹圆柱 — 根本原因已定位，转向新架构</div><div class="tl-sub">stolen 流水线对全包裹场景根本错误 — 新的 color_patch_strip 方案待实现</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-gray">Setup</span><div><div class="tl-title">全包裹圆柱 — 根本原因已定位，转向新架构</div><div class="tl-sub">stolen 流水线对全包裹场景根本错误 — 新的 color_patch_strip 方案待实现</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <span class="tl-section-label">发现的问题</span>
     <ul>
       <li>整个圆柱侧面涂红（CL=4，AW=2）：期望 4 条红色循环 + 2 条白色循环 + 白色填充</li>
       <li>实际结果：1 条红色 + 3 条白色，无填充 — 所有尝试方案均失败</li>
-      <li>根本原因：原始 stolen 流水线将涂色体积一直延伸到模型中心，stolen = 全截面（而非仅外层 CL 圈）</li>
-      <li>mine = diff(layer_slice, segmented.expolygons) 从白色中减去完整涂色深度 — 当涂色体积 &gt; 壁厚时，白色的 AW 循环也被一并删除</li>
+      <li>根本原因：原始 stolen 流水线将涂色体积一直延伸到模型中心 — stolen = 全截面（而非仅外层 CL 圈）</li>
+      <li>mine = diff(layer_slice, segmented.expolygons) 从白色中减去完整涂色深度 — 当涂色体积 > 壁厚时，白色的 AW 循环也被一并删除</li>
     </ul>
     <span class="tl-section-label">调查中的关键发现</span>
     <ul>
-      <li>确认：CL=4 时 stolen 深度为 1.6mm（4×0.4mm）——涂色系统确实精确窃取 CL 圈深度 ✅</li>
+      <li>确认：CL=4 时 stolen 深度为 1.6mm（4×0.4mm）— 涂色系统确实精确窃取 CL 圈深度 ✅</li>
       <li>但 mine 减去的是完整 segmented.expolygons（全涂色体积），而非仅 CL 圈带 — 这是 bug 所在</li>
-      <li>PerimeterGenerator 中的 loop_number 覆盖让红色尝试打印 CL 圈，但白色几何仍与这些位置重叠（mine 计算错误所致）</li>
+      <li>PerimeterGenerator 中的 loop_number 覆盖让红色尝试打印 CL 圈，但白色实体仍与这些位置重叠（mine 计算错误所致）</li>
+      <li>color_patch_regions 存储 shell_strip = 完整 stolen：inner_core = diff(stolen, stolen) = 空 — 白色无实体可归还</li>
       <li>"stolen" 改名为 "painted" 已记录为未来清理项（上游变量，暂不重命名）</li>
+    </ul>
+    <span class="tl-section-label">第5b阶段失败方案 — 勿重试</span>
+    <ul>
+      <li>❌ 将 full_model 内缩 CL×loop_width 以获取边界带 — 壁薄时坍塌（AW=2 壁厚=0.8mm，CL×0.4mm=1.6mm > 壁厚）</li>
+      <li>❌ 直接内缩 stolen — 产生空洞环形，红色仅打印内外边界</li>
+      <li>❌ 面积阈值（stolen_area ≥ 85% full_area）检测全包裹 — 阈值不稳定</li>
+      <li>❌ 在还原块中从 base_dst 减去 color_patch_regions — shell_strip=完整壁时过度减除</li>
+      <li>❌ PerimeterGenerator 中基于 wall_loops 的封顶 — 错误，CL 与 AW 相互独立</li>
+      <li>❌ 多次回退与重建 — 代码状态不一致，多次需要 git checkout ba3d32bc68</li>
     </ul>
     <span class="tl-section-label">架构决策 — 新的 color_patch_strip 流水线</span>
     <ul>
-      <li>completely 保留 stolen/mine 流水线不变 — 所有非着色区域场景均正确</li>
-      <li>新增 color_patch_mode 布尔字段至 PrintObjectConfig（每对象设置，默认 false）</li>
-      <li>color_patch_loops 保留在 PrintConfig（每耗材设置）</li>
+      <li>保留完整的 stolen/mine 流水线不变 — 非着色区域模式的分色场景仍依赖此流程</li>
+      <li>新增 color_patch_mode 布尔字段至 PrintObjectConfig（每实体设置，默认 false）</li>
+      <li>color_patch_loops 保留在 PrintConfig（每挤出口生效）</li>
       <li>UI：MMU 工具面板顶部新增"原始 / 着色区域"切换；CL 滑块仅在着色区域模式下显示</li>
-      <li>color_patch_mode=true 时：计算 color_patch_strip = intersection(模型CL边界带, 涂色面)；替换 stolen 在 by_region 中的内容；mine 减去 color_patch_strip（而非完整 segmented.expolygons），白色保留其 AW 循环</li>
-      <li>优先级规则：CL &gt; OW &gt; IW — 着色区域循环始终位于最外层，与 AW 设置无关</li>
+      <li>color_patch_mode=true 时：计算 color_patch_strip = intersection(full_model CL 边界带, 涂色面)；替换 stolen 在 by_region 中的内容；mine 减去 color_patch_strip（而非完整 segmented.expolygons），白色保留其 AW 循环</li>
+      <li>优先级规则：CL > OW > IW — 着色区域循环始终位于最外层，与 AW 设置无关</li>
     </ul>
     <span class="tl-section-label">当前状态（5月19日）</span>
     <ul>
@@ -579,13 +658,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <li>PrintConfig.cpp：color_patch_mode 已在 PrintObjectConfig 段注册 ✅</li>
       <li>GLGizmoMmuSegmentation：原始/着色区域切换按钮已添加，CL 滑块按模式显隐 ✅</li>
       <li>PrintObjectSlice.cpp：color_patch_mode 门控已添加（mode=false 时 patch_loops=0，走原始流程）✅</li>
-      <li>应用完整重建后正常启动 ⏳ — 测试中</li>
+      <li>完整重建后应用正常启动 ⏳ — 测试中</li>
       <li>color_patch_strip 流水线逻辑：尚未实现 — UI 确认可用后的下一步</li>
     </ul>
     <span class="tl-section-label">下一步</span>
     <ul>
       <li>确认切换 UI 在应用中正常工作</li>
-      <li>实现 color_patch_strip：从 full_model 计算 CL 圈边界带，与涂色区域取交集，作为红色几何</li>
+      <li>实现 color_patch_strip：从 full_model 计算 CL 圈边界带，与涂色区域取交集，作为红色实体</li>
       <li>修改 mine 减法：color_patch_mode=true 时减去 color_patch_strip（而非 segmented.expolygons）</li>
       <li>测试：全包裹圆柱 AW=2 CL=4 → 4 条红色 + 2 条白色 + 白色填充</li>
       <li>测试：局部涂色（立方体单面）在着色区域模式下仍正确</li>
@@ -598,12 +677,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 <div class="tl-date">待完成 / TODO</div>
 <div class="tl-row">
-<div class="tl-spine"><div class="tl-dot" style="background:#B4B2A9"></div></div>
+<div class="tl-spine"><div class="tl-dot" style="background:#888780"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-gray">TODO</span><div><div class="tl-title">剩余事项</div><div class="tl-sub">Wiki、重命名、已知问题、第五阶段剩余</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-gray">Setup</span><div><div class="tl-title">剩余事项</div><div class="tl-sub">Wiki、重命名、已知问题、第五阶段剩余</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <ul>
-      <li>GitHub Wiki：解释混合挤出口外墙/内壁行为与原版 OrcaSlicer 的区别</li>
+      <li>GitHub Wiki：说明混合挤出口外墙/内壁行为与原版 OrcaSlicer 的区别</li>
       <li>项目重命名为 FOrcaSlicer — 代码库重命名 + 品牌更新</li>
       <li>outer_wall_loops：UI 无硬性上限（标签变红作为警告 — 已接受）</li>
       <li>NozzleVerifyDialog 颜色：耗材更改后需重新切片才更新</li>
@@ -616,7 +695,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 </div>
 
-</div><!-- end ZH -->
+</div><!-- end ZH --><!-- end ZH -->
 
 </div>
 <script>
