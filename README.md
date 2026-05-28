@@ -1,12 +1,12 @@
-# FOrcaSlicer — Flexible OrcaSlicer
-A fork of [Snapmaker OrcaSlicer](https://github.com/SoftFever/OrcaSlicer) adding mixed nozzle size printing support for the Snapmaker U1 4-head printer.
+# FOrcaSlicer — Flexible OrcaSlicer — Dev Roadmap
+This repo hosts the interactive development roadmap for [FOrcaSlicer](https://github.com/jiyang1018/FOrcaSlicer). The project source code lives there.
 
 ## Development Roadmap
 Track progress, design decisions, and implementation details:
 👉 **[View the interactive roadmap](https://jiyang1018.github.io/FOrcaSlicer-roadmap/)**
 
 ## About
-The Snapmaker U1 supports 4 independent print heads with different nozzle diameters (e.g. 0.2mm, 0.4mm, 0.6mm, 0.8mm). Stock Snapmaker OrcaSlicer syncs all nozzles to the same size. FOrcaSlicer extends the slicer to:
+[FOrcaSlicer](https://github.com/jiyang1018/FOrcaSlicer) is a fork of [Snapmaker OrcaSlicer](https://github.com/SoftFever/OrcaSlicer) adding mixed nozzle size printing support for the Snapmaker U1 4-head printer. The Snapmaker U1 supports 4 independent print heads with different nozzle diameters (e.g. 0.2mm, 0.4mm, 0.6mm, 0.8mm). Stock Snapmaker OrcaSlicer syncs all nozzles to the same size. FOrcaSlicer extends the slicer to:
 - Allow independent nozzle diameter configuration per head
 - Under Multimaterial tab, separate "Outer wall (OW)" and "Inner wall (IW)" from "Walls"
 - Allow OW, IW, infill, solid infill, and prime tower to use different nozzle sizes independently
@@ -19,15 +19,15 @@ The Snapmaker U1 supports 4 independent print heads with different nozzle diamet
 
 ---
 
-# FOrcaSlicer — 灵活版 OrcaSlicer
-[Snapmaker OrcaSlicer](https://github.com/SoftFever/OrcaSlicer) 的分支版本，为 Snapmaker U1 四头打印机添加混合挤出口尺寸打印支持。
+# FOrcaSlicer — 灵活版 OrcaSlicer — 开发路线图
+本仓库托管 [FOrcaSlicer](https://github.com/jiyang1018/FOrcaSlicer) 的交互式开发路线图，项目源代码位于该仓库。
 
 ## 开发路线图
 查看进度、设计决策和实现细节：
 👉 **[查看交互式路线图](https://jiyang1018.github.io/FOrcaSlicer-roadmap/)**
 
 ## 关于本项目
-Snapmaker U1 支持 4 个独立工作头，每个挤出口直径不同（如 0.2mm、0.4mm、0.6mm、0.8mm）。原版 Snapmaker OrcaSlicer 同步所有挤出口为相同尺寸。FOrcaSlicer 对切片引擎进行了以下扩展：
+[FOrcaSlicer](https://github.com/jiyang1018/FOrcaSlicer) 是 [Snapmaker OrcaSlicer](https://github.com/SoftFever/OrcaSlicer) 的分支版本，为 Snapmaker U1 四头打印机添加混合挤出口尺寸打印支持。Snapmaker U1 支持 4 个独立工作头，每个挤出口直径不同（如 0.2mm、0.4mm、0.6mm、0.8mm）。原版 Snapmaker OrcaSlicer 同步所有挤出口为相同尺寸。FOrcaSlicer 对切片引擎进行了以下扩展：
 - 支持每个工作头独立配置挤出口直径
 - 在多材料标签页中，将"外墙（OW）"和"内壁（IW）"从"总墙壁"中独立拆分
 - 外墙、内壁、填充、实心填充及换料塔可分别指定不同尺寸挤出口
