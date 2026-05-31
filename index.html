@@ -291,7 +291,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </ul>
     <span class="tl-section-label">Architecture at committed state</span>
     <ul>
-      <li>Layer.hpp: color_patch_regions (vector<ExPolygons>) — shell strip per extruder per layer</li>
+      <li>Layer.hpp: color_patch_regions (vector<expolygons>) — shell strip per extruder per layer</expolygons></li>
       <li>PrintObjectSlice.cpp apply_mm_segmentation(): shell_strip = intersection(full_model_boundary_strip, stolen_expanded); inner core returned to base region</li>
       <li>PerimeterGenerator: loop_number overridden to patch_loops-1; is_color_patch suppresses infill</li>
       <li>color_patch_loops default: {1,1,1,1} for 4-head U1</li>
@@ -322,12 +322,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <li>T1 (black) = base material, wall_filament of model region</li>
       <li>T2/T3/T4 = painted colors — users paint onto T1 body</li>
       <li>color_patch_enabled[ext_idx]=false → Original mode (pass-through to stock pipeline)</li>
-      <li>color_patch_enabled[ext_idx]=true + color_patch_loops[ext_idx] > 0 → Color Patch mode</li>
+      <li>color_patch_enabled[ext_idx]=true + color_patch_loops[ext_idx] &gt; 0 → Color Patch mode</li>
       <li>color_patch_loops default changed to {0,0,0,0} — Original mode is now the default</li>
     </ul>
     <div class="tl-milestone">Milestone</div>
-    <ul>
-    </ul>
   </div>
 </div>
 </div>
@@ -345,17 +343,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </ul>
     <span class="tl-section-label">PrintObjectSlice.cpp</span>
     <ul>
-      <li>Gate: if (cp_enabled && patch_loops > 0) — FOS pipeline only when both true</li>
-      <li>Per-object read: reads from model_object->config first, falls back to global print()->config()</li>
-      <li>loop_width = ext_width/2 + (CL>1 ? ext_sp2 : 0) + (CL>2 ? (CL-2)×perim_sp : 0) + perim_width/2</li>
+      <li>Gate: if (cp_enabled &amp;&amp; patch_loops &gt; 0) — FOS pipeline only when both true</li>
+      <li>Per-object read: reads from model_object-&gt;config first, falls back to global print()-&gt;config()</li>
+      <li>loop_width = ext_width/2 + (CL&gt;1 ? ext_sp2 : 0) + (CL&gt;2 ? (CL-2)×perim_sp : 0) + perim_width/2</li>
       <li>Uses target_lr (painted extruder's region) for flow values — supports mixed nozzle sizes</li>
       <li>shell_strip stored in color_patch_regions[ext_idx] and color_patch_loops_effective[ext_idx]</li>
       <li>mine subtraction: removes only shell_strip (not full stolen) — T1 keeps inner area</li>
     </ul>
     <span class="tl-section-label">Layer.hpp</span>
     <ul>
-      <li>color_patch_regions: vector<ExPolygons> — shell strips per extruder</li>
-      <li>color_patch_loops_effective: vector<int> — resolved per-object CL values per extruder</li>
+      <li>color_patch_regions: vector<expolygons> — shell strips per extruder</expolygons></li>
+      <li>color_patch_loops_effective: vector<int> — resolved per-object CL values per extruder</int></li>
     </ul>
     <span class="tl-section-label">PerimeterGenerator.cpp — process_classic()</span>
     <ul>
@@ -374,11 +372,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </ul>
     <span class="tl-section-label">GLGizmoMmuSegmentation</span>
     <ul>
-      <li>Original button (left): sets color_patch_enabled[ext_idx]=false in model_object->config</li>
-      <li>Color Patch button (right): sets color_patch_enabled[ext_idx]=true, ensures color_patch_loops > 0</li>
-      <li>CL slider reads/writes color_patch_loops[ext_idx] in model_object->config</li>
+      <li>Original button (left): sets color_patch_enabled[ext_idx]=false in model_object-&gt;config</li>
+      <li>Color Patch button (right): sets color_patch_enabled[ext_idx]=true, ensures color_patch_loops &gt; 0</li>
+      <li>CL slider reads/writes color_patch_loops[ext_idx] in model_object-&gt;config</li>
       <li>on_config_change must pass full preset config — partial config does NOT propagate correctly</li>
-      <li>Re-slice triggered via wxGetApp().plater()->update()</li>
+      <li>Re-slice triggered via wxGetApp().plater()-&gt;update()</li>
     </ul>
   </div>
 </div>
@@ -441,7 +439,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <li>discover_vertical_shells staircasing: if painted extruder dst uses full stolen for top/bottom, discover_vertical_shells propagates larger area downward into wall layers → staircase artifact. Fix: painted extruder dst always uses shell_strip; solid infill comes from fill_expolygons being set to full exposed area</li>
       <li>fill_expolygons clipping: fill_surfaces are clipped by fill_expolygons in Layer.cpp multi-region path. If fill_expolygons is only shell_strip, solid infill gets clipped away. Fix: for top/bottom CP layers, dst gets exposed top/bottom portion of stolen so fill_expolygons covers full top face</li>
       <li>Exposed area split: for layers where painted region spans top face AND side face (crossing an edge), stolen is split — exposed portion gets full dst; side portion gets shell_strip only</li>
-      <li>CL slider re-slice fix: wxGetApp().plater()->update() alone doesn't mark object dirty. Fix: also call notify_instance_update(obj_idx, 0) + post_event(EVT_GLCANVAS_SCHEDULE_BACKGROUND_PROCESS)</li>
+      <li>CL slider re-slice fix: wxGetApp().plater()-&gt;update() alone doesn't mark object dirty. Fix: also call notify_instance_update(obj_idx, 0) + post_event(EVT_GLCANVAS_SCHEDULE_BACKGROUND_PROCESS)</li>
     </ul>
     <span class="tl-section-label">Failed approaches — do not retry</span>
     <ul>
@@ -451,8 +449,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </ul>
     <span class="tl-section-label">Detection logic (PrintObjectSlice.cpp)</span>
     <ul>
-      <li>fos_near_obj_top = (layer_id >= total_layers - top_shells)</li>
-      <li>fos_near_obj_bottom = (layer_id < bot_shells)</li>
+      <li>fos_near_obj_top = (layer_id &gt;= total_layers - top_shells)</li>
+      <li>fos_near_obj_bottom = (layer_id &lt; bot_shells)</li>
       <li>If near boundary: check if stolen intersects object boundary at that boundary layer</li>
       <li>Split stolen into exposed vs side portions using segmentation data of layer above/below</li>
     </ul>
@@ -510,7 +508,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </ul>
     <span class="tl-section-label">Fix</span>
     <ul>
-      <li>GLGizmoMmuSegmentation.cpp: call mo->config.touch() after every set_key_value for color_patch keys — 5 locations: Original button, Color Patch button ×2, CL slider, drag input</li>
+      <li>GLGizmoMmuSegmentation.cpp: call mo-&gt;config.touch() after every set_key_value for color_patch keys — 5 locations: Original button, Color Patch button ×2, CL slider, drag input</li>
       <li>PrintApply.cpp: when object_config_changed is true, manually check if color_patch_loops or color_patch_enabled changed in per-object DynamicConfig and append them to the diff before calling invalidate_state_by_config_options</li>
       <li>PrintObject.cpp: changed color_patch keys invalidation from posPerimeters to posSlice — perimeters-only invalidation was returning false when already invalidated, preventing re-slice</li>
     </ul>
@@ -521,6 +519,41 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div class="tl-milestone">Milestone</div>
     <ul>
       <li>CL slider and mode button changes now reliably trigger re-slice</li>
+    </ul>
+  </div>
+</div>
+</div>
+
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#0B3D91"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-blue">Phase 7d</span><div><div class="tl-title">Mixed nozzle + color patch hotfix — May 30 ✅</div><div class="tl-sub">Three fixes shipped in v2.3.2-fos.1</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-detail">
+    <span class="tl-section-label">Fix 1 — Mixed nozzle gap fix (PrintConfig.cpp)</span>
+    <ul>
+      <li>has_mixed_nozzle_sizes flag was defined but never computed — always false</li>
+      <li>Added computation in normalize_fdm_1(): iterates nozzle_diameter values, sets flag true if any differ from the first</li>
+      <li>This activates the Phase 2 code path in PerimeterGenerator that reads outer_wall_loops for mixed nozzle geometry</li>
+    </ul>
+    <span class="tl-section-label">Fix 2 — CL=1 large nozzle fix (PerimeterGenerator.cpp)</span>
+    <ul>
+      <li>For color patch regions with CL=1 (loop_number=0), i0_half_width was using perimeter_spacing/2 — for large nozzles (0.6/0.8mm) this was too large, inset exceeded shell_strip width → empty offsets → missing color patch</li>
+      <li>Fix: use ext_perimeter_width/2 for CL=1, perimeter_spacing/2 for CL≥2. Condition: (is_cp_region && loop_number > 0)</li>
+    </ul>
+    <span class="tl-section-label">Fix 3 — OW extruder color patch guard (GLGizmoMmuSegmentation.cpp)</span>
+    <ul>
+      <li>Color Patch mode is meaningless when selected painting extruder is the OW extruder — would just replicate OW behavior</li>
+      <li>Guard: compares m_selected_extruder_idx against wall_filament-1 from print config. If match: auto-switches to Original mode, Color Patch button visually disabled, tooltip explains why</li>
+      <li>Note: ImGui::BeginDisabled not available in this ImGui version — used style color override + && !is_ow_extruder condition instead</li>
+    </ul>
+    <span class="tl-section-label">Known remaining issues</span>
+    <ul>
+      <li>Occasional color patch sync issue on fresh objects (pre-existing) — toggle Original → Color Patch to fix</li>
+      <li>Mixed nozzle + color patch with multiple feature extruders (OW/IW/infill all different) not yet fully validated — treat as separate workflows for now</li>
+    </ul>
+    <div class="tl-milestone">Milestone</div>
+    <ul>
+      <li>All three fixes shipped in v2.3.2-fos.1</li>
     </ul>
   </div>
 </div>
@@ -778,7 +811,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </ul>
     <span class="tl-section-label">提交时的架构</span>
     <ul>
-      <li>Layer.hpp：color_patch_regions（vector<ExPolygons>）— 每挤出口每层的壳带</li>
+      <li>Layer.hpp：color_patch_regions（vector<expolygons>）— 每挤出口每层的壳带</expolygons></li>
       <li>PrintObjectSlice.cpp apply_mm_segmentation()：shell_strip = intersection(full_model 边界带, stolen_expanded)；内核归还至基础区域</li>
       <li>PerimeterGenerator：loop_number 覆盖为 patch_loops-1；is_color_patch 抑制填充</li>
       <li>color_patch_loops 默认值：{1,1,1,1}（适配 U1 四工作头）</li>
@@ -809,12 +842,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <li>T1（黑色）= 基础耗材，即模型区域的 wall_filament</li>
       <li>T2/T3/T4 = 涂色耗材 — 用户在 T1 实体上涂色</li>
       <li>color_patch_enabled[ext_idx]=false → 原始模式（直通原版流水线）</li>
-      <li>color_patch_enabled[ext_idx]=true 且 color_patch_loops[ext_idx]>0 → 着色区域模式</li>
+      <li>color_patch_enabled[ext_idx]=true 且 color_patch_loops[ext_idx]&gt;0 → 着色区域模式</li>
       <li>color_patch_loops 默认值已改为 {0,0,0,0} — 原始模式为默认行为</li>
     </ul>
     <div class="tl-milestone">里程碑</div>
-    <ul>
-    </ul>
   </div>
 </div>
 </div>
@@ -832,17 +863,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </ul>
     <span class="tl-section-label">PrintObjectSlice.cpp</span>
     <ul>
-      <li>门控：if (cp_enabled && patch_loops > 0) — 两者均为真时才走 FOS 流水线</li>
-      <li>逐对象读取：优先读取 model_object->config，否则回退至全局 print()->config()</li>
-      <li>循环宽度 = ext_width/2 + (CL>1 ? ext_sp2 : 0) + (CL>2 ? (CL-2)×perim_sp : 0) + perim_width/2</li>
+      <li>门控：if (cp_enabled &amp;&amp; patch_loops &gt; 0) — 两者均为真时才走 FOS 流水线</li>
+      <li>逐对象读取：优先读取 model_object-&gt;config，否则回退至全局 print()-&gt;config()</li>
+      <li>循环宽度 = ext_width/2 + (CL&gt;1 ? ext_sp2 : 0) + (CL&gt;2 ? (CL-2)×perim_sp : 0) + perim_width/2</li>
       <li>使用 target_lr（涂色挤出口的区域）获取流量参数 — 支持混合挤出口尺寸</li>
       <li>shell_strip 分别存入 color_patch_regions[ext_idx] 和 color_patch_loops_effective[ext_idx]</li>
       <li>mine 减法：仅减去 shell_strip（非完整 stolen）— T1 保留内部区域</li>
     </ul>
     <span class="tl-section-label">Layer.hpp</span>
     <ul>
-      <li>color_patch_regions：vector<ExPolygons> — 每挤出口的壳带</li>
-      <li>color_patch_loops_effective：vector<int> — 每挤出口经逐对象解析后的 CL 值</li>
+      <li>color_patch_regions：vector<expolygons> — 每挤出口的壳带</expolygons></li>
+      <li>color_patch_loops_effective：vector<int> — 每挤出口经逐对象解析后的 CL 值</int></li>
     </ul>
     <span class="tl-section-label">PerimeterGenerator.cpp — process_classic()</span>
     <ul>
@@ -861,11 +892,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </ul>
     <span class="tl-section-label">GLGizmoMmuSegmentation</span>
     <ul>
-      <li>原始按钮（左）：将 color_patch_enabled[ext_idx]=false 写入 model_object->config</li>
-      <li>着色区域按钮（右）：将 color_patch_enabled[ext_idx]=true 写入，并确保 color_patch_loops > 0</li>
-      <li>CL 滑块读写 model_object->config 中的 color_patch_loops[ext_idx]</li>
+      <li>原始按钮（左）：将 color_patch_enabled[ext_idx]=false 写入 model_object-&gt;config</li>
+      <li>着色区域按钮（右）：将 color_patch_enabled[ext_idx]=true 写入，并确保 color_patch_loops &gt; 0</li>
+      <li>CL 滑块读写 model_object-&gt;config 中的 color_patch_loops[ext_idx]</li>
       <li>on_config_change 必须传入完整预设配置 — 传局部配置无法正确传递</li>
-      <li>重新切片通过 wxGetApp().plater()->update() 触发</li>
+      <li>重新切片通过 wxGetApp().plater()-&gt;update() 触发</li>
     </ul>
   </div>
 </div>
@@ -928,7 +959,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <li>discover_vertical_shells 阶梯化：若涂色挤出口 dst 在顶/底层使用完整 stolen，discover_vertical_shells 会将较大区域向下传播至壁层，产生阶梯伪影。修复：涂色挤出口 dst 始终使用 shell_strip；实心填充来自 fill_expolygons 覆盖完整暴露区域</li>
       <li>fill_expolygons 裁剪：Layer.cpp 多区域路径中 fill_surfaces 被 fill_expolygons 裁剪。若 fill_expolygons 仅为 shell_strip，实心填充面会被裁掉。修复：顶/底 CP 层的 dst 包含 stolen 的暴露顶/底部分，使 fill_expolygons 覆盖完整顶面</li>
       <li>暴露区域分割：涂色区域同时跨越顶面和侧面（穿越边缘）的层，stolen 被分割 — 暴露部分获得完整 dst；侧面部分仅获得 shell_strip</li>
-      <li>CL 滑块触发重新切片修复：wxGetApp().plater()->update() 单独调用不会标记实体为脏数据。修复：同时调用 notify_instance_update(obj_idx, 0) + post_event(EVT_GLCANVAS_SCHEDULE_BACKGROUND_PROCESS)</li>
+      <li>CL 滑块触发重新切片修复：wxGetApp().plater()-&gt;update() 单独调用不会标记实体为脏数据。修复：同时调用 notify_instance_update(obj_idx, 0) + post_event(EVT_GLCANVAS_SCHEDULE_BACKGROUND_PROCESS)</li>
     </ul>
     <span class="tl-section-label">失败方案 — 勿重试</span>
     <ul>
@@ -938,8 +969,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </ul>
     <span class="tl-section-label">检测逻辑（PrintObjectSlice.cpp）</span>
     <ul>
-      <li>fos_near_obj_top = (layer_id >= total_layers - top_shells)</li>
-      <li>fos_near_obj_bottom = (layer_id < bot_shells)</li>
+      <li>fos_near_obj_top = (layer_id &gt;= total_layers - top_shells)</li>
+      <li>fos_near_obj_bottom = (layer_id &lt; bot_shells)</li>
       <li>若接近边界：检查该边界层的 stolen 是否与实体边界相交</li>
       <li>利用上/下层的分割数据将 stolen 拆分为暴露部分与侧面部分</li>
     </ul>
@@ -997,7 +1028,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </ul>
     <span class="tl-section-label">修复方案</span>
     <ul>
-      <li>GLGizmoMmuSegmentation.cpp：在每次对 color_patch 键调用 set_key_value 后调用 mo->config.touch() — 共 5 处：原始按钮、着色区域按钮 ×2、CL 滑块、拖拽输入</li>
+      <li>GLGizmoMmuSegmentation.cpp：在每次对 color_patch 键调用 set_key_value 后调用 mo-&gt;config.touch() — 共 5 处：原始按钮、着色区域按钮 ×2、CL 滑块、拖拽输入</li>
       <li>PrintApply.cpp：当 object_config_changed 为真时，手动检查逐对象 DynamicConfig 中 color_patch_loops 或 color_patch_enabled 是否发生变化，并在调用 invalidate_state_by_config_options 前将其追加至差异集</li>
       <li>PrintObject.cpp：将 color_patch 键的失效步骤从 posPerimeters 改为 posSlice — 仅周界失效在已失效时返回 false，阻止了重新切片的触发</li>
     </ul>
@@ -1008,6 +1039,41 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div class="tl-milestone">里程碑</div>
     <ul>
       <li>CL 滑块与模式按钮的更改现可可靠地触发重新切片</li>
+    </ul>
+  </div>
+</div>
+</div>
+
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#0B3D91"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-blue">第7d阶段</span><div><div class="tl-title">混合挤出口 + 仅外壳着色热修复 — 5月30日 ✅</div><div class="tl-sub">三项修复随 v2.3.2-fos.1 发布</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-detail">
+    <span class="tl-section-label">修复 1 — 混合挤出口间隙修复（PrintConfig.cpp）</span>
+    <ul>
+      <li>has_mixed_nozzle_sizes 标志已定义但从未计算 — 始终为 false</li>
+      <li>在 normalize_fdm_1() 中新增计算：遍历 nozzle_diameter 值，若任意值与第一个不同则将标志设为 true</li>
+      <li>此修复激活了 PerimeterGenerator 中第二阶段的代码路径，使其读取混合挤出口几何结构的 outer_wall_loops</li>
+    </ul>
+    <span class="tl-section-label">修复 2 — CL=1 大挤出口修复（PerimeterGenerator.cpp）</span>
+    <ul>
+      <li>着色区域 CL=1（loop_number=0）时，i0_half_width 使用 perimeter_spacing/2 — 对大挤出口（0.6/0.8mm）而言偏移量过大，内缩超出 shell_strip 宽度 → 偏移结果为空 → 着色区域缺失</li>
+      <li>修复：CL=1 时使用 ext_perimeter_width/2，CL≥2 时使用 perimeter_spacing/2。条件：(is_cp_region && loop_number > 0)</li>
+    </ul>
+    <span class="tl-section-label">修复 3 — 外墙挤出口仅外壳着色防护（GLGizmoMmuSegmentation.cpp）</span>
+    <ul>
+      <li>当所选涂色挤出口为外墙挤出口时，仅外壳着色模式无意义 — 仅会复制外墙行为</li>
+      <li>防护：将 m_selected_extruder_idx 与打印配置中的 wall_filament-1 比对。若匹配：自动切换至原始模式，仅外壳着色按钮视觉禁用，提示说明原因</li>
+      <li>注意：此 ImGui 版本不支持 ImGui::BeginDisabled — 改用样式颜色覆盖 + && !is_ow_extruder 条件实现</li>
+    </ul>
+    <span class="tl-section-label">已知遗留问题</span>
+    <ul>
+      <li>新建实体上偶发的仅外壳着色配置同步问题（预先存在）— 切换"原始 → 仅外壳着色"可解决</li>
+      <li>混合挤出口 + 仅外壳着色在多功能挤出口（OW/IW/填充各不同）场景下尚未完整验证 — 当前建议作为独立工作流处理</li>
+    </ul>
+    <div class="tl-milestone">里程碑</div>
+    <ul>
+      <li>三项修复均随 v2.3.2-fos.1 发布</li>
     </ul>
   </div>
 </div>
