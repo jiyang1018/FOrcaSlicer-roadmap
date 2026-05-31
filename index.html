@@ -80,7 +80,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <li>Color-to-nozzle priority: color match → smallest nozzle = outer → extruder 0 fallback</li>
       <li>Color depth: min = nozzle diameter; thin section = bleed-through or 50/50 split</li>
       <li>Per-patch nozzle override: global=YES follows mixed logic; global=NO single nozzle owns patch</li>
-      <li>Priority hierarchy locked: CL (color patch loops) > OW (outer wall) > IW (inner wall)</li>
+      <li>Priority hierarchy locked: CL (color patch loops) &gt; OW (outer wall) &gt; IW (inner wall)</li>
     </ul>
     <ul>
       <li>Started on OrcaSlicer-FullSpectrum fork, later pivoted to Snapmaker Orca due to cleaner Filament for Features UI</li>
@@ -114,7 +114,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <ul>
       <li>apply_depth(): per-layer ClipperUtils offset — built but not yet correctly wired (see Phase 5)</li>
       <li>detect_thin_sections(): stubbed · ThinSectionBehavior: BleedThrough | Split50_50</li>
-      <li>inward_offset(): uses scaled<float>() for correct Clipper unit conversion</li>
+      <li>inward_offset(): uses scaled<float>() for correct Clipper unit conversion</float></li>
     </ul>
     <span class="tl-section-label">NozzleVerifyDialog.hpp/.cpp</span>
     <ul>
@@ -291,7 +291,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </ul>
     <span class="tl-section-label">Architecture at committed state</span>
     <ul>
-      <li>Layer.hpp: color_patch_regions (vector&lt;ExPolygons&gt;) — shell strip per extruder per layer</li>
+      <li>Layer.hpp: color_patch_regions (vector<ExPolygons>) — shell strip per extruder per layer</li>
       <li>PrintObjectSlice.cpp apply_mm_segmentation(): shell_strip = intersection(full_model_boundary_strip, stolen_expanded); inner core returned to base region</li>
       <li>PerimeterGenerator: loop_number overridden to patch_loops-1; is_color_patch suppresses infill</li>
       <li>color_patch_loops default: {1,1,1,1} for 4-head U1</li>
@@ -326,6 +326,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <li>color_patch_loops default changed to {0,0,0,0} — Original mode is now the default</li>
     </ul>
     <div class="tl-milestone">Milestone</div>
+    <ul>
+    </ul>
   </div>
 </div>
 </div>
@@ -343,17 +345,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </ul>
     <span class="tl-section-label">PrintObjectSlice.cpp</span>
     <ul>
-      <li>Gate: if (cp_enabled &amp;&amp; patch_loops &gt; 0) — FOS pipeline only when both true</li>
-      <li>Per-object read: reads from model_object-&gt;config first, falls back to global print()-&gt;config()</li>
-      <li>loop_width = ext_width/2 + (CL&gt;1 ? ext_sp2 : 0) + (CL&gt;2 ? (CL-2)×perim_sp : 0) + perim_width/2</li>
+      <li>Gate: if (cp_enabled && patch_loops > 0) — FOS pipeline only when both true</li>
+      <li>Per-object read: reads from model_object->config first, falls back to global print()->config()</li>
+      <li>loop_width = ext_width/2 + (CL>1 ? ext_sp2 : 0) + (CL>2 ? (CL-2)×perim_sp : 0) + perim_width/2</li>
       <li>Uses target_lr (painted extruder's region) for flow values — supports mixed nozzle sizes</li>
       <li>shell_strip stored in color_patch_regions[ext_idx] and color_patch_loops_effective[ext_idx]</li>
       <li>mine subtraction: removes only shell_strip (not full stolen) — T1 keeps inner area</li>
     </ul>
     <span class="tl-section-label">Layer.hpp</span>
     <ul>
-      <li>color_patch_regions: vector&lt;ExPolygons&gt; — shell strips per extruder</li>
-      <li>color_patch_loops_effective: vector&lt;int&gt; — resolved per-object CL values per extruder</li>
+      <li>color_patch_regions: vector<ExPolygons> — shell strips per extruder</li>
+      <li>color_patch_loops_effective: vector<int> — resolved per-object CL values per extruder</li>
     </ul>
     <span class="tl-section-label">PerimeterGenerator.cpp — process_classic()</span>
     <ul>
@@ -372,11 +374,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </ul>
     <span class="tl-section-label">GLGizmoMmuSegmentation</span>
     <ul>
-      <li>Original button (left): sets color_patch_enabled[ext_idx]=false in model_object-&gt;config</li>
-      <li>Color Patch button (right): sets color_patch_enabled[ext_idx]=true, ensures color_patch_loops &gt; 0</li>
-      <li>CL slider reads/writes color_patch_loops[ext_idx] in model_object-&gt;config</li>
+      <li>Original button (left): sets color_patch_enabled[ext_idx]=false in model_object->config</li>
+      <li>Color Patch button (right): sets color_patch_enabled[ext_idx]=true, ensures color_patch_loops > 0</li>
+      <li>CL slider reads/writes color_patch_loops[ext_idx] in model_object->config</li>
       <li>on_config_change must pass full preset config — partial config does NOT propagate correctly</li>
-      <li>Re-slice triggered via wxGetApp().plater()-&gt;update()</li>
+      <li>Re-slice triggered via wxGetApp().plater()->update()</li>
     </ul>
   </div>
 </div>
@@ -420,7 +422,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 </div>
 
-<div class="tl-date">Phase 7 — Color patch top/bottom surfaces — May 28–30 🔄 In progress</div>
+<div class="tl-date">Phase 7 — Color patch top/bottom surfaces — May 28–30 ✅ Complete</div>
 <div class="tl-row">
 <div class="tl-spine"><div class="tl-dot" style="background:#0B3D91"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
@@ -482,7 +484,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <li>PerimeterGenerator.cpp: infill suppression for CP regions, top/bottom solid infill, top_fills guard</li>
       <li>PerimeterGenerator.hpp + Layer.hpp: color_patch_is_top_bottom pointer/vector added</li>
       <li>LayerRegion.cpp: passes color_patch_is_top_bottom to PerimeterGenerator</li>
-      <li>GLGizmoMmuSegmentation.cpp: CL slider triggers re-slice via notify_instance_update</li>
     </ul>
     <span class="tl-section-label">Known limitations</span>
     <ul>
@@ -491,6 +492,36 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <li>Top/bottom shell staircase near boundaries: same as stock OrcaSlicer multi-material discover_vertical_shells propagation — not a regression, accepted</li>
     </ul>
     <div class="tl-milestone">Milestone</div>
+    <ul>
+    </ul>
+  </div>
+</div>
+</div>
+
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#0B3D91"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-blue">Phase 7c</span><div><div class="tl-title">CL slider / mode button re-slice fix — May 30 ✅</div><div class="tl-sub">Two root causes found and fixed — config timestamp + invalidation path</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-detail">
+    <span class="tl-section-label">Root causes</span>
+    <ul>
+      <li>ModelObject::config.set_key_value() does not bump the config timestamp → PrintApply.cpp sees no change → returns APPLY_STATUS_UNCHANGED → no re-slice triggered</li>
+      <li>color_patch_loops and color_patch_enabled are stored in ModelObject::config (per-object DynamicConfig) but are not fields of PrintObjectConfig → even when timestamp changed, object_config_from_model_object never included them in the diff passed to invalidate_state_by_config_options</li>
+    </ul>
+    <span class="tl-section-label">Fix</span>
+    <ul>
+      <li>GLGizmoMmuSegmentation.cpp: call mo->config.touch() after every set_key_value for color_patch keys — 5 locations: Original button, Color Patch button ×2, CL slider, drag input</li>
+      <li>PrintApply.cpp: when object_config_changed is true, manually check if color_patch_loops or color_patch_enabled changed in per-object DynamicConfig and append them to the diff before calling invalidate_state_by_config_options</li>
+      <li>PrintObject.cpp: changed color_patch keys invalidation from posPerimeters to posSlice — perimeters-only invalidation was returning false when already invalidated, preventing re-slice</li>
+    </ul>
+    <span class="tl-section-label">Files changed</span>
+    <ul>
+      <li>GLGizmoMmuSegmentation.cpp · PrintApply.cpp · PrintObject.cpp</li>
+    </ul>
+    <div class="tl-milestone">Milestone</div>
+    <ul>
+      <li>CL slider and mode button changes now reliably trigger re-slice</li>
+    </ul>
   </div>
 </div>
 </div>
@@ -538,7 +569,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <li>颜色到挤出口优先级：颜色匹配 → 最小挤出口=外墙 → 挤出机 0 兜底</li>
       <li>颜色深度：最小值=挤出口直径；薄截面=完全渗透或 50/50 分割</li>
       <li>每区域挤出口覆盖：global=YES 遵循混合逻辑；global=NO 单挤出口拥有整个区域</li>
-      <li>优先级层次已锁定：CL（着色区域循环数）> OW（外墙）> IW（内壁）</li>
+      <li>优先级层次已锁定：CL（着色区域循环数）&gt; OW（外墙）&gt; IW（内壁）</li>
       <li>最初基于 OrcaSlicer-FullSpectrum 分支，后因 Filament for Features UI 更清晰改用 Snapmaker Orca</li>
       <li>FullSpectrum 存在 resolved_model_config_for_tab 过滤 sparse_infill_filament 的问题，无法干净修复</li>
     </ul>
@@ -549,8 +580,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <li>DLL 策略：从已安装的 Snapmaker_Orca\ 复制所有文件，除了 Snapmaker_Orca.dll</li>
       <li>PrintConfig.hpp 必须为 UTF-8（非 ANSI）— 第一行有 <code>// -*- coding: utf-8 -*-</code>；在 VS2019 编辑后需运行编码修复脚本</li>
       <li>禁止对 PrintConfig.cpp 运行编码转换 — ANSI→UTF-8 会损坏中文字符</li>
-    </ul>
-    <ul>
     </ul>
   </div>
 </div>
@@ -572,7 +601,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <ul>
       <li>apply_depth()：逐层 ClipperUtils 偏移 — 已构建但尚未正确连接（见第五阶段）</li>
       <li>detect_thin_sections()：存根 · ThinSectionBehavior：BleedThrough | Split50_50</li>
-      <li>inward_offset()：使用 scaled<float>() 进行正确的 Clipper 单位转换</li>
+      <li>inward_offset()：使用 scaled<float>() 进行正确的 Clipper 单位转换</float></li>
     </ul>
     <span class="tl-section-label">NozzleVerifyDialog.hpp/.cpp</span>
     <ul>
@@ -749,7 +778,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </ul>
     <span class="tl-section-label">提交时的架构</span>
     <ul>
-      <li>Layer.hpp：color_patch_regions（vector&lt;ExPolygons&gt;）— 每挤出口每层的壳带</li>
+      <li>Layer.hpp：color_patch_regions（vector<ExPolygons>）— 每挤出口每层的壳带</li>
       <li>PrintObjectSlice.cpp apply_mm_segmentation()：shell_strip = intersection(full_model 边界带, stolen_expanded)；内核归还至基础区域</li>
       <li>PerimeterGenerator：loop_number 覆盖为 patch_loops-1；is_color_patch 抑制填充</li>
       <li>color_patch_loops 默认值：{1,1,1,1}（适配 U1 四工作头）</li>
@@ -784,6 +813,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <li>color_patch_loops 默认值已改为 {0,0,0,0} — 原始模式为默认行为</li>
     </ul>
     <div class="tl-milestone">里程碑</div>
+    <ul>
+    </ul>
   </div>
 </div>
 </div>
@@ -801,17 +832,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </ul>
     <span class="tl-section-label">PrintObjectSlice.cpp</span>
     <ul>
-      <li>门控：if (cp_enabled &amp;&amp; patch_loops &gt; 0) — 两者均为真时才走 FOS 流水线</li>
-      <li>逐对象读取：优先读取 model_object-&gt;config，否则回退至全局 print()-&gt;config()</li>
-      <li>循环宽度 = ext_width/2 + (CL&gt;1 ? ext_sp2 : 0) + (CL&gt;2 ? (CL-2)×perim_sp : 0) + perim_width/2</li>
+      <li>门控：if (cp_enabled && patch_loops > 0) — 两者均为真时才走 FOS 流水线</li>
+      <li>逐对象读取：优先读取 model_object->config，否则回退至全局 print()->config()</li>
+      <li>循环宽度 = ext_width/2 + (CL>1 ? ext_sp2 : 0) + (CL>2 ? (CL-2)×perim_sp : 0) + perim_width/2</li>
       <li>使用 target_lr（涂色挤出口的区域）获取流量参数 — 支持混合挤出口尺寸</li>
       <li>shell_strip 分别存入 color_patch_regions[ext_idx] 和 color_patch_loops_effective[ext_idx]</li>
       <li>mine 减法：仅减去 shell_strip（非完整 stolen）— T1 保留内部区域</li>
     </ul>
     <span class="tl-section-label">Layer.hpp</span>
     <ul>
-      <li>color_patch_regions：vector&lt;ExPolygons&gt; — 每挤出口的壳带</li>
-      <li>color_patch_loops_effective：vector&lt;int&gt; — 每挤出口经逐对象解析后的 CL 值</li>
+      <li>color_patch_regions：vector<ExPolygons> — 每挤出口的壳带</li>
+      <li>color_patch_loops_effective：vector<int> — 每挤出口经逐对象解析后的 CL 值</li>
     </ul>
     <span class="tl-section-label">PerimeterGenerator.cpp — process_classic()</span>
     <ul>
@@ -830,11 +861,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </ul>
     <span class="tl-section-label">GLGizmoMmuSegmentation</span>
     <ul>
-      <li>原始按钮（左）：将 color_patch_enabled[ext_idx]=false 写入 model_object-&gt;config</li>
-      <li>着色区域按钮（右）：将 color_patch_enabled[ext_idx]=true 写入，并确保 color_patch_loops &gt; 0</li>
-      <li>CL 滑块读写 model_object-&gt;config 中的 color_patch_loops[ext_idx]</li>
+      <li>原始按钮（左）：将 color_patch_enabled[ext_idx]=false 写入 model_object->config</li>
+      <li>着色区域按钮（右）：将 color_patch_enabled[ext_idx]=true 写入，并确保 color_patch_loops > 0</li>
+      <li>CL 滑块读写 model_object->config 中的 color_patch_loops[ext_idx]</li>
       <li>on_config_change 必须传入完整预设配置 — 传局部配置无法正确传递</li>
-      <li>重新切片通过 wxGetApp().plater()-&gt;update() 触发</li>
+      <li>重新切片通过 wxGetApp().plater()->update() 触发</li>
     </ul>
   </div>
 </div>
@@ -878,7 +909,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 </div>
 
-<div class="tl-date">第七阶段 — 着色区域顶/底面实心填充 — 5月28–30日 🔄 进行中</div>
+<div class="tl-date">第七阶段 — 着色区域顶/底面实心填充 — 5月28–30日 ✅ 已完成</div>
 <div class="tl-row">
 <div class="tl-spine"><div class="tl-dot" style="background:#0B3D91"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
@@ -940,7 +971,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <li>PerimeterGenerator.cpp：CP 区域填充抑制、顶/底实心填充、top_fills 防护</li>
       <li>PerimeterGenerator.hpp + Layer.hpp：新增 color_patch_is_top_bottom 指针/向量</li>
       <li>LayerRegion.cpp：将 color_patch_is_top_bottom 传递至 PerimeterGenerator</li>
-      <li>GLGizmoMmuSegmentation.cpp：CL 滑块通过 notify_instance_update 触发重新切片</li>
     </ul>
     <span class="tl-section-label">已知限制</span>
     <ul>
@@ -949,6 +979,36 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <li>顶/底壳边界阶梯：与原版 OrcaSlicer 多材料 discover_vertical_shells 传播行为一致 — 非回归，已接受</li>
     </ul>
     <div class="tl-milestone">里程碑</div>
+    <ul>
+    </ul>
+  </div>
+</div>
+</div>
+
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#0B3D91"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-blue">第7c阶段</span><div><div class="tl-title">CL 滑块 / 模式按钮触发重新切片修复 — 5月30日 ✅</div><div class="tl-sub">发现并修复两处根本原因 — 配置时间戳 + 失效路径</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-detail">
+    <span class="tl-section-label">根本原因</span>
+    <ul>
+      <li>ModelObject::config.set_key_value() 不会更新配置时间戳 → PrintApply.cpp 检测不到变化 → 返回 APPLY_STATUS_UNCHANGED → 不触发重新切片</li>
+      <li>color_patch_loops 和 color_patch_enabled 存储在 ModelObject::config（逐对象 DynamicConfig）中，但不是 PrintObjectConfig 的字段 → 即使时间戳更新，object_config_from_model_object 也不会将其纳入传递给 invalidate_state_by_config_options 的差异集</li>
+    </ul>
+    <span class="tl-section-label">修复方案</span>
+    <ul>
+      <li>GLGizmoMmuSegmentation.cpp：在每次对 color_patch 键调用 set_key_value 后调用 mo->config.touch() — 共 5 处：原始按钮、着色区域按钮 ×2、CL 滑块、拖拽输入</li>
+      <li>PrintApply.cpp：当 object_config_changed 为真时，手动检查逐对象 DynamicConfig 中 color_patch_loops 或 color_patch_enabled 是否发生变化，并在调用 invalidate_state_by_config_options 前将其追加至差异集</li>
+      <li>PrintObject.cpp：将 color_patch 键的失效步骤从 posPerimeters 改为 posSlice — 仅周界失效在已失效时返回 false，阻止了重新切片的触发</li>
+    </ul>
+    <span class="tl-section-label">修改的文件</span>
+    <ul>
+      <li>GLGizmoMmuSegmentation.cpp · PrintApply.cpp · PrintObject.cpp</li>
+    </ul>
+    <div class="tl-milestone">里程碑</div>
+    <ul>
+      <li>CL 滑块与模式按钮的更改现可可靠地触发重新切片</li>
+    </ul>
   </div>
 </div>
 </div>
@@ -993,7 +1053,7 @@ function setLang(lang){
     s.textContent='Snapmaker U1 · OrcaSlicer 分支 · 2026年5月15–30日 · 点击任意卡片展开';
   } else {
     t.textContent='FOrcaSlicer — Flexible OrcaSlicer dev roadmap';
-    s.textContent='Snapmaker U1 · OrcaSlicer fork · May 15–19 2026 · click any card to expand';
+    s.textContent='Snapmaker U1 · OrcaSlicer fork · May 15–30 2026 · click any card to expand';
   }
 }
 </script>
