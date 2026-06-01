@@ -606,6 +606,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <ul>
       <li>Shortcut renamed from "Snapmaker Orca.lnk" to "FOrcaSlicer.lnk"</li>
     </ul>
+    <span class="tl-section-label">Fix 7 — Unified line width format (only for U1)</span>
+    <ul>
+      <li>Unified all U1 process preset line widths from absolute mm to percentages in these files: fdm_process_U1.json, fdm_process_U1_common.json, fdm_process_U1_0.08.json, fdm_process_U1_0.12.json, fdm_process_U1_0.16.json, fdm_process_U1_0.20.json</li>
+    </ul>
     <div class="tl-milestone">Milestone</div>
     <ul>
       <li>Fresh install with any printer preset no longer crashes · system preset auto-sync disabled by default</li>
@@ -628,14 +632,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </ul>
     <span class="tl-section-label">inner_wall_filament definition fix (PrintConfig.cpp)</span>
     <ul>
-      <li>Missing def->mode = comAdvanced and def->set_default_value(new ConfigOptionInt(1)) — IW dropdown rendered incorrectly on first launch</li>
+      <li>Missing def-&gt;mode = comAdvanced and def-&gt;set_default_value(new ConfigOptionInt(1)) — IW dropdown rendered incorrectly on first launch</li>
       <li>Added both to match wall_filament definition</li>
     </ul>
     <span class="tl-section-label">CL=1 large nozzle refinement (PerimeterGenerator.cpp)</span>
     <ul>
       <li>Refined fix from Phase 7d: i0_half_width for CL=1 color patch now uses ext_perimeter_spacing/2 (not ext_perimeter_width/2)</li>
       <li>Spacing is slightly less than width — gives single CL=1 loop enough room in shell_strip for large nozzles (0.6mm, 0.8mm) at all layer heights</li>
-      <li>Condition: (is_cp_region && loop_number > 0) ? perimeter_spacing/2 : (is_cp_region ? ext_perimeter_spacing/2 : ext_perimeter_width/2)</li>
+      <li>Condition: (is_cp_region &amp;&amp; loop_number &gt; 0) ? perimeter_spacing/2 : (is_cp_region ? ext_perimeter_spacing/2 : ext_perimeter_width/2)</li>
     </ul>
     <span class="tl-section-label">Known remaining issues</span>
     <ul>
@@ -672,7 +676,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 </div>
 
-</div><!-- end EN --><!-- end EN --><!-- end EN -->
+</div><!-- end EN --><!-- end EN --><!-- end EN --><!-- end EN -->
 
 <!-- ============================================================ CHINESE ============================================================ -->
 <div lang-content="zh">
@@ -1217,6 +1221,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <ul>
       <li>快捷方式从 "Snapmaker Orca.lnk" 重命名为 "FOrcaSlicer.lnk"</li>
     </ul>
+    <span class="tl-section-label">修复 7 — 统一打印线宽度格式（仅针对U1）</span>
+    <ul>
+      <li>把U1默认处理的打印线宽度从绝对毫米值改为了相对的百分比值，涉及到以下文件：
+fdm_process_U1.json, fdm_process_U1_common.json, fdm_process_U1_0.08.json, fdm_process_U1_0.12.json, fdm_process_U1_0.16.json, fdm_process_U1_0.20.json</li>
+    </ul>
     <div class="tl-milestone">里程碑</div>
     <ul>
       <li>使用任意打印机预设全新安装不再崩溃 · 系统预设自动同步默认禁用</li>
@@ -1239,14 +1248,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </ul>
     <span class="tl-section-label">inner_wall_filament 定义修复（PrintConfig.cpp）</span>
     <ul>
-      <li>缺少 def->mode = comAdvanced 和 def->set_default_value(new ConfigOptionInt(1)) — 导致首次启动时内壁下拉框显示异常</li>
+      <li>缺少 def-&gt;mode = comAdvanced 和 def-&gt;set_default_value(new ConfigOptionInt(1)) — 导致首次启动时内壁下拉框显示异常</li>
       <li>已补充两项，与 wall_filament 定义保持一致</li>
     </ul>
     <span class="tl-section-label">CL=1 时对大挤出口微调（PerimeterGenerator.cpp）</span>
     <ul>
       <li>对第7d阶段修复的进一步优化：CL=1 着色区域的 i0_half_width 改用 ext_perimeter_spacing/2（而非 ext_perimeter_width/2）</li>
       <li>spacing 略小于 width — 使 CL=1 单圈在所有层高下均能在 shell_strip 内正确生成，适用于大挤出口（0.6mm、0.8mm）</li>
-      <li>条件：(is_cp_region && loop_number > 0) ? perimeter_spacing/2 : (is_cp_region ? ext_perimeter_spacing/2 : ext_perimeter_width/2)</li>
+      <li>条件：(is_cp_region &amp;&amp; loop_number &gt; 0) ? perimeter_spacing/2 : (is_cp_region ? ext_perimeter_spacing/2 : ext_perimeter_width/2)</li>
     </ul>
     <span class="tl-section-label">已知遗留问题</span>
     <ul>
@@ -1283,7 +1292,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 </div>
 
-</div><!-- end ZH --><!-- end ZH -->
+</div><!-- end ZH --><!-- end ZH --><!-- end ZH -->
 </div>
 <script>
 function toggle(card){card.classList.toggle('open')}
