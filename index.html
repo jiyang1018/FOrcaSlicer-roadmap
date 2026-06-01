@@ -53,7 +53,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div class="tl-header">
   <div class="tl-header-left">
     <h2 id="main-title">FOrcaSlicer — Flexible OrcaSlicer dev roadmap</h2>
-    <span id="main-sub">Snapmaker U1 · OrcaSlicer fork · May 15–30 2026 · click any card to expand</span>
+    <span id="main-sub">Snapmaker U1 · OrcaSlicer fork · May 15–31 2026 · click any card to expand</span>
   </div>
   <div class="lang-toggle">
     <button class="lang-btn active" onclick="setLang('en')">EN</button>
@@ -490,8 +490,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <li>Top/bottom shell staircase near boundaries: same as stock OrcaSlicer multi-material discover_vertical_shells propagation — not a regression, accepted</li>
     </ul>
     <div class="tl-milestone">Milestone</div>
-    <ul>
-    </ul>
   </div>
 </div>
 </div>
@@ -538,13 +536,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <span class="tl-section-label">Fix 2 — CL=1 large nozzle fix (PerimeterGenerator.cpp)</span>
     <ul>
       <li>For color patch regions with CL=1 (loop_number=0), i0_half_width was using perimeter_spacing/2 — for large nozzles (0.6/0.8mm) this was too large, inset exceeded shell_strip width → empty offsets → missing color patch</li>
-      <li>Fix: use ext_perimeter_width/2 for CL=1, perimeter_spacing/2 for CL≥2. Condition: (is_cp_region && loop_number > 0)</li>
+      <li>Fix: use ext_perimeter_width/2 for CL=1, perimeter_spacing/2 for CL≥2. Condition: (is_cp_region &amp;&amp; loop_number &gt; 0)</li>
     </ul>
     <span class="tl-section-label">Fix 3 — OW extruder color patch guard (GLGizmoMmuSegmentation.cpp)</span>
     <ul>
       <li>Color Patch mode is meaningless when selected painting extruder is the OW extruder — would just replicate OW behavior</li>
       <li>Guard: compares m_selected_extruder_idx against wall_filament-1 from print config. If match: auto-switches to Original mode, Color Patch button visually disabled, tooltip explains why</li>
-      <li>Note: ImGui::BeginDisabled not available in this ImGui version — used style color override + && !is_ow_extruder condition instead</li>
+      <li>Note: ImGui::BeginDisabled not available in this ImGui version — used style color override + &amp;&amp; !is_ow_extruder condition instead</li>
     </ul>
     <span class="tl-section-label">Known remaining issues</span>
     <ul>
@@ -559,6 +557,96 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 </div>
 
+<div class="tl-date">Phase 8 — Foreign preset crash fixes + mixed nozzle polish — May 31</div>
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#1A7A4A"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">Phase 8a</span><div><div class="tl-title">Foreign preset crash fixes — 7 issues resolved</div><div class="tl-sub">Fresh install with Bambu/generic presets no longer crashes · system preset auto-sync disabled</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-detail">
+    <span class="tl-section-label">Root cause</span>
+    <ul>
+      <li>Fresh install downloads 2.3.14 presets from Snapmaker server — incompatible with FOrcaSlicer 2.3.2 codebase</li>
+      <li>FOrcaSlicer-specific config options missing from foreign presets → null pointer crashes when UI reads them</li>
+    </ul>
+    <span class="tl-section-label">Fix 1 — Multimaterial tab crash (Preset.cpp + Tab.cpp)</span>
+    <ul>
+      <li>Symptom: clicking Multimaterial tab crashes with Access violation in DynamicConfig::opt_int() on foreign presets</li>
+      <li>Preset.cpp Preset::normalize(): add defaults for outer_wall_loops, outer_wall_layer_height_max, outer_wall_seam_position, color_patch_loops, color_patch_enabled, inner_wall_filament before handle_legacy_sla()</li>
+      <li>Tab.cpp TabPrint::reload_config(): same defaults added at start before Tab::reload_config()</li>
+      <li>OptionsGroup.cpp get_config_value() + get_config_value2(): null guards added for all coInt/coBool/coInts/coBools/coEnum/coEnums cases — returns 0/false instead of crashing</li>
+    </ul>
+    <span class="tl-section-label">Fix 2 — Adding printer crash (Plater.cpp)</span>
+    <ul>
+      <li>Symptom: adding Snapmaker U1 crashes in Sidebar::on_filaments_change() with access violation on choices.back()</li>
+      <li>Root cause: choices vector empty when called before sidebar combo boxes initialized</li>
+      <li>Fix: int last_selection = choices.empty() ? 0 : choices.back()->GetSelection()</li>
+    </ul>
+    <span class="tl-section-label">Fix 3 — Multimaterial gizmo crash (GLGizmoMmuSegmentation.cpp)</span>
+    <ul>
+      <li>Symptom: clicking paint gizmo with no object selected crashes on notify_instance_update</li>
+      <li>Fix: wrap all 4 FOS-added notify_instance_update blocks with null check on mo_notify before accessing model objects</li>
+    </ul>
+    <span class="tl-section-label">Fix 4 — Line width validation error (Print.cpp)</span>
+    <ul>
+      <li>Symptom: slicing fails with "Line width too small (skin_infill_line_width)" on 0.2mm nozzle second launch</li>
+      <li>Root cause: validation check extrusion_width_min <= layer_height triggers when both are 0.2mm — <= should be <</li>
+      <li>Fix: extrusion_width_min < layer_height in validate_extrusion_width lambda</li>
+    </ul>
+    <span class="tl-section-label">Fix 5 — Startup crash on 2.3.14 presets (PrintConfig.cpp)</span>
+    <ul>
+      <li>Symptom: Unknown option exception: internal_solid_infill_acceleration fatal crash on startup</li>
+      <li>Root cause: option used in GCode.cpp and Print.cpp but never registered; also copy-paste bug gave skeleton_infill_line_width the wrong label/tooltip</li>
+      <li>Fix: register internal_solid_infill_acceleration as separate coFloatOrPercent entry; restore correct label/tooltip for skeleton_infill_line_width</li>
+    </ul>
+    <span class="tl-section-label">Fix 6 — System preset auto-sync disabled (AppConfig.cpp)</span>
+    <ul>
+      <li>sync_system_preset default changed from true to false — prevents downloading incompatible 2.3.14 presets on fresh install</li>
+    </ul>
+    <span class="tl-section-label">Fix 7 — Desktop shortcut name (installer.nsi)</span>
+    <ul>
+      <li>Shortcut renamed from "Snapmaker Orca.lnk" to "FOrcaSlicer.lnk"</li>
+    </ul>
+    <div class="tl-milestone">Milestone</div>
+    <ul>
+      <li>Fresh install with any printer preset no longer crashes · system preset auto-sync disabled by default</li>
+    </ul>
+  </div>
+</div>
+</div>
+
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#1A7A4A"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">Phase 8b</span><div><div class="tl-title">Mixed nozzle + color patch polish</div><div class="tl-sub">SLIC3R_APP_KEY rename · inner_wall_filament fix · CL=1 large nozzle refinement</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-detail">
+    <span class="tl-section-label">SLIC3R_APP_KEY renamed to FOrcaSlicer</span>
+    <ul>
+      <li>Files: src/common_func/common_func.hpp + version.inc</li>
+      <li>App data now at %APPDATA%\FOrcaSlicer\ instead of %APPDATA%\Snapmaker_Orca\</li>
+      <li>All locale .mo files already copied to FOrcaSlicer.mo — no action needed</li>
+      <li>Pre-install step: copy Snapmaker_Orca.mo → FOrcaSlicer.mo for all locales before making installer</li>
+    </ul>
+    <span class="tl-section-label">inner_wall_filament definition fix (PrintConfig.cpp)</span>
+    <ul>
+      <li>Missing def->mode = comAdvanced and def->set_default_value(new ConfigOptionInt(1)) — IW dropdown rendered incorrectly on first launch</li>
+      <li>Added both to match wall_filament definition</li>
+    </ul>
+    <span class="tl-section-label">CL=1 large nozzle refinement (PerimeterGenerator.cpp)</span>
+    <ul>
+      <li>Refined fix from Phase 7d: i0_half_width for CL=1 color patch now uses ext_perimeter_spacing/2 (not ext_perimeter_width/2)</li>
+      <li>Spacing is slightly less than width — gives single CL=1 loop enough room in shell_strip for large nozzles (0.6mm, 0.8mm) at all layer heights</li>
+      <li>Condition: (is_cp_region && loop_number > 0) ? perimeter_spacing/2 : (is_cp_region ? ext_perimeter_spacing/2 : ext_perimeter_width/2)</li>
+    </ul>
+    <span class="tl-section-label">Known remaining issues</span>
+    <ul>
+      <li>Color patch FlowErrorNegativeSpacing with mixed nozzle sizes (e.g. T1=0.2mm, T3=0.6mm) — root cause not yet diagnosed; look in PrintObjectSlice.cpp shell_strip calculation and LayerRegion.cpp flow setup</li>
+      <li>IW dropdown may show incorrectly on absolute first launch — clicking refreshes it; root cause is dynamic_filament_list_1_based not yet populated when tab widget first created</li>
+      <li>outer_wall_layer_height_max field exists in UI but NozzleLayerPlanner accumulator logic not yet implemented — field has no effect on slicing</li>
+    </ul>
+  </div>
+</div>
+</div>
+
 <div class="tl-date">Outstanding / TODO</div>
 <div class="tl-row">
 <div class="tl-spine"><div class="tl-dot" style="background:#888780"></div><div class="tl-line"></div></div>
@@ -567,7 +655,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <div class="tl-detail">
     <ul>
       <li>Curved surface color patch regression — verify sphere/torus/cone CL loops; if broken, bisect between 48c601c3b1 and current</li>
-      <li>Comment cleanup — replace T1/T2 references in FOS comments with "base extruder" / "painted extruder"</li>
+      <li>Color patch FlowErrorNegativeSpacing with mixed nozzle sizes — not yet diagnosed</li>
+      <li>IW dropdown incorrect on absolute first launch — low priority, clicking refreshes</li>
+      <li>outer_wall_layer_height_max: field in UI but NozzleLayerPlanner accumulator not yet implemented</li>
+      <li>Comment cleanup — replace T1/T2 in FOS comments with "base extruder" / "painted extruder"</li>
       <li>Version bump to fos.2 when next release is ready</li>
       <li>GitHub wiki: mixed nozzle OW/IW behavior vs stock OrcaSlicer</li>
       <li>outer_wall_loops: no hard UI cap (label turns red as warning — accepted)</li>
@@ -581,7 +672,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 </div>
 
-</div><!-- end EN --><!-- end EN -->
+</div><!-- end EN --><!-- end EN --><!-- end EN -->
 
 <!-- ============================================================ CHINESE ============================================================ -->
 <div lang-content="zh">
@@ -1010,8 +1101,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <li>顶/底壳边界阶梯：与原版 OrcaSlicer 多材料 discover_vertical_shells 传播行为一致 — 非回归，已接受</li>
     </ul>
     <div class="tl-milestone">里程碑</div>
-    <ul>
-    </ul>
   </div>
 </div>
 </div>
@@ -1058,13 +1147,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <span class="tl-section-label">修复 2 — CL=1 大挤出口修复（PerimeterGenerator.cpp）</span>
     <ul>
       <li>着色区域 CL=1（loop_number=0）时，i0_half_width 使用 perimeter_spacing/2 — 对大挤出口（0.6/0.8mm）而言偏移量过大，内缩超出 shell_strip 宽度 → 偏移结果为空 → 着色区域缺失</li>
-      <li>修复：CL=1 时使用 ext_perimeter_width/2，CL≥2 时使用 perimeter_spacing/2。条件：(is_cp_region && loop_number > 0)</li>
+      <li>修复：CL=1 时使用 ext_perimeter_width/2，CL≥2 时使用 perimeter_spacing/2。条件：(is_cp_region &amp;&amp; loop_number &gt; 0)</li>
     </ul>
     <span class="tl-section-label">修复 3 — 外墙挤出口仅外壳着色防护（GLGizmoMmuSegmentation.cpp）</span>
     <ul>
       <li>当所选涂色挤出口为外墙挤出口时，仅外壳着色模式无意义 — 仅会复制外墙行为</li>
       <li>防护：将 m_selected_extruder_idx 与打印配置中的 wall_filament-1 比对。若匹配：自动切换至原始模式，仅外壳着色按钮视觉禁用，提示说明原因</li>
-      <li>注意：此 ImGui 版本不支持 ImGui::BeginDisabled — 改用样式颜色覆盖 + && !is_ow_extruder 条件实现</li>
+      <li>注意：此 ImGui 版本不支持 ImGui::BeginDisabled — 改用样式颜色覆盖 + &amp;&amp; !is_ow_extruder 条件实现</li>
     </ul>
     <span class="tl-section-label">已知遗留问题</span>
     <ul>
@@ -1079,6 +1168,96 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 </div>
 
+<div class="tl-date">第八阶段 — 外部预设崩溃修复 + 混合挤出口完善 — 5月31日</div>
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#1A7A4A"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">第8a阶段</span><div><div class="tl-title">外部预设崩溃修复 — 7 项问题已解决</div><div class="tl-sub">使用 Bambu/通用预设全新安装不再崩溃 · 系统预设自动同步已禁用</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-detail">
+    <span class="tl-section-label">根本原因</span>
+    <ul>
+      <li>全新安装从 Snapmaker 服务器下载 2.3.14 预设 — 与 FOrcaSlicer 2.3.2 代码库不兼容</li>
+      <li>外部预设中缺少 FOrcaSlicer 专属配置选项 → UI 读取时产生空指针崩溃</li>
+    </ul>
+    <span class="tl-section-label">修复 1 — 多材料标签页崩溃（Preset.cpp + Tab.cpp）</span>
+    <ul>
+      <li>症状：在外部预设下点击多材料标签页时，DynamicConfig::opt_int() 发生访问违规崩溃</li>
+      <li>Preset.cpp Preset::normalize()：在 handle_legacy_sla() 前为 outer_wall_loops、outer_wall_layer_height_max、outer_wall_seam_position、color_patch_loops、color_patch_enabled、inner_wall_filament 添加默认值</li>
+      <li>Tab.cpp TabPrint::reload_config()：在 Tab::reload_config() 前添加相同的默认值</li>
+      <li>OptionsGroup.cpp get_config_value() + get_config_value2()：为所有 coInt/coBool/coInts/coBools/coEnum/coEnums 分支添加空值防护 — 返回 0/false 而非崩溃</li>
+    </ul>
+    <span class="tl-section-label">修复 2 — 添加打印机崩溃（Plater.cpp）</span>
+    <ul>
+      <li>症状：添加 Snapmaker U1 时，Sidebar::on_filaments_change() 在 choices.back() 处访问违规崩溃</li>
+      <li>根本原因：侧边栏耗材下拉框初始化前被调用时 choices 向量为空</li>
+      <li>修复：int last_selection = choices.empty() ? 0 : choices.back()->GetSelection()</li>
+    </ul>
+    <span class="tl-section-label">修复 3 — 多材料操作工具崩溃（GLGizmoMmuSegmentation.cpp）</span>
+    <ul>
+      <li>症状：未选择实体时点击涂色工具崩溃</li>
+      <li>修复：所有 4 处 FOS 新增的 notify_instance_update 块中，对 mo_notify 添加空值检查后再访问模型对象</li>
+    </ul>
+    <span class="tl-section-label">修复 4 — 线宽验证错误（Print.cpp）</span>
+    <ul>
+      <li>症状：0.2mm 挤出口第二次启动时切片失败，提示"线宽过小（skin_infill_line_width）"</li>
+      <li>根本原因：validate_extrusion_width 中 extrusion_width_min <= layer_height 在两者均为 0.2mm 时触发 — <= 应改为 <</li>
+      <li>修改：extrusion_width_min < layer_height in validate_extrusion_width lambda</li>
+    </ul>
+    <span class="tl-section-label">修复 5 — 启动崩溃（PrintConfig.cpp）</span>
+    <ul>
+      <li>症状：加载 2.3.14 预设时启动崩溃，Unknown option exception: internal_solid_infill_acceleration</li>
+      <li>根本原因：该选项在 GCode.cpp 和 Print.cpp 中使用但从未注册；同时存在复制粘贴错误，skeleton_infill_line_width 被赋予了错误的标签和提示文字</li>
+      <li>修复：将 internal_solid_infill_acceleration 注册为独立 coFloatOrPercent 条目；恢复 skeleton_infill_line_width 的正确标签和提示文字</li>
+    </ul>
+    <span class="tl-section-label">修复 6 — 系统预设自动同步已禁用（AppConfig.cpp）</span>
+    <ul>
+      <li>sync_system_preset 默认值从 true 改为 false — 防止全新安装时下载不兼容的 2.3.14 预设</li>
+    </ul>
+    <span class="tl-section-label">修复 7 — 桌面快捷方式名称（installer.nsi）</span>
+    <ul>
+      <li>快捷方式从 "Snapmaker Orca.lnk" 重命名为 "FOrcaSlicer.lnk"</li>
+    </ul>
+    <div class="tl-milestone">里程碑</div>
+    <ul>
+      <li>使用任意打印机预设全新安装不再崩溃 · 系统预设自动同步默认禁用</li>
+    </ul>
+  </div>
+</div>
+</div>
+
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#1A7A4A"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">第8b阶段</span><div><div class="tl-title">混合挤出口 + 仅外壳着色完善</div><div class="tl-sub">SLIC3R_APP_KEY 重命名 · inner_wall_filament 修复 · CL=1 大挤出口精细化</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-detail">
+    <span class="tl-section-label">SLIC3R_APP_KEY 重命名为 FOrcaSlicer</span>
+    <ul>
+      <li>文件：src/common_func/common_func.hpp + version.inc</li>
+      <li>应用数据现存储于 %APPDATA%\FOrcaSlicer\ 而非 %APPDATA%\Snapmaker_Orca\</li>
+      <li>所有语言 .mo 文件已复制为 FOrcaSlicer.mo — 无需额外操作</li>
+      <li>制作安装程序前的预备步骤：将所有语言目录中的 Snapmaker_Orca.mo 复制为 FOrcaSlicer.mo</li>
+    </ul>
+    <span class="tl-section-label">inner_wall_filament 定义修复（PrintConfig.cpp）</span>
+    <ul>
+      <li>缺少 def->mode = comAdvanced 和 def->set_default_value(new ConfigOptionInt(1)) — 导致首次启动时内壁下拉框显示异常</li>
+      <li>已补充两项，与 wall_filament 定义保持一致</li>
+    </ul>
+    <span class="tl-section-label">CL=1 时对大挤出口微调（PerimeterGenerator.cpp）</span>
+    <ul>
+      <li>对第7d阶段修复的进一步优化：CL=1 着色区域的 i0_half_width 改用 ext_perimeter_spacing/2（而非 ext_perimeter_width/2）</li>
+      <li>spacing 略小于 width — 使 CL=1 单圈在所有层高下均能在 shell_strip 内正确生成，适用于大挤出口（0.6mm、0.8mm）</li>
+      <li>条件：(is_cp_region && loop_number > 0) ? perimeter_spacing/2 : (is_cp_region ? ext_perimeter_spacing/2 : ext_perimeter_width/2)</li>
+    </ul>
+    <span class="tl-section-label">已知遗留问题</span>
+    <ul>
+      <li>混合挤出口尺寸下仅外壳着色产生 FlowErrorNegativeSpacing（如 T1=0.2mm，T3=0.6mm）— 根本原因尚未诊断；排查方向：PrintObjectSlice.cpp shell_strip 计算 + LayerRegion.cpp 流量设置</li>
+      <li>绝对首次启动时内壁下拉框可能显示异常 — 点击可刷新；根本原因是 dynamic_filament_list_1_based 在标签页控件首次创建时尚未填充</li>
+      <li>outer_wall_layer_height_max 字段已在 UI 中显示，但 NozzleLayerPlanner 累加器逻辑尚未实现 — 该字段目前对切片无效</li>
+    </ul>
+  </div>
+</div>
+</div>
+
 <div class="tl-date">待完成 / TODO</div>
 <div class="tl-row">
 <div class="tl-spine"><div class="tl-dot" style="background:#888780"></div><div class="tl-line"></div></div>
@@ -1087,6 +1266,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <div class="tl-detail">
     <ul>
       <li>曲面着色区域回归 — 验证球体/环形/锥体 CL 路径是否正常；如有问题，在 48c601c3b1 与当前版本之间进行二分排查</li>
+      <li>混合挤出口尺寸下仅外壳着色 FlowErrorNegativeSpacing — 尚未诊断</li>
+      <li>绝对首次启动时内壁下拉框显示异常 — 优先级低，点击可刷新</li>
+      <li>outer_wall_layer_height_max：UI 中已有字段，但 NozzleLayerPlanner 累加器尚未实现</li>
       <li>注释清理 — 将 FOS 注释中的 T1/T2 引用替换为"基础挤出机"/"涂色挤出机"</li>
       <li>下次发布时版本升级至 fos.2</li>
       <li>GitHub Wiki：说明混合挤出口外墙/内壁行为与原版 OrcaSlicer 的区别</li>
@@ -1116,7 +1298,7 @@ function setLang(lang){
   var s=document.getElementById('main-sub');
   if(lang==='zh'){
     t.textContent='FOrcaSlicer — 灵活版 OrcaSlicer 开发路线图';
-    s.textContent='Snapmaker U1 · OrcaSlicer 分支 · 2026年5月15–30日 · 点击任意卡片展开';
+    s.textContent='Snapmaker U1 · OrcaSlicer 分支 · 2026年5月15–31日 · 点击任意卡片展开';
   } else {
     t.textContent='FOrcaSlicer — Flexible OrcaSlicer dev roadmap';
     s.textContent='Snapmaker U1 · OrcaSlicer fork · May 15–30 2026 · click any card to expand';
