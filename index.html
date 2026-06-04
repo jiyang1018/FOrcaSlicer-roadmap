@@ -53,7 +53,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div class="tl-header">
   <div class="tl-header-left">
     <h2 id="main-title">FOrcaSlicer — Flexible OrcaSlicer dev roadmap</h2>
-    <span id="main-sub">Snapmaker U1 · OrcaSlicer fork · May 15–31 2026 · click any card to expand</span>
+    <span id="main-sub">Snapmaker U1 · OrcaSlicer fork · May 15 – Jun 3 2026 · click any card to expand</span>
   </div>
   <div class="lang-toggle">
     <button class="lang-btn active" onclick="setLang('en')">EN</button>
@@ -628,14 +628,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </ul>
     <span class="tl-section-label">inner_wall_filament definition fix (PrintConfig.cpp)</span>
     <ul>
-      <li>Missing def->mode = comAdvanced and def->set_default_value(new ConfigOptionInt(1)) — IW dropdown rendered incorrectly on first launch</li>
+      <li>Missing def-&gt;mode = comAdvanced and def-&gt;set_default_value(new ConfigOptionInt(1)) — IW dropdown rendered incorrectly on first launch</li>
       <li>Added both to match wall_filament definition</li>
     </ul>
     <span class="tl-section-label">CL=1 large nozzle refinement (PerimeterGenerator.cpp)</span>
     <ul>
       <li>Refined fix from Phase 7d: i0_half_width for CL=1 color patch now uses ext_perimeter_spacing/2 (not ext_perimeter_width/2)</li>
       <li>Spacing is slightly less than width — gives single CL=1 loop enough room in shell_strip for large nozzles (0.6mm, 0.8mm) at all layer heights</li>
-      <li>Condition: (is_cp_region && loop_number > 0) ? perimeter_spacing/2 : (is_cp_region ? ext_perimeter_spacing/2 : ext_perimeter_width/2)</li>
+      <li>Condition: (is_cp_region &amp;&amp; loop_number &gt; 0) ? perimeter_spacing/2 : (is_cp_region ? ext_perimeter_spacing/2 : ext_perimeter_width/2)</li>
     </ul>
     <span class="tl-section-label">Known remaining issues</span>
     <ul>
@@ -673,6 +673,85 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 </div>
 
+<div class="tl-date">Phase 9 — Nozzle panel redesign + mixed nozzle spacing + stability — Jun 3 · v2.3.2-fos.3/fos.4</div>
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#1A7A4A"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">Phase 9a</span><div><div class="tl-title">Mixed nozzle OW/IW spacing fix + flow clamp + stability</div><div class="tl-sub">Correct OW-to-IW transition spacing · Flow.cpp crash prevention · null guards</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-detail">
+    <span class="tl-section-label">Mixed nozzle OW/IW spacing fix (PerimeterGenerator.cpp)</span>
+    <ul>
+      <li>OW loops now use ext_perimeter_spacing, IW loops use perimeter_spacing</li>
+      <li>Correct transition spacing at OW-to-IW boundary: 0.5 × (ext_perimeter_spacing + perimeter_spacing)</li>
+      <li>Fix only activates when wall_filament != inner_wall_filament (fos_ow_iw_split flag)</li>
+    </ul>
+    <span class="tl-section-label">Flow clamp for color patch (Flow.cpp)</span>
+    <ul>
+      <li>with_spacing() now clamps instead of throws when width &lt; height</li>
+      <li>Prevents crash with color patch + mixed nozzle at higher layer heights</li>
+    </ul>
+    <span class="tl-section-label">Process preset line width fix (fdm_process_U1.json)</span>
+    <ul>
+      <li>top_surface_line_width fixed to "105%" in source — was "105" (no % marker)</li>
+      <li>Note: percentage-based line widths break mixed nozzle flow calculation — all U1 process preset line widths kept as absolute mm (correct for mixed nozzle where perimeter generator runs in OW nozzle context)</li>
+    </ul>
+    <span class="tl-section-label">Null guards + stability (Tab.cpp, OptionsGroup.cpp)</span>
+    <ul>
+      <li>Tab.cpp: outer_wall_loops vs wall_loops color check now guards against null config options</li>
+      <li>OptionsGroup.cpp: additional null guards for coInt case in get_config_value</li>
+      <li>Tab.cpp: outer_wall_layer_height_max option line and toggle commented out — pending accumulator sync implementation</li>
+    </ul>
+    <div class="tl-milestone">Milestone</div>
+    <ul>
+      <li>v2.3.2-fos.3 released with spacing fix and flow clamp</li>
+    </ul>
+  </div>
+</div>
+</div>
+
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#1A7A4A"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">Phase 9b</span><div><div class="tl-title">Nozzle diameter panel redesign (fos.4)</div><div class="tl-sub">2-column grid UI · mixed mode toggle · auto-detect · PRP refresh chain</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-detail">
+    <div class="tl-decision">Decision change</div>
+    <span class="tl-section-label">New UI (Plater.cpp, ParamsPanel.cpp)</span>
+    <ul>
+      <li>Printer Preset = PTP
+Process Preset = PRP</li>
+      <li>Replaced notebook tabs with 2-column grid matching filament panel style</li>
+      <li>Mixed mode toggle (SwitchButton, default OFF) — auto-detects mixed mode on PTP load if nozzle diameters differ</li>
+      <li>Color bar per row: 0.2mm=white, 0.4mm=10% gray, 0.6mm=20% gray, 0.8mm=30% gray · label format: "N: X.Xmm"</li>
+      <li>Process preset info note added above PRP dropdown — "Process presets are filtered by Nozzle 1 diameter. The layer height value you set determines your actual sliced result."</li>
+    </ul>
+    <span class="tl-section-label">Synced mode behavior</span>
+    <ul>
+      <li>Changing any nozzle → confirm dialog (Sync/Cancel) → all nozzles sync to selected diameter → switch to matching system preset → PRP refreshes</li>
+    </ul>
+    <span class="tl-section-label">Mixed mode behavior</span>
+    <ul>
+      <li>Each nozzle independent — OW nozzle change updates inherits on custom PTP → PRP refreshes</li>
+      <li>Turning off mixed with differing diameters → confirm → sync all to Nozzle 1 → switch system preset</li>
+    </ul>
+    <span class="tl-section-label">PRP refresh chain</span>
+    <ul>
+      <li>update_nozzle_settings(switch_machine=true) → reads OW nozzle idx from wall_filament → updates inherits → update_compatible(Always) → CallAfter → update_presets + load_current_preset</li>
+      <li>is_compatible_with_parent_printer() checks active_printer.preset.inherits() against compatible_printers list</li>
+      <li>Custom PTPs need correct inherits: "Snapmaker U1 (X.X nozzle)" based on OW nozzle diameter</li>
+    </ul>
+    <span class="tl-section-label">Known limitations (fos.4)</span>
+    <ul>
+      <li>PRP filtered by Nozzle 1 diameter regardless of which nozzle is assigned as OW — deferred until accumulator layer height sync implemented</li>
+      <li>Dark mode: nozzle color bars (white/gray scale) not tested — may need color inversion</li>
+    </ul>
+    <div class="tl-milestone">Milestone</div>
+    <ul>
+      <li>v2.3.2-fos.4 released · installer.nsi VIProductVersion 2.3.2.4</li>
+    </ul>
+  </div>
+</div>
+</div>
+
 <div class="tl-date">Outstanding / TODO</div>
 <div class="tl-row">
 <div class="tl-spine"><div class="tl-dot" style="background:#888780"></div><div class="tl-line"></div></div>
@@ -682,22 +761,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <ul>
       <li>Curved surface color patch regression — verify sphere/torus/cone CL loops; if broken, bisect between 48c601c3b1 and current</li>
       <li>Color patch FlowErrorNegativeSpacing with mixed nozzle sizes — not yet diagnosed</li>
+      <li>Color patch CL=1 seam artifacts at arc endpoints (nearest/aligned seam) — workaround: use random seam</li>
+      <li>PRP filtering by actual OW nozzle — deferred until accumulator layer height sync implemented</li>
+      <li>Accumulator layer height sync (NozzleLayerPlanner) — not yet started</li>
+      <li>Dark mode nozzle color bars — not yet tested</li>
       <li>IW dropdown incorrect on absolute first launch — low priority, clicking refreshes</li>
-      <li>outer_wall_layer_height_max: field in UI but NozzleLayerPlanner accumulator not yet implemented</li>
       <li>Comment cleanup — replace T1/T2 in FOS comments with "base extruder" / "painted extruder"</li>
-      <li>GitHub wiki: mixed nozzle OW/IW behavior vs stock OrcaSlicer</li>
+      <li>GitHub wiki: mixed nozzle OW/IW behavior vs stock OrcaSlicer · wiki started at gitclub.design4paragon.com</li>
       <li>outer_wall_loops: no hard UI cap (label turns red as warning — accepted)</li>
       <li>NozzleVerifyDialog color doesn't update until fresh reslice after filament change</li>
       <li>CL slider max hardcoded to 10 in UI — increase if needed</li>
       <li>No visual indicator in gizmo showing which extruder has Color Patch vs Original active</li>
       <li>Per-object CL not exposed in Objects tab — only via gizmo</li>
-      <li>Extended testing: complex multi-color models, layer height changes across objects, seam placement with color patch zones</li>
     </ul>
   </div>
 </div>
 </div>
 
-</div><!-- end EN --><!-- end EN --><!-- end EN -->
+</div><!-- end EN --><!-- end EN -->
 
 <!-- ============================================================ CHINESE ============================================================ -->
 <div lang-content="zh">
@@ -1263,14 +1344,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </ul>
     <span class="tl-section-label">inner_wall_filament 定义修复（PrintConfig.cpp）</span>
     <ul>
-      <li>缺少 def->mode = comAdvanced 和 def->set_default_value(new ConfigOptionInt(1)) — 导致首次启动时内壁下拉框显示异常</li>
+      <li>缺少 def-&gt;mode = comAdvanced 和 def-&gt;set_default_value(new ConfigOptionInt(1)) — 导致首次启动时内壁下拉框显示异常</li>
       <li>已补充两项，与 wall_filament 定义保持一致</li>
     </ul>
     <span class="tl-section-label">CL=1 大挤出口微调（PerimeterGenerator.cpp）</span>
     <ul>
       <li>对第7d阶段修复的进一步优化：CL=1 着色区域的 i0_half_width 改用 ext_perimeter_spacing/2（而非 ext_perimeter_width/2）</li>
       <li>spacing 略小于 width — 使 CL=1 单圈在所有层高下均能在 shell_strip 内正确生成，适用于大挤出口（0.6mm、0.8mm）</li>
-      <li>条件：(is_cp_region && loop_number > 0) ? perimeter_spacing/2 : (is_cp_region ? ext_perimeter_spacing/2 : ext_perimeter_width/2)</li>
+      <li>条件：(is_cp_region &amp;&amp; loop_number &gt; 0) ? perimeter_spacing/2 : (is_cp_region ? ext_perimeter_spacing/2 : ext_perimeter_width/2)</li>
     </ul>
     <span class="tl-section-label">已知遗留问题</span>
     <ul>
@@ -1308,25 +1389,106 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 </div>
 
+<div class="tl-date">第九阶段 — 挤出口面板重设计 + 混合挤出口间距 + 稳定性 — 6月3日 · v2.3.2-fos.3/fos.4</div>
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#1A7A4A"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">第9a阶段</span><div><div class="tl-title">混合挤出口 OW/IW 间距修复 + 流量封顶 + 稳定性</div><div class="tl-sub">正确的外墙至内壁过渡间距 · Flow.cpp 崩溃防护 · 空值防护</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-detail">
+    <span class="tl-section-label">混合挤出口 OW/IW 间距修复（PerimeterGenerator.cpp）</span>
+    <ul>
+      <li>外墙循环现使用 ext_perimeter_spacing，内壁循环使用 perimeter_spacing</li>
+      <li>外墙至内壁边界的正确过渡间距：0.5 × (ext_perimeter_spacing + perimeter_spacing)</li>
+      <li>仅当 wall_filament != inner_wall_filament 时激活（fos_ow_iw_split 标志）</li>
+    </ul>
+    <span class="tl-section-label">仅外壳着色流量封顶（Flow.cpp）</span>
+    <ul>
+      <li>with_spacing() 在宽度 &lt; 高度时现改为封顶而非抛出异常</li>
+      <li>防止仅外壳着色 + 混合挤出口在较高层高时崩溃</li>
+    </ul>
+    <span class="tl-section-label">打印流程预设线宽修复（fdm_process_U1.json）</span>
+    <ul>
+      <li>源文件中 top_surface_line_width 修正为 "105%"（原为 "105"，缺少 % 标记）</li>
+      <li>注意：百分比线宽会破坏混合挤出口流量计算 — U1 打印流程预设中所有线宽保留为绝对 mm 值</li>
+    </ul>
+    <span class="tl-section-label">空值防护 + 稳定性（Tab.cpp、OptionsGroup.cpp）</span>
+    <ul>
+      <li>Tab.cpp：outer_wall_loops 与 wall_loops 的颜色比较现对空配置选项添加防护</li>
+      <li>OptionsGroup.cpp：在 get_config_value 的 coInt 分支中添加额外空值防护</li>
+      <li>Tab.cpp：outer_wall_layer_height_max 选项行及切换已注释隐藏 — 待累加器同步实现后恢复</li>
+    </ul>
+    <div class="tl-milestone">里程碑</div>
+    <ul>
+      <li>v2.3.2-fos.3 随间距修复和流量封顶一同发布</li>
+    </ul>
+  </div>
+</div>
+</div>
+
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#1A7A4A"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">第9b阶段</span><div><div class="tl-title">挤出口直径面板重设计（fos.4）</div><div class="tl-sub">两行两列 UI · 混直径模式切换 · 自动检测 · 打印流程预设刷新链</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-detail">
+    <div class="tl-decision">决策变更</div>
+    <span class="tl-section-label">新 UI（Plater.cpp、ParamsPanel.cpp）</span>
+    <ul>
+      <li>打印机预设简称 PTP
+打印流程预设简称 PRP</li>
+      <li>两行两列布局取代原标签页，与耗材面板样式一致</li>
+      <li>混直径模式切换开关（SwitchButton，默认关闭）— 加载 PTP 时若各挤出口直径不同则自动启用混合模式</li>
+      <li>每行颜色条：0.2mm=白色，0.4mm=10%灰，0.6mm=20%灰，0.8mm=30%灰 · 标签格式："N: X.Xmm"</li>
+      <li>打印流程预设下拉框上方新增提示文字：打印流程预设按挤出口 1 直径过滤，您设置的层高决定实际切片结果</li>
+    </ul>
+    <span class="tl-section-label">同步模式行为</span>
+    <ul>
+      <li>更改任意挤出口 → 确认对话框（同步/取消）→ 所有挤出口同步至所选直径 → 切换至匹配系统预设 → 打印流程预设刷新</li>
+    </ul>
+    <span class="tl-section-label">混直径模式行为</span>
+    <ul>
+      <li>各挤出口独立 — 外墙挤出口变更时更新自定义 PTP 的继承关系 → 打印流程预设刷新</li>
+      <li>在各挤出口直径不同时关闭混合模式 → 确认 → 全部同步至挤出口 1 → 切换系统预设</li>
+    </ul>
+    <span class="tl-section-label">打印流程预设刷新链</span>
+    <ul>
+      <li>update_nozzle_settings(switch_machine=true) → 从 wall_filament 读取外墙挤出口索引 → 更新 inherits → update_compatible(Always) → CallAfter → update_presets + load_current_preset</li>
+      <li>is_compatible_with_parent_printer() checks active_printer.preset.inherits() against compatible_printers list</li>
+      <li>自定义 PTP 需要正确的 inherits：根据外墙挤出口直径设为 "Snapmaker U1 (X.X nozzle)"</li>
+    </ul>
+    <span class="tl-section-label">已知限制（fos.4）</span>
+    <ul>
+      <li>打印流程预设按挤出口 1 直径过滤，而非实际外墙挤出口 — 延迟至累加器层高同步实现后处理</li>
+      <li>深色模式：挤出口颜色条（白/灰调）尚未测试 — 可能需要颜色反转</li>
+    </ul>
+    <div class="tl-milestone">里程碑</div>
+    <ul>
+      <li>v2.3.2-fos.4 已发布 · installer.nsi VIProductVersion 2.3.2.4</li>
+    </ul>
+  </div>
+</div>
+</div>
+
 <div class="tl-date">待完成 / TODO</div>
 <div class="tl-row">
 <div class="tl-spine"><div class="tl-dot" style="background:#888780"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-gray">TODO</span><div><div class="tl-title">剩余事项</div><div class="tl-sub">回归修复、代码清理、扩展测试</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-gray">TODO</span><div><div class="tl-title">待处理事项</div><div class="tl-sub">回归修复、代码清理、待实现功能</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <ul>
       <li>曲面着色区域回归 — 验证球体/环形/锥体 CL 路径是否正常；如有问题，在 48c601c3b1 与当前版本之间进行二分排查</li>
       <li>混合挤出口尺寸下仅外壳着色 FlowErrorNegativeSpacing — 尚未诊断</li>
+      <li>仅外壳着色 CL=1 弧线端点接缝伪影（最近/对齐接缝位置）— 变通方法：使用随机接缝</li>
+      <li>按实际外墙挤出口过滤打印流程预设 — 延迟至累加器层高同步实现</li>
+      <li>累加器层高同步（NozzleLayerPlanner）— 尚未开始</li>
+      <li>深色模式挤出口颜色条 — 尚未测试</li>
       <li>绝对首次启动时内壁下拉框显示异常 — 优先级低，点击可刷新</li>
-      <li>outer_wall_layer_height_max：UI 中已有字段，但 NozzleLayerPlanner 累加器尚未实现</li>
       <li>注释清理 — 将 FOS 注释中的 T1/T2 引用替换为"基础挤出机"/"涂色挤出机"</li>
-      <li>GitHub Wiki：说明混合挤出口外墙/内壁行为与原版 OrcaSlicer 的区别</li>
+      <li>GitHub Wiki：说明混合挤出口外墙/内壁行为与原版 OrcaSlicer 的区别 · wiki 已在 gitclub.design4paragon.com 启动</li>
       <li>outer_wall_loops：UI 无硬性上限（标签变红作为警告 — 已接受）</li>
       <li>NozzleVerifyDialog 颜色：耗材更改后需重新切片才更新</li>
       <li>CL 滑块最大值在 UI 中硬编码为 10 — 如有需要可调高</li>
       <li>操作工具面板中无视觉指示器显示哪个挤出口处于仅外壳着色模式 vs 原始模式</li>
       <li>逐对象 CL 仅可通过操作工具设置，未在对象属性面板（Objects 标签）中开放</li>
-      <li>扩展测试：复杂多色模型、跨对象层高变化、着色区域内的接缝位置</li>
     </ul>
   </div>
 </div>
@@ -1347,7 +1509,7 @@ function setLang(lang){
   var s=document.getElementById('main-sub');
   if(lang==='zh'){
     t.textContent='FOrcaSlicer — 灵活版 OrcaSlicer 开发路线图';
-    s.textContent='Snapmaker U1 · OrcaSlicer 分支 · 2026年5月15–31日 · 点击任意卡片展开';
+    s.textContent='Snapmaker U1 · OrcaSlicer 分支 · 2026年5月15日 – 6月3日 · 点击任意卡片展开';
   } else {
     t.textContent='FOrcaSlicer — Flexible OrcaSlicer dev roadmap';
     s.textContent='Snapmaker U1 · OrcaSlicer fork · May 15–30 2026 · click any card to expand';
