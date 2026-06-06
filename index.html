@@ -53,7 +53,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div class="tl-header">
   <div class="tl-header-left">
     <h2 id="main-title">FOrcaSlicer — Flexible OrcaSlicer dev roadmap</h2>
-    <span id="main-sub">Snapmaker U1 · OrcaSlicer fork · May 15 – Jun 4 2026 · click any card to expand</span>
+    <span id="main-sub">Snapmaker U1 · OrcaSlicer fork · May 15 – Jun 5 2026 · click any card to expand</span>
   </div>
   <div class="lang-toggle">
     <button class="lang-btn active" onclick="setLang('en')">EN</button>
@@ -70,7 +70,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div class="tl-card" onclick="toggle(this)">
   <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-gray">Setup</span><div><div class="tl-title">Architecture &amp; repo decisions</div><div class="tl-sub">Design goals, hardware constraints, repo selection</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
-    <div class="tl-decision">Decision change</div>
+    <div class="tl-decision">Major Decision</div>
     <span class="tl-section-label">Design decisions locked</span>
     <ul>
       <li>wall[0] = 0.2mm outer nozzle; wall[1+] = 0.4mm inner nozzle</li>
@@ -177,7 +177,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div class="tl-card" onclick="toggle(this)">
   <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-amber">Pivot</span><div><div class="tl-title">Fork from Snapmaker Orca instead of FullSpectrum</div><div class="tl-sub">Cleaner base, Filament for Features already working</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
-    <div class="tl-decision">Decision change</div>
+    <div class="tl-decision">Major Decision</div>
     <ul>
       <li>FullSpectrum: unresolvable resolved_model_config_for_tab filtering — sparse_infill_filament couldn't show in Multimaterial tab</li>
       <li>Snapmaker Orca is the actual target hardware — cleaner starting point</li>
@@ -388,7 +388,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div class="tl-card" onclick="toggle(this)">
   <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">Phase 6</span><div><div class="tl-title">Renamed to FOrcaSlicer — Flexible OrcaSlicer + Fork-a-Slicer</div><div class="tl-sub">Exe, DLL, installer, icon, web UI, splash, README all updated · v2.3.2-fos.1 released</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
-    <div class="tl-decision">Decision change</div>
+    <div class="tl-decision">Major Decision</div>
     <span class="tl-section-label">Files changed</span>
     <ul>
       <li>version.inc: SLIC3R_APP_NAME "FOrcaSlicer" · SLIC3R_APP_KEY must stay "Snapmaker_Orca" — translation .mo files are named Snapmaker_Orca.mo, changing it crashes the app</li>
@@ -426,7 +426,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div class="tl-card" onclick="toggle(this)">
   <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-blue">Phase 7a</span><div><div class="tl-title">Color patch top/bottom solid surfaces — design &amp; iterations</div><div class="tl-sub">Extend color patch to painted top/bottom faces — solid infill in painted color</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
-    <div class="tl-decision">Decision change</div>
+    <div class="tl-decision">Major Decision</div>
     <span class="tl-section-label">Correct behavior (spec, May 29)</span>
     <ul>
       <li>Side walls: CL loops only (shell_strip) — existing behavior unchanged</li>
@@ -714,7 +714,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div class="tl-card" onclick="toggle(this)">
   <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">Phase 9b</span><div><div class="tl-title">Nozzle diameter panel redesign (fos.4)</div><div class="tl-sub">2-column grid UI · mixed mode toggle · auto-detect · PRP refresh chain</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
-    <div class="tl-decision">Decision change</div>
+    <div class="tl-decision">Major Decision</div>
     <span class="tl-section-label">New UI (Plater.cpp, ParamsPanel.cpp)</span>
     <ul>
       <li>Printer Preset = PTP
@@ -774,14 +774,14 @@ Process Preset = PRP</li>
   <div class="tl-detail">
     <span class="tl-section-label">Root cause</span>
     <ul>
-      <li>GL volume color: vol->extruder_id → filament_colour[extruder_id-1]; extruder_id always 1 for unpainted objects</li>
-      <li>simple_render (shells/thumbnails after slicing) hardcoded model_volume->extruder_id() as base color index</li>
-      <li>Paint gizmo ebt_colors[0] (base color for unpainted faces) also used mv->extruder_id()-1</li>
-      <li>Key design decision: do NOT set mo->config["extruder"] — breaks slicing by overriding per-feature filament assignments in object_config_from_model_object. Color override is purely visual.</li>
+      <li>GL volume color: vol-&gt;extruder_id → filament_colour[extruder_id-1]; extruder_id always 1 for unpainted objects</li>
+      <li>simple_render (shells/thumbnails after slicing) hardcoded model_volume-&gt;extruder_id() as base color index</li>
+      <li>Paint gizmo ebt_colors[0] (base color for unpainted faces) also used mv-&gt;extruder_id()-1</li>
+      <li>Key design decision: do NOT set mo-&gt;config["extruder"] — breaks slicing by overriding per-feature filament assignments in object_config_from_model_object. Color override is purely visual.</li>
     </ul>
     <span class="tl-section-label">Fix locations</span>
     <ul>
-      <li>Tab.cpp on_value_change: when wall_filament changes, CallAfter patches vol->extruder_id directly on all non-modifier GL volumes → update_volumes_colors_by_extruder(). Does NOT touch mo->config</li>
+      <li>Tab.cpp on_value_change: when wall_filament changes, CallAfter patches vol-&gt;extruder_id directly on all non-modifier GL volumes → update_volumes_colors_by_extruder(). Does NOT touch mo-&gt;config</li>
       <li>GLCanvas3D.cpp reload_scene: after update_volumes_colors_by_extruder(), re-reads wall_filament and re-applies extruder_id override if OW &gt; 1 — ensures color persists across every reload_scene</li>
     </ul>
     <span class="tl-section-label">Files changed</span>
@@ -789,7 +789,9 @@ Process Preset = PRP</li>
       <li>Tab.cpp · GLCanvas3D.cpp · Plater.cpp · resources/images/nozzle_diameter.svg</li>
     </ul>
     <div class="tl-milestone">Milestone</div>
-    <ul><li>v2.3.2-fos.5 released · VIProductVersion 2.3.2.5</li></ul>
+    <ul>
+      <li>v2.3.2-fos.5 released · VIProductVersion 2.3.2.5</li>
+    </ul>
   </div>
 </div>
 </div>
@@ -800,9 +802,9 @@ Process Preset = PRP</li>
   <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">Phase 10c</span><div><div class="tl-title">Multi-material painting erase warning on OW change</div><div class="tl-sub">Prompt to erase MMU painting when OW nozzle changed · currently commented out pending testing</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <ul>
-      <li>When wall_filament changes: check mv->is_mm_painted() across all objects</li>
+      <li>When wall_filament changes: check mv-&gt;is_mm_painted() across all objects</li>
       <li>If painted: MessageDialog — "Changing the Outer Wall nozzle will erase all multi-material painting on all objects."</li>
-      <li>Yes: mmu_segmentation_facets.reset() on all model part volumes → plater()->update()</li>
+      <li>Yes: mmu_segmentation_facets.reset() on all model part volumes → plater()-&gt;update()</li>
       <li>No: read old value from get_selected_preset().config, revert via m_config_manipulation.apply(), return early — dropdown snaps back</li>
       <li>Currently commented out — more testing needed before enabling</li>
     </ul>
@@ -819,7 +821,7 @@ Process Preset = PRP</li>
     <span class="tl-section-label">Root cause (remaining from fos.5)</span>
     <ul>
       <li>simple_render (shells/thumbnails) still hardcoded extruder_id() as base color</li>
-      <li>Paint gizmo ebt_colors[0] used mv->extruder_id()-1, not OW extruder</li>
+      <li>Paint gizmo ebt_colors[0] used mv-&gt;extruder_id()-1, not OW extruder</li>
     </ul>
     <span class="tl-section-label">Fix locations (3DScene.cpp, GLCanvas3D.cpp, GLGizmoMmuSegmentation.cpp)</span>
     <ul>
@@ -831,7 +833,9 @@ Process Preset = PRP</li>
       <li>GLGizmoMmuSegmentation.cpp update_triangle_selectors_colors + data_changed: static last_ow_ext_idx tracks wall_filament changes, triggers color update when changed</li>
     </ul>
     <div class="tl-milestone">Milestone</div>
-    <ul><li>Model color, thumbnails, and paint gizmo base color all correctly reflect OW nozzle assignment</li></ul>
+    <ul>
+      <li>Model color, thumbnails, and paint gizmo base color all correctly reflect OW nozzle assignment</li>
+    </ul>
   </div>
 </div>
 </div>
@@ -857,7 +861,64 @@ Process Preset = PRP</li>
       <li>Fix: after update_presets_from_to in save_preset, call sidebar().update_nozzle_settings(true) when m_type == TYPE_PRINTER</li>
     </ul>
     <div class="tl-milestone">Milestone</div>
-    <ul><li>v2.3.2-fos.6 released · VIProductVersion 2.3.2.6</li></ul>
+    <ul>
+      <li>v2.3.2-fos.6 released · VIProductVersion 2.3.2.6</li>
+    </ul>
+  </div>
+</div>
+</div>
+
+<div class="tl-date">Phase 12 — Nozzle verify panel + mouse config + GCode legend — Jun 5 · v2.3.2-fos.7</div>
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#1A7A4A"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">Phase 12a</span><div><div class="tl-title">Nozzle verification integrated into GCode legend panel</div><div class="tl-sub">Floating dialog replaced with inline panel in Filament legend · Print button gate preserved</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-detail">
+    <div class="tl-decision">Major Decision</div>
+    <span class="tl-section-label">New behavior</span>
+    <ul>
+      <li>After slicing with mixed nozzles, a "Nozzle Verification" section appears at top of Filament legend panel (above filament table)</li>
+      <li>2-row grid: Nozzle 1–N labels on top, diameter values with color-coded rectangles below (0.2mm=white, 0.4mm=10% grey, 0.6mm=20% grey, 0.8mm=30% grey)</li>
+      <li>Green "Verify nozzle sizes" button gates Print button until clicked → turns grey "[OK]" state</li>
+      <li>Re-slicing resets button back to green "Verify nozzle sizes"</li>
+      <li>Floating NozzleVerifyDialog commented out (preserved for future reference)</li>
+    </ul>
+    <span class="tl-section-label">Files changed</span>
+    <ul>
+      <li>GCodeViewer.cpp — FOS nozzle verify block in case EViewType::ColorPrint</li>
+      <li>Plater.cpp — verify_nozzle_sizes(), is_nozzle_verify_required(), is_nozzle_verified(), reset on reslice</li>
+      <li>MainFrame.cpp — reset_nozzle_verified(), set_nozzle_verified_only()</li>
+    </ul>
+  </div>
+</div>
+</div>
+
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#1A7A4A"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">Phase 12b</span><div><div class="tl-title">Mouse drag button assignment in Preferences + GCode legend defaults</div><div class="tl-sub">Settings → General: per-button rotate/pan/none · Filament view default · OW first in Line Type</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-detail">
+    <div class="tl-decision">Major Decision</div>
+    <span class="tl-section-label">Mouse drag assignment UI (Preferences.cpp, AppConfig.cpp, GLCanvas3D.cpp)</span>
+    <ul>
+      <li>Settings → General (below Use free camera): 3-row table — Left drag / Middle drag / Right drag, each with radio buttons: Rotate | Pan | Not assigned</li>
+      <li>Defaults: Left=Rotate, Middle=Pan, Right=Rotate</li>
+      <li>Config keys: mouse_left_btn_fn, mouse_middle_btn_fn, mouse_right_btn_fn (values: "rotate" | "pan" | "none")</li>
+      <li>GLCanvas3D.cpp is_camera_rotate + is_camera_pan read new keys</li>
+    </ul>
+    <span class="tl-section-label">Filament view as default in GCode legend (GCodeViewer.cpp/hpp)</span>
+    <ul>
+      <li>ColorPrint moved to first in view_type_items list</li>
+      <li>m_view_type default changed to EViewType::ColorPrint</li>
+    </ul>
+    <span class="tl-section-label">Outer Wall first in Line Type legend (GCodeViewer.cpp)</span>
+    <ul>
+      <li>After sort_remove_duplicates(m_roles), erExternalPerimeter and erPerimeter are swapped so OW appears before IW</li>
+    </ul>
+    <div class="tl-milestone">Milestone</div>
+    <ul>
+      <li>v2.3.2-fos.7 released · VIProductVersion 2.3.2.7</li>
+    </ul>
   </div>
 </div>
 </div>
@@ -873,15 +934,16 @@ Process Preset = PRP</li>
       <li>Color patch FlowErrorNegativeSpacing with mixed nozzle sizes — not yet diagnosed</li>
       <li>Color patch CL=1 seam artifacts at arc endpoints (nearest/aligned seam) — workaround: use random seam</li>
       <li>Painting erase warning on OW change — implemented but commented out, pending testing</li>
-      <li>Right drag reassignment — investigate fully reassigning left drag to separate action if needed</li>
       <li>PRP filtering by actual OW nozzle — deferred until accumulator layer height sync implemented</li>
       <li>Accumulator layer height sync (NozzleLayerPlanner) — not yet started</li>
+      <li>Per-nozzle FLP filtering — all FLP dropdowns filter by nozzle 1; pending Snapmaker clarification on 0.2mm FLP list</li>
+      <li>Per-nozzle hardened steel toggle — allow marking individual nozzles as HS vs standard</li>
+      <li>Drag-and-drop STL after fresh install fails — workaround: run OrcaSlicer once then switch back; fix: investigate installer.nsi shell registration</li>
       <li>Dark mode nozzle color bars — not yet tested</li>
       <li>IW dropdown incorrect on absolute first launch — low priority, clicking refreshes</li>
       <li>Comment cleanup — replace T1/T2 in FOS comments with "base extruder" / "painted extruder"</li>
       <li>GitHub wiki: mixed nozzle OW/IW behavior vs stock OrcaSlicer · wiki started in closed environment</li>
       <li>outer_wall_loops: no hard UI cap (label turns red as warning — accepted)</li>
-      <li>NozzleVerifyDialog color doesn't update until fresh reslice after filament change</li>
       <li>CL slider max hardcoded to 10 in UI — increase if needed</li>
       <li>No visual indicator in gizmo showing which extruder has Color Patch vs Original active</li>
       <li>Per-object CL not exposed in Objects tab — only via gizmo</li>
@@ -890,7 +952,7 @@ Process Preset = PRP</li>
 </div>
 </div>
 
-</div><!-- end EN --><!-- end EN -->
+</div><!-- end EN --><!-- end EN --><!-- end EN -->
 
 <!-- ============================================================ CHINESE ============================================================ -->
 <div lang-content="zh">
@@ -1602,14 +1664,14 @@ Process Preset = PRP</li>
   <div class="tl-detail">
     <span class="tl-section-label">根本原因</span>
     <ul>
-      <li>GL 体积颜色：vol->extruder_id → filament_colour[extruder_id-1]；未涂色实体的 extruder_id 始终为 1</li>
-      <li>simple_render（切片后的壳体/缩略图）将 model_volume->extruder_id() 硬编码为基础颜色索引</li>
-      <li>涂色工具 ebt_colors[0]（未涂色面的基础颜色）同样使用 mv->extruder_id()-1</li>
-      <li>重大决策：禁止设置 mo->config["extruder"] — 会通过 object_config_from_model_object 覆盖各功能耗材分配，破坏切片。颜色覆盖仅为纯视觉效果。</li>
+      <li>GL 体积颜色：vol-&gt;extruder_id → filament_colour[extruder_id-1]；未涂色实体的 extruder_id 始终为 1</li>
+      <li>simple_render（切片后的壳体/缩略图）将 model_volume-&gt;extruder_id() 硬编码为基础颜色索引</li>
+      <li>涂色工具 ebt_colors[0]（未涂色面的基础颜色）同样使用 mv-&gt;extruder_id()-1</li>
+      <li>重大决策：禁止设置 mo-&gt;config["extruder"] — 会通过 object_config_from_model_object 覆盖各功能耗材分配，破坏切片。颜色覆盖仅为纯视觉效果。</li>
     </ul>
     <span class="tl-section-label">修复位置</span>
     <ul>
-      <li>Tab.cpp on_value_change：wall_filament 变更时，通过 CallAfter 直接修补所有非修改体 GL 体积的 vol->extruder_id → update_volumes_colors_by_extruder()，不修改 mo->config</li>
+      <li>Tab.cpp on_value_change：wall_filament 变更时，通过 CallAfter 直接修补所有非修改体 GL 体积的 vol-&gt;extruder_id → update_volumes_colors_by_extruder()，不修改 mo-&gt;config</li>
       <li>GLCanvas3D.cpp reload_scene：update_volumes_colors_by_extruder() 后重新读取 wall_filament，若 OW &gt; 1 则重新应用 extruder_id 覆盖 — 确保颜色在每次 reload_scene 后持久保留</li>
     </ul>
     <span class="tl-section-label">修改的文件</span>
@@ -1617,7 +1679,9 @@ Process Preset = PRP</li>
       <li>Tab.cpp · GLCanvas3D.cpp · Plater.cpp · resources/images/nozzle_diameter.svg</li>
     </ul>
     <div class="tl-milestone">里程碑</div>
-    <ul><li>v2.3.2-fos.5 已发布 · VIProductVersion 2.3.2.5</li></ul>
+    <ul>
+      <li>v2.3.2-fos.5 已发布 · VIProductVersion 2.3.2.5</li>
+    </ul>
   </div>
 </div>
 </div>
@@ -1628,9 +1692,9 @@ Process Preset = PRP</li>
   <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">第10c阶段</span><div><div class="tl-title">外墙挤出口变更时的多材料涂色擦除警告</div><div class="tl-sub">已实现但暂时注释 — 待测试后启用</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <ul>
-      <li>wall_filament 变更时：检查所有实体上 mv->is_mm_painted()</li>
+      <li>wall_filament 变更时：检查所有实体上 mv-&gt;is_mm_painted()</li>
       <li>若有涂色：弹出 MessageDialog — "更改外墙挤出口将擦除所有实体上的多材料涂色。"</li>
-      <li>确认：对所有模型部件体积调用 mmu_segmentation_facets.reset() → plater()->update()</li>
+      <li>确认：对所有模型部件体积调用 mmu_segmentation_facets.reset() → plater()-&gt;update()</li>
       <li>取消：从 get_selected_preset().config 读取旧值，通过 m_config_manipulation.apply() 还原，提前返回 — 下拉框恢复原值</li>
       <li>当前已注释 — 启用前需更多测试</li>
     </ul>
@@ -1647,7 +1711,7 @@ Process Preset = PRP</li>
     <span class="tl-section-label">fos.5 遗留根本原因</span>
     <ul>
       <li>simple_render（壳体/缩略图）仍将 extruder_id() 硬编码为基础颜色</li>
-      <li>涂色工具 ebt_colors[0] 使用 mv->extruder_id()-1，而非外墙挤出口</li>
+      <li>涂色工具 ebt_colors[0] 使用 mv-&gt;extruder_id()-1，而非外墙挤出口</li>
     </ul>
     <span class="tl-section-label">修复位置（3DScene.cpp、GLCanvas3D.cpp、GLGizmoMmuSegmentation.cpp）</span>
     <ul>
@@ -1659,7 +1723,9 @@ Process Preset = PRP</li>
       <li>GLGizmoMmuSegmentation.cpp update_triangle_selectors_colors + data_changed：静态变量 last_ow_ext_idx 追踪 wall_filament 变更，变更时触发颜色更新</li>
     </ul>
     <div class="tl-milestone">里程碑</div>
-    <ul><li>模型颜色、缩略图和涂色工具基础颜色均正确反映外墙挤出口分配</li></ul>
+    <ul>
+      <li>模型颜色、缩略图和涂色工具基础颜色均正确反映外墙挤出口分配</li>
+    </ul>
   </div>
 </div>
 </div>
@@ -1685,14 +1751,71 @@ Process Preset = PRP</li>
       <li>修复：save_preset 中 update_presets_from_to 之后，当 m_type == TYPE_PRINTER 时调用 sidebar().update_nozzle_settings(true)</li>
     </ul>
     <div class="tl-milestone">里程碑</div>
-    <ul><li>v2.3.2-fos.6 已发布 · VIProductVersion 2.3.2.6</li></ul>
+    <ul>
+      <li>v2.3.2-fos.6 已发布 · VIProductVersion 2.3.2.6</li>
+    </ul>
+  </div>
+</div>
+</div>
+
+<div class="tl-date">第十二阶段 — 挤出口验证面板 + 鼠标配置 + GCode 图例 — 6月5日 · v2.3.2-fos.7</div>
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#1A7A4A"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">第12a阶段</span><div><div class="tl-title">挤出口验证集成至 GCode 图例面板</div><div class="tl-sub">浮动对话框替换为耗材图例内嵌面板 · 打印按钮门控保留</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-detail">
+    <div class="tl-decision">重大决策</div>
+    <span class="tl-section-label">新行为</span>
+    <ul>
+      <li>混合挤出口切片完成后，耗材图例面板顶部（耗材列表上方）出现"挤出口验证"区域</li>
+      <li>两行网格：上行显示挤出口 1–N 标签，下行显示带颜色矩形的直径值（0.2mm=白色，0.4mm=10%灰，0.6mm=20%灰，0.8mm=30%灰）</li>
+      <li>绿色"验证挤出口尺寸"按钮 — 点击前打印按钮被锁定；点击后变为灰色"[OK]"状态</li>
+      <li>重新切片后按钮重置为绿色"验证挤出口尺寸"</li>
+      <li>浮动 NozzleVerifyDialog 已注释（保留供后续参考）</li>
+    </ul>
+    <span class="tl-section-label">修改的文件</span>
+    <ul>
+      <li>GCodeViewer.cpp — EViewType::ColorPrint case 中的 FOS 挤出口验证块</li>
+      <li>Plater.cpp — verify_nozzle_sizes()、is_nozzle_verify_required()、is_nozzle_verified()、重新切片时重置</li>
+      <li>MainFrame.cpp — reset_nozzle_verified()、set_nozzle_verified_only()</li>
+    </ul>
+  </div>
+</div>
+</div>
+
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#1A7A4A"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">第12b阶段</span><div><div class="tl-title">偏好设置中的鼠标按键分配 + GCode 图例默认值</div><div class="tl-sub">设置 → 通用：逐按键旋转/平移/不分配 · 耗材视图为默认 · 外墙在线型图例中排首位</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-detail">
+    <div class="tl-decision">重大决策</div>
+    <span class="tl-section-label">鼠标拖拽分配 UI（Preferences.cpp、AppConfig.cpp、GLCanvas3D.cpp）</span>
+    <ul>
+      <li>设置 → 通用（"使用自由相机"下方）：三行表格 — 左键拖拽 / 中键拖拽 / 右键拖拽，每行含单选按钮：旋转 | 平移 | 不分配</li>
+      <li>默认值：左键=旋转，中键=平移，右键=旋转</li>
+      <li>配置键：mouse_left_btn_fn、mouse_middle_btn_fn、mouse_right_btn_fn（值："rotate" | "pan" | "none"）</li>
+      <li>GLCanvas3D.cpp is_camera_rotate + is_camera_pan 读取新配置键</li>
+    </ul>
+    <span class="tl-section-label">GCode 图例默认显示耗材视图（GCodeViewer.cpp/hpp）</span>
+    <ul>
+      <li>ColorPrint 移至 view_type_items 列表首位</li>
+      <li>m_view_type 默认值改为 EViewType::ColorPrint</li>
+    </ul>
+    <span class="tl-section-label">外墙在线型图例中排首位（GCodeViewer.cpp）</span>
+    <ul>
+      <li>sort_remove_duplicates(m_roles) 后交换 erExternalPerimeter 与 erPerimeter，使外墙显示在内壁之前</li>
+    </ul>
+    <div class="tl-milestone">里程碑</div>
+    <ul>
+      <li>v2.3.2-fos.7 已发布 · VIProductVersion 2.3.2.7</li>
+    </ul>
   </div>
 </div>
 </div>
 
 <div class="tl-date">待完成 / TODO</div>
 <div class="tl-row">
-<div class="tl-spine"><div class="tl-dot" style="background:#888780"></div></div>
+<div class="tl-spine"><div class="tl-dot" style="background:#888780"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
   <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-gray">TODO</span><div><div class="tl-title">待处理事项</div><div class="tl-sub">回归修复、代码清理、待实现功能</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
@@ -1701,15 +1824,16 @@ Process Preset = PRP</li>
       <li>混合挤出口尺寸下仅外壳着色 FlowErrorNegativeSpacing — 尚未诊断</li>
       <li>仅外壳着色 CL=1 弧线端点接缝伪影（最近/对齐接缝位置）— 变通方法：使用随机接缝</li>
       <li>外墙挤出口变更时的涂色擦除警告 — 已实现但注释，待测试后启用</li>
-      <li>右键拖拽重新分配 — 调查是否需要将左键拖拽重新分配为独立操作</li>
       <li>按实际外墙挤出口过滤打印流程预设 — 延迟至累加器层高同步实现</li>
       <li>累加器层高同步（NozzleLayerPlanner）— 尚未开始</li>
+      <li>逐挤出口耗材列表过滤 — 所有耗材下拉框按挤出口 1 过滤；待 Snapmaker 确认 0.2mm 耗材列表问题</li>
+      <li>逐挤出口钢化钢（HS）切换 — 允许单独标记各挤出口为 HS 或标准型</li>
+      <li>全新安装后拖拽 STL 文件失败 — 变通方法：先运行一次 OrcaSlicer 再切换；修复方向：排查 installer.nsi 的 shell 注册</li>
       <li>深色模式挤出口颜色条 — 尚未测试</li>
       <li>绝对首次启动时内壁下拉框显示异常 — 优先级低，点击可刷新</li>
       <li>注释清理 — 将 FOS 注释中的 T1/T2 引用替换为"基础挤出机"/"涂色挤出机"</li>
       <li>GitHub Wiki：说明混合挤出口外墙/内壁行为与原版 OrcaSlicer 的区别 · wiki 已在封闭环境中启动</li>
       <li>outer_wall_loops：UI 无硬性上限（标签变红作为警告 — 已接受）</li>
-      <li>NozzleVerifyDialog 颜色：耗材更改后需重新切片才更新</li>
       <li>CL 滑块最大值在 UI 中硬编码为 10 — 如有需要可调高</li>
       <li>操作工具面板中无视觉指示器显示哪个挤出口处于仅外壳着色模式 vs 原始模式</li>
       <li>逐对象 CL 仅可通过操作工具设置，未在对象属性面板（Objects 标签）中开放</li>
@@ -1718,7 +1842,7 @@ Process Preset = PRP</li>
 </div>
 </div>
 
-</div><!-- end ZH -->
+</div><!-- end ZH --><!-- end ZH -->
 </div>
 <script>
 function toggle(card){card.classList.toggle('open')}
@@ -1733,10 +1857,10 @@ function setLang(lang){
   var s=document.getElementById('main-sub');
   if(lang==='zh'){
     t.textContent='FOrcaSlicer — 灵活版 OrcaSlicer 开发路线图';
-    s.textContent='Snapmaker U1 · OrcaSlicer 分支 · 2026年5月15日 – 6月4日 · 点击任意卡片展开';
+    s.textContent='Snapmaker U1 · OrcaSlicer 分支 · 2026年5月15日 – 6月5日 · 点击任意卡片展开';
   } else {
     t.textContent='FOrcaSlicer — Flexible OrcaSlicer dev roadmap';
-    s.textContent='Snapmaker U1 · OrcaSlicer fork · May 15 – Jun 4 2026 · click any card to expand';
+    s.textContent='Snapmaker U1 · OrcaSlicer fork · May 15 – Jun 5 2026 · click any card to expand';
   }
 }
 </script>
