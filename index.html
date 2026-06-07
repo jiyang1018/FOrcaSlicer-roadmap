@@ -53,7 +53,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div class="tl-header">
   <div class="tl-header-left">
     <h2 id="main-title">FOrcaSlicer — Flexible OrcaSlicer dev roadmap</h2>
-    <span id="main-sub">Snapmaker U1 · OrcaSlicer fork · May 15 – Jun 5 2026 · click any card to expand</span>
+    <span id="main-sub">Snapmaker U1 · OrcaSlicer fork · May 15 – Jun 7 2026 · click any card to expand</span>
   </div>
   <div class="lang-toggle">
     <button class="lang-btn active" onclick="setLang('en')">EN</button>
@@ -923,6 +923,45 @@ Process Preset = PRP</li>
 </div>
 </div>
 
+<div class="tl-date">Phase 13 — Per-nozzle FLP filtering for mixed nozzle — Jun 7 · v2.3.2-fos.8</div>
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#1A7A4A"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">Phase 13a</span><div><div class="tl-title">Per-nozzle filament profile filtering — correct volumetric speed per slot</div><div class="tl-sub">Slot 3/4 (0.2mm) now auto-selects 0.2mm FLP · 1.6mm³/s instead of 12mm³/s</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-detail">
+    <div class="tl-decision">Major Decision</div>
+    <span class="tl-section-label">Root cause</span>
+    <ul>
+      <li>PresetComboBoxes.cpp FLP filter used nozzle_diameter[0] for all slots</li>
+      <li>Preset.cpp update_compatible_internal only marked FLPs compatible via parent printer inheritance — 0.2mm FLPs incompatible when printer inherits from 0.4mm parent</li>
+      <li>PresetBundle.cpp update_compatible auto-selection ignored nozzle diameter per slot</li>
+      <li>Alias collision: Generic PLA and Generic PLA @U1 0.2 nozzle share alias "Generic PLA" — map key collision caused wrong preset to display/select</li>
+    </ul>
+    <span class="tl-section-label">Fix — Preset.cpp</span>
+    <ul>
+      <li>update_compatible_internal: FOS block marks filament presets compatible if compatible_printers matches any nozzle diameter in mixed nozzle printer config</li>
+      <li>Restricted to TYPE_FILAMENT only · uses vector copy of cp->values to avoid pointer invalidation</li>
+    </ul>
+    <span class="tl-section-label">Fix — PresetBundle.cpp</span>
+    <ul>
+      <li>update_compatible: unconditional FOS block after select_other_filament_if_incompatible gate</li>
+      <li>Iterates all filament slots, checks compatible_printers against slot's nozzle diameter</li>
+      <li>On mismatch: first_compatible lambda scores by nozzle match (required) + same alias (+1000) + same material type (+10)</li>
+    </ul>
+    <span class="tl-section-label">Fix — PresetComboBoxes.cpp</span>
+    <ul>
+      <li>Per-slot display filter in PlaterPresetComboBox::update(): filters by slot nozzle diameter AND printer model</li>
+      <li>get_preset_name override returns full preset name in mixed nozzle mode</li>
+      <li>Appends @U1 X.X nozzle suffix to presets lacking nozzle suffix — consistent naming</li>
+    </ul>
+    <div class="tl-milestone">Milestone</div>
+    <ul>
+      <li>Slot 1/2 (0.4mm): Generic PLA @U1 0.4 nozzle, 12mm³/s ✓ · Slot 3/4 (0.2mm): auto-selects Generic PLA @U1 0.2 nozzle, 1.6mm³/s ✓ · v2.3.2-fos.8 released</li>
+    </ul>
+  </div>
+</div>
+</div>
+
 <div class="tl-date">Outstanding / TODO</div>
 <div class="tl-row">
 <div class="tl-spine"><div class="tl-dot" style="background:#888780"></div><div class="tl-line"></div></div>
@@ -934,11 +973,13 @@ Process Preset = PRP</li>
       <li>Color patch FlowErrorNegativeSpacing with mixed nozzle sizes — not yet diagnosed</li>
       <li>Color patch CL=1 seam artifacts at arc endpoints (nearest/aligned seam) — workaround: use random seam</li>
       <li>Painting erase warning on OW change — implemented but commented out, pending testing</li>
+      <li>PRP dropdown width not adaptive in mixed nozzle mode</li>
       <li>PRP filtering by actual OW nozzle — deferred until accumulator layer height sync implemented</li>
       <li>Accumulator layer height sync (NozzleLayerPlanner) — not yet started</li>
-      <li>Per-nozzle FLP filtering — all FLP dropdowns filter by nozzle 1; pending Snapmaker clarification on 0.2mm FLP list</li>
+      <li>Per-nozzle FLP — full architecture deferred: requires per-slot speed overrides in PTP (OW/IW/infill/top surface speeds per nozzle)</li>
+      <li>Toolhead UID identity system — each toolhead needs factory-burned UID; blocked by hardware; software architecture planned (local registry JSON, PTP stores UID arrangement)</li>
       <li>Per-nozzle hardened steel toggle — allow marking individual nozzles as HS vs standard</li>
-      <li>Drag-and-drop STL after fresh install fails — workaround: run OrcaSlicer once then switch back; fix: investigate installer.nsi shell registration</li>
+      <li>Drag-and-drop STL after fresh install fails — workaround: run OrcaSlicer once; fix: investigate installer.nsi shell registration</li>
       <li>Dark mode nozzle color bars — not yet tested</li>
       <li>IW dropdown incorrect on absolute first launch — low priority, clicking refreshes</li>
       <li>Comment cleanup — replace T1/T2 in FOS comments with "base extruder" / "painted extruder"</li>
@@ -952,7 +993,7 @@ Process Preset = PRP</li>
 </div>
 </div>
 
-</div><!-- end EN --><!-- end EN --><!-- end EN -->
+</div><!-- end EN --><!-- end EN --><!-- end EN --><!-- end EN -->
 
 <!-- ============================================================ CHINESE ============================================================ -->
 <div lang-content="zh">
@@ -1813,6 +1854,45 @@ Process Preset = PRP</li>
 </div>
 </div>
 
+<div class="tl-date">第十三阶段 — 混合挤出口逐槽耗材列表过滤 — 6月7日 · v2.3.2-fos.8</div>
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#1A7A4A"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">第13a阶段</span><div><div class="tl-title">逐挤出口耗材配置文件过滤 — 各槽独立体积流速</div><div class="tl-sub">槽 3/4（0.2mm）现自动选择 0.2mm 耗材配置 · 1.6mm³/s 而非 12mm³/s</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-detail">
+    <div class="tl-decision">重大决策</div>
+    <span class="tl-section-label">根本原因</span>
+    <ul>
+      <li>PresetComboBoxes.cpp 耗材列表过滤对所有槽均使用 nozzle_diameter[0]</li>
+      <li>Preset.cpp update_compatible_internal 仅通过父打印机继承关系标记耗材列表兼容性 — 当打印机继承自 0.4mm 父级时，0.2mm 耗材列表被标记为不兼容</li>
+      <li>PresetBundle.cpp update_compatible 自动选择逻辑忽略各槽独立的挤出口直径</li>
+      <li>别名冲突："Generic PLA" 与 "Generic PLA @U1 0.2 nozzle" 共享别名 "Generic PLA" — map 键冲突导致显示/选择错误的预设</li>
+    </ul>
+    <span class="tl-section-label">修复 — Preset.cpp</span>
+    <ul>
+      <li>update_compatible_internal：FOS 块在混合挤出口打印机配置中，若 compatible_printers 匹配任意挤出口直径则标记耗材列表为兼容</li>
+      <li>仅限 TYPE_FILAMENT · 使用 cp->values 的向量副本避免指针失效</li>
+    </ul>
+    <span class="tl-section-label">修复 — PresetBundle.cpp</span>
+    <ul>
+      <li>update_compatible：在 select_other_filament_if_incompatible 门控之后添加无条件 FOS 块</li>
+      <li>遍历所有耗材槽，将 compatible_printers 与各槽挤出口直径比对</li>
+      <li>不匹配时：first_compatible lambda 按挤出口匹配（必要）+ 相同别名（+1000）+ 相同材料类型（+10）评分</li>
+    </ul>
+    <span class="tl-section-label">修复 — PresetComboBoxes.cpp</span>
+    <ul>
+      <li>PlaterPresetComboBox::update() 中逐槽显示过滤：按槽挤出口直径 + 打印机型号过滤</li>
+      <li>混直径模式下 get_preset_name 返回完整预设名称</li>
+      <li>为缺少挤出口后缀的预设追加 @U1 X.X nozzle — 保持命名一致性</li>
+    </ul>
+    <div class="tl-milestone">里程碑</div>
+    <ul>
+      <li>槽 1/2（0.4mm）：Generic PLA @U1 0.4 nozzle，12mm³/s ✓ · 槽 3/4（0.2mm）：自动选择 Generic PLA @U1 0.2 nozzle，1.6mm³/s ✓ · v2.3.2-fos.8 已发布</li>
+    </ul>
+  </div>
+</div>
+</div>
+
 <div class="tl-date">待完成 / TODO</div>
 <div class="tl-row">
 <div class="tl-spine"><div class="tl-dot" style="background:#888780"></div><div class="tl-line"></div></div>
@@ -1824,9 +1904,11 @@ Process Preset = PRP</li>
       <li>混合挤出口尺寸下仅外壳着色 FlowErrorNegativeSpacing — 尚未诊断</li>
       <li>仅外壳着色 CL=1 弧线端点接缝伪影（最近/对齐接缝位置）— 变通方法：使用随机接缝</li>
       <li>外墙挤出口变更时的涂色擦除警告 — 已实现但注释，待测试后启用</li>
+      <li>打印流程预设下拉框宽度在混直径模式下不自适应</li>
       <li>按实际外墙挤出口过滤打印流程预设 — 延迟至累加器层高同步实现</li>
       <li>累加器层高同步（NozzleLayerPlanner）— 尚未开始</li>
-      <li>逐挤出口耗材列表过滤 — 所有耗材下拉框按挤出口 1 过滤；待 Snapmaker 确认 0.2mm 耗材列表问题</li>
+      <li>逐挤出口耗材列表完整架构延后 — 需要在 PTP 中实现逐槽速度覆盖（各挤出口的外墙/内壁/填充/顶面速度）</li>
+      <li>工作头 UID 身份识别系统 — 每个工作头需要出厂烧录 UID；受硬件阻塞；软件架构已规划（本地注册表 JSON，PTP 存储 UID 排列）</li>
       <li>逐挤出口钢化钢（HS）切换 — 允许单独标记各挤出口为 HS 或标准型</li>
       <li>全新安装后拖拽 STL 文件失败 — 变通方法：先运行一次 OrcaSlicer 再切换；修复方向：排查 installer.nsi 的 shell 注册</li>
       <li>深色模式挤出口颜色条 — 尚未测试</li>
@@ -1857,10 +1939,10 @@ function setLang(lang){
   var s=document.getElementById('main-sub');
   if(lang==='zh'){
     t.textContent='FOrcaSlicer — 灵活版 OrcaSlicer 开发路线图';
-    s.textContent='Snapmaker U1 · OrcaSlicer 分支 · 2026年5月15日 – 6月5日 · 点击任意卡片展开';
+    s.textContent='Snapmaker U1 · OrcaSlicer 分支 · 2026年5月15日 – 6月7日 · 点击任意卡片展开';
   } else {
     t.textContent='FOrcaSlicer — Flexible OrcaSlicer dev roadmap';
-    s.textContent='Snapmaker U1 · OrcaSlicer fork · May 15 – Jun 5 2026 · click any card to expand';
+    s.textContent='Snapmaker U1 · OrcaSlicer fork · May 15 – Jun 7 2026 · click any card to expand';
   }
 }
 </script>
