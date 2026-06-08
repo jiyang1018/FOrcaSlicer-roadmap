@@ -752,9 +752,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 <div class="tl-date">Phase 10 — OW nozzle → model color sync + painting erase warning — Jun 4 · v2.3.2-fos.5</div>
 <div class="tl-row">
-<div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
+<div class="tl-spine"><div class="tl-dot" style="background:#0F6E56"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-purple">Phase 10a</span><div><div class="tl-title">Nozzle diameter title icon</div><div class="tl-sub">nozzle_diameter.svg added · ScalableButton wired in Plater.cpp</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-teal">Phase 10a</span><div><div class="tl-title">Nozzle diameter title icon</div><div class="tl-sub">nozzle_diameter.svg added · ScalableButton wired in Plater.cpp</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <ul>
       <li>Added nozzle_diameter.svg to resources/images/ — grey top arc, green side lines, outer green-stroked ellipse, inner green-filled ellipse representing nozzle tip</li>
@@ -766,9 +766,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 
 <div class="tl-row">
-<div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
+<div class="tl-spine"><div class="tl-dot" style="background:#0F6E56"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-purple">Phase 10b</span><div><div class="tl-title">OW nozzle → model preview color sync</div><div class="tl-sub">3D viewport and paint gizmo now reflect OW nozzle color assignment</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-teal">Phase 10b</span><div><div class="tl-title">OW nozzle → model preview color sync</div><div class="tl-sub">3D viewport and paint gizmo now reflect OW nozzle color assignment</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <span class="tl-section-label">Root cause</span>
     <ul>
@@ -795,9 +795,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 
 <div class="tl-row">
-<div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
+<div class="tl-spine"><div class="tl-dot" style="background:#0F6E56"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-purple">Phase 10c</span><div><div class="tl-title">Multi-material painting erase warning on OW change</div><div class="tl-sub">Prompt to erase MMU painting when OW nozzle changed · currently commented out pending testing</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-teal">Phase 10c</span><div><div class="tl-title">Multi-material painting erase warning on OW change</div><div class="tl-sub">Prompt to erase MMU painting when OW nozzle changed · currently commented out pending testing</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <ul>
       <li>When wall_filament changes: check mv-&gt;is_mm_painted() across all objects</li>
@@ -968,13 +968,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <span class="tl-section-label">Root causes</span>
     <ul>
       <li>fos.8 get_preset_name fabricated "Generic PLA @U1 0.4 nozzle" — no actual preset with that name exists in bundle; broke system_presets map key matching → drop_down stuck, ComboBox unable to reopen. 0.2mm slots unaffected because "Generic PLA @U1 0.2 nozzle" is a real preset name.</li>
-      <li>DynamicFilamentList::update and DynamicFilamentList1Based::update called find_preset()->get_filament_type() without null guard — nullptr crash during preset selection state transition</li>
-      <li>combo->update() called synchronously during selection event in on_select_preset — potential dropdown state corruption</li>
+      <li>DynamicFilamentList::update and DynamicFilamentList1Based::update called find_preset()-&gt;get_filament_type() without null guard — nullptr crash during preset selection state transition</li>
+      <li>combo-&gt;update() called synchronously during selection event in on_select_preset — potential dropdown state corruption</li>
     </ul>
     <span class="tl-section-label">Fix — Plater.cpp</span>
     <ul>
       <li>Null guard in DynamicFilamentList::update and DynamicFilamentList1Based::update — checks find_preset() result before calling get_filament_type()</li>
-      <li>Deferred combo->update() in on_select_preset via wxTheApp->CallAfter to avoid corrupting dropdown state during selection event</li>
+      <li>Deferred combo-&gt;update() in on_select_preset via wxTheApp-&gt;CallAfter to avoid corrupting dropdown state during selection event</li>
     </ul>
     <span class="tl-section-label">Fix — PresetComboBoxes.cpp</span>
     <ul>
@@ -1715,9 +1715,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 <div class="tl-date">第十阶段 — 外墙挤出口 → 模型颜色同步 + 涂色擦除警告 — 6月4日 · v2.3.2-fos.5</div>
 <div class="tl-row">
-<div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
+<div class="tl-spine"><div class="tl-dot" style="background:#0F6E56"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-purple">第10a阶段</span><div><div class="tl-title">挤出口直径标题图标</div><div class="tl-sub">新增 nozzle_diameter.svg · Plater.cpp 中接入 ScalableButton</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-teal">第10a阶段</span><div><div class="tl-title">挤出口直径标题图标</div><div class="tl-sub">新增 nozzle_diameter.svg · Plater.cpp 中接入 ScalableButton</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <ul>
       <li>新增 nozzle_diameter.svg 至 resources/images/ — 灰色顶部弧线、绿色侧线、绿色描边外椭圆、绿色填充内椭圆代表挤出口尖端</li>
@@ -1729,9 +1729,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 
 <div class="tl-row">
-<div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
+<div class="tl-spine"><div class="tl-dot" style="background:#0F6E56"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-purple">第10b阶段</span><div><div class="tl-title">外墙挤出口 → 模型预览颜色同步</div><div class="tl-sub">3D 视口和涂色工具现正确反映外墙挤出口颜色</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-teal">第10b阶段</span><div><div class="tl-title">外墙挤出口 → 模型预览颜色同步</div><div class="tl-sub">3D 视口和涂色工具现正确反映外墙挤出口颜色</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <span class="tl-section-label">根本原因</span>
     <ul>
@@ -1758,9 +1758,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 
 <div class="tl-row">
-<div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
+<div class="tl-spine"><div class="tl-dot" style="background:#0F6E56"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-purple">第10c阶段</span><div><div class="tl-title">外墙挤出口变更时的多材料涂色擦除警告</div><div class="tl-sub">已实现但暂时注释 — 待测试后启用</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-teal">第10c阶段</span><div><div class="tl-title">外墙挤出口变更时的多材料涂色擦除警告</div><div class="tl-sub">已实现但暂时注释 — 待测试后启用</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <ul>
       <li>wall_filament 变更时：检查所有实体上 mv-&gt;is_mm_painted()</li>
@@ -1926,18 +1926,18 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div class="tl-row">
 <div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-purple">第13b阶段</span><div><div class="tl-title">热修复 — FLP 下拉框锁死 + 预设重新选择时崩溃 · v2.3.2-fos.8.1</div><div class="tl-sub">fos.8 get_preset_name 假名称导致 0.4mm 槽下拉框卡死 · 空指针崩溃已修复</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-purple">第13b阶段</span><div><div class="tl-title">热修复 — FLP 下拉框锁死 + 预设重新选择时崩溃 · v2.3.2-fos.8.1</div><div class="tl-sub">fos.8 get_preset_name 构造的虚假名称导致 0.4mm 槽下拉框卡死 · 空指针崩溃已修复</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <span class="tl-section-label">根本原因</span>
     <ul>
       <li>fos.8 get_preset_name 构造了"Generic PLA @U1 0.4 nozzle"虚假名称 — 预设包中实际不存在该名称；破坏 system_presets 的 map 键匹配 → drop_down 状态卡死，ComboBox 无法重新打开。0.2mm 槽不受影响，因为"Generic PLA @U1 0.2 nozzle"是真实存在的预设名称。</li>
-      <li>DynamicFilamentList::update 和 DynamicFilamentList1Based::update 调用 find_preset()->get_filament_type() 时缺少空值检查 — 预设选择状态切换期间 find_preset() 返回 nullptr 导致崩溃</li>
-      <li>on_select_preset 中 combo->update() 在选择事件期间同步调用 — 可能导致下拉框状态损坏</li>
+      <li>DynamicFilamentList::update 和 DynamicFilamentList1Based::update 调用 find_preset()-&gt;get_filament_type() 时缺少空值检查 — 预设选择状态切换期间 find_preset() 返回 nullptr 导致崩溃</li>
+      <li>on_select_preset 中 combo-&gt;update() 在选择事件期间同步调用 — 可能导致下拉框状态损坏</li>
     </ul>
     <span class="tl-section-label">修复 — Plater.cpp</span>
     <ul>
       <li>DynamicFilamentList::update 和 DynamicFilamentList1Based::update 中添加空值防护 — 调用 get_filament_type() 前先检查 find_preset() 返回值</li>
-      <li>on_select_preset 中通过 wxTheApp->CallAfter 延迟执行 combo->update() — 避免选择事件处理期间损坏下拉框状态</li>
+      <li>on_select_preset 中通过 wxTheApp-&gt;CallAfter 延迟执行 combo-&gt;update() — 避免选择事件处理期间损坏下拉框状态</li>
     </ul>
     <span class="tl-section-label">修复 — PresetComboBoxes.cpp</span>
     <ul>
@@ -1958,7 +1958,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div class="tl-card" onclick="toggle(this)">
   <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-gray">TODO</span><div><div class="tl-title">待处理事项</div><div class="tl-sub">回归修复、代码清理、待实现功能</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
-    <span class="tl-section-label">内测阶段目标</span>
+    <span class="tl-section-label">内测版目标</span>
     <ul>
       <li>混合挤出口尺寸下仅外壳着色 FlowErrorNegativeSpacing — 尚未诊断</li>
       <li>外墙挤出口变更时的涂色擦除警告 — 已实现但注释，待测试后启用</li>
@@ -1967,7 +1967,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <li>绝对首次启动时内壁下拉框显示异常 — 优先级低，点击可刷新</li>
       <li>GitHub Wiki：说明混合挤出口外墙/内壁行为与原版 OrcaSlicer 的区别 · wiki 已在封闭环境中启动</li>
     </ul>
-    <span class="tl-section-label">公测阶段目标</span>
+    <span class="tl-section-label">公测版目标</span>
     <ul>
       <li>曲面着色区域回归 — 验证球体/环形/锥体 CL 路径是否正常；如有问题，在 48c601c3b1 与当前版本之间进行二分排查</li>
       <li>仅外壳着色 CL=1 弧线端点接缝伪影（最近/对齐接缝位置）— 变通方法：使用随机接缝</li>
