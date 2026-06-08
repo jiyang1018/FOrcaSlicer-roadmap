@@ -717,8 +717,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div class="tl-decision">Major Decision</div>
     <span class="tl-section-label">New UI (Plater.cpp, ParamsPanel.cpp)</span>
     <ul>
-      <li>Printer Preset = PTP
-Process Preset = PRP</li>
+      <li>Printer Preset = PTP (Printer Type Profile) · Process Preset = PRP (Process Recipe Profile)</li>
       <li>Replaced notebook tabs with 2-column grid matching filament panel style</li>
       <li>Mixed mode toggle (SwitchButton, default OFF) — auto-detects mixed mode on PTP load if nozzle diameters differ</li>
       <li>Color bar per row: 0.2mm=white, 0.4mm=10% gray, 0.6mm=20% gray, 0.8mm=30% gray · label format: "N: X.Xmm"</li>
@@ -923,7 +922,7 @@ Process Preset = PRP</li>
 </div>
 </div>
 
-<div class="tl-date">Phase 13 — Per-nozzle FLP filtering for mixed nozzle — Jun 7 · v2.3.2-fos.8</div>
+<div class="tl-date">Phase 13 — Per-nozzle FLP (Filament Preset) filtering for mixed nozzle — Jun 7 · v2.3.2-fos.8</div>
 <div class="tl-row">
 <div class="tl-spine"><div class="tl-dot" style="background:#1A7A4A"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
@@ -940,7 +939,7 @@ Process Preset = PRP</li>
     <span class="tl-section-label">Fix — Preset.cpp</span>
     <ul>
       <li>update_compatible_internal: FOS block marks filament presets compatible if compatible_printers matches any nozzle diameter in mixed nozzle printer config</li>
-      <li>Restricted to TYPE_FILAMENT only · uses vector copy of cp->values to avoid pointer invalidation</li>
+      <li>Restricted to TYPE_FILAMENT only · uses vector copy of cp-&gt;values to avoid pointer invalidation</li>
     </ul>
     <span class="tl-section-label">Fix — PresetBundle.cpp</span>
     <ul>
@@ -968,32 +967,38 @@ Process Preset = PRP</li>
 <div class="tl-card" onclick="toggle(this)">
   <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-gray">TODO</span><div><div class="tl-title">Remaining items</div><div class="tl-sub">Regression fix, cleanup, version bump, extended testing</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
+    <span class="tl-section-label">Alpha test goal</span>
     <ul>
-      <li>Curved surface color patch regression — verify sphere/torus/cone CL loops; if broken, bisect between 48c601c3b1 and current</li>
       <li>Color patch FlowErrorNegativeSpacing with mixed nozzle sizes — not yet diagnosed</li>
-      <li>Color patch CL=1 seam artifacts at arc endpoints (nearest/aligned seam) — workaround: use random seam</li>
       <li>Painting erase warning on OW change — implemented but commented out, pending testing</li>
       <li>PRP dropdown width not adaptive in mixed nozzle mode</li>
-      <li>PRP filtering by actual OW nozzle — deferred until accumulator layer height sync implemented</li>
-      <li>Accumulator layer height sync (NozzleLayerPlanner) — not yet started</li>
-      <li>Per-nozzle FLP — full architecture deferred: requires per-slot speed overrides in PTP (OW/IW/infill/top surface speeds per nozzle)</li>
-      <li>Toolhead UID identity system — each toolhead needs factory-burned UID; blocked by hardware; software architecture planned (local registry JSON, PTP stores UID arrangement)</li>
-      <li>Per-nozzle hardened steel toggle — allow marking individual nozzles as HS vs standard</li>
-      <li>Drag-and-drop STL after fresh install fails — workaround: run OrcaSlicer once; fix: investigate installer.nsi shell registration</li>
-      <li>Dark mode nozzle color bars — not yet tested</li>
+      <li>Per-nozzle FLP — full architecture deferred: requires per-slot speed overrides in PRP (OW/IW/infill/top surface speeds per nozzle)</li>
       <li>IW dropdown incorrect on absolute first launch — low priority, clicking refreshes</li>
       <li>Comment cleanup — replace T1/T2 in FOS comments with "base extruder" / "painted extruder"</li>
       <li>GitHub wiki: mixed nozzle OW/IW behavior vs stock OrcaSlicer · wiki started in closed environment</li>
+    </ul>
+    <span class="tl-section-label">Beta test goal</span>
+    <ul>
+      <li>Curved surface color patch regression — verify sphere/torus/cone CL loops; if broken, bisect between 48c601c3b1 and current</li>
+      <li>Color patch CL=1 seam artifacts at arc endpoints (nearest/aligned seam) — workaround: use random seam</li>
+      <li>PRP filtering by actual OW nozzle — deferred until accumulator layer height sync implemented</li>
+      <li>Accumulator layer height sync (NozzleLayerPlanner) — not yet started</li>
+      <li>Drag-and-drop STL after fresh install fails — workaround: run OrcaSlicer once; fix: investigate installer.nsi shell registration</li>
+      <li>Dark mode nozzle color bars — not yet tested</li>
       <li>outer_wall_loops: no hard UI cap (label turns red as warning — accepted)</li>
       <li>CL slider max hardcoded to 10 in UI — increase if needed</li>
-      <li>No visual indicator in gizmo showing which extruder has Color Patch vs Original active</li>
       <li>Per-object CL not exposed in Objects tab — only via gizmo</li>
+    </ul>
+    <span class="tl-section-label">Future goal</span>
+    <ul>
+      <li>Toolhead UID identity system — each toolhead needs factory-burned UID; blocked by hardware; software architecture planned (local registry JSON, PTP stores UID arrangement)</li>
+      <li>Per-nozzle hardened steel toggle — allow marking individual nozzles as HS vs standard</li>
     </ul>
   </div>
 </div>
 </div>
 
-</div><!-- end EN --><!-- end EN --><!-- end EN --><!-- end EN -->
+</div><!-- end EN --><!-- end EN --><!-- end EN --><!-- end EN --><!-- end EN -->
 
 <!-- ============================================================ CHINESE ============================================================ -->
 <div lang-content="zh">
@@ -1648,8 +1653,7 @@ Process Preset = PRP</li>
     <div class="tl-decision">重大决策</div>
     <span class="tl-section-label">新 UI（Plater.cpp、ParamsPanel.cpp）</span>
     <ul>
-      <li>打印机预设简称 PTP
-打印流程预设简称 PRP</li>
+      <li>打印机预设简称 PTP · 打印流程预设简称 PRP</li>
       <li>两行两列布局取代原标签页，与耗材面板样式一致</li>
       <li>混直径模式切换开关（SwitchButton，默认关闭）— 加载 PTP 时若各挤出口直径不同则自动启用混合模式</li>
       <li>每行颜色条：0.2mm=白色，0.4mm=10%灰，0.6mm=20%灰，0.8mm=30%灰 · 标签格式："N: X.Xmm"</li>
@@ -1854,7 +1858,7 @@ Process Preset = PRP</li>
 </div>
 </div>
 
-<div class="tl-date">第十三阶段 — 混合挤出口逐槽耗材列表过滤 — 6月7日 · v2.3.2-fos.8</div>
+<div class="tl-date">第十三阶段 — 混合挤出口逐槽耗材配置文件（FLP=耗材预设）过滤 — 6月7日 · v2.3.2-fos.8</div>
 <div class="tl-row">
 <div class="tl-spine"><div class="tl-dot" style="background:#1A7A4A"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
@@ -1871,7 +1875,7 @@ Process Preset = PRP</li>
     <span class="tl-section-label">修复 — Preset.cpp</span>
     <ul>
       <li>update_compatible_internal：FOS 块在混合挤出口打印机配置中，若 compatible_printers 匹配任意挤出口直径则标记耗材列表为兼容</li>
-      <li>仅限 TYPE_FILAMENT · 使用 cp->values 的向量副本避免指针失效</li>
+      <li>仅限 TYPE_FILAMENT · 使用 cp-&gt;values 的向量副本避免指针失效</li>
     </ul>
     <span class="tl-section-label">修复 — PresetBundle.cpp</span>
     <ul>
@@ -1899,26 +1903,32 @@ Process Preset = PRP</li>
 <div class="tl-card" onclick="toggle(this)">
   <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-gray">TODO</span><div><div class="tl-title">待处理事项</div><div class="tl-sub">回归修复、代码清理、待实现功能</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
+    <span class="tl-section-label">内测版目标</span>
     <ul>
-      <li>曲面着色区域回归 — 验证球体/环形/锥体 CL 路径是否正常；如有问题，在 48c601c3b1 与当前版本之间进行二分排查</li>
       <li>混合挤出口尺寸下仅外壳着色 FlowErrorNegativeSpacing — 尚未诊断</li>
-      <li>仅外壳着色 CL=1 弧线端点接缝伪影（最近/对齐接缝位置）— 变通方法：使用随机接缝</li>
       <li>外墙挤出口变更时的涂色擦除警告 — 已实现但注释，待测试后启用</li>
       <li>打印流程预设下拉框宽度在混直径模式下不自适应</li>
-      <li>按实际外墙挤出口过滤打印流程预设 — 延迟至累加器层高同步实现</li>
-      <li>累加器层高同步（NozzleLayerPlanner）— 尚未开始</li>
-      <li>逐挤出口耗材列表完整架构延后 — 需要在 PTP 中实现逐槽速度覆盖（各挤出口的外墙/内壁/填充/顶面速度）</li>
-      <li>工作头 UID 身份识别系统 — 每个工作头需要出厂烧录 UID；受硬件阻塞；软件架构已规划（本地注册表 JSON，PTP 存储 UID 排列）</li>
-      <li>逐挤出口钢化钢（HS）切换 — 允许单独标记各挤出口为 HS 或标准型</li>
-      <li>全新安装后拖拽 STL 文件失败 — 变通方法：先运行一次 OrcaSlicer 再切换；修复方向：排查 installer.nsi 的 shell 注册</li>
-      <li>深色模式挤出口颜色条 — 尚未测试</li>
+      <li>逐挤出口耗材列表完整架构延后 — 需要在 PRP 中实现逐槽速度覆盖（各挤出口的外墙/内壁/填充/顶面速度）</li>
       <li>绝对首次启动时内壁下拉框显示异常 — 优先级低，点击可刷新</li>
       <li>注释清理 — 将 FOS 注释中的 T1/T2 引用替换为"基础挤出机"/"涂色挤出机"</li>
       <li>GitHub Wiki：说明混合挤出口外墙/内壁行为与原版 OrcaSlicer 的区别 · wiki 已在封闭环境中启动</li>
+    </ul>
+    <span class="tl-section-label">公测版目标</span>
+    <ul>
+      <li>曲面着色区域回归 — 验证球体/环形/锥体 CL 路径是否正常；如有问题，在 48c601c3b1 与当前版本之间进行二分排查</li>
+      <li>仅外壳着色 CL=1 弧线端点接缝伪影（最近/对齐接缝位置）— 变通方法：使用随机接缝</li>
+      <li>按实际外墙挤出口过滤打印流程预设 — 延迟至累加器层高同步实现</li>
+      <li>累加器层高同步（NozzleLayerPlanner）— 尚未开始</li>
+      <li>全新安装后拖拽 STL 文件失败 — 变通方法：先运行一次 OrcaSlicer 再切换；修复方向：排查 installer.nsi 的 shell 注册</li>
+      <li>深色模式挤出口颜色条 — 尚未测试</li>
       <li>outer_wall_loops：UI 无硬性上限（标签变红作为警告 — 已接受）</li>
       <li>CL 滑块最大值在 UI 中硬编码为 10 — 如有需要可调高</li>
-      <li>操作工具面板中无视觉指示器显示哪个挤出口处于仅外壳着色模式 vs 原始模式</li>
       <li>逐对象 CL 仅可通过操作工具设置，未在对象属性面板（Objects 标签）中开放</li>
+    </ul>
+    <span class="tl-section-label">未来目标</span>
+    <ul>
+      <li>工作头 UID 身份识别系统 — 每个工作头需要出厂烧录 UID；受硬件阻塞；软件架构已规划（本地注册表 JSON，PTP 存储 UID 排列）</li>
+      <li>逐挤出口钢化钢（HS）切换 — 允许单独标记各挤出口为 HS 或标准型</li>
     </ul>
   </div>
 </div>
