@@ -38,10 +38,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .tl-section-label{font-size:14px;font-weight:500;color:#888780;margin:8px 0 3px;display:block}
 .badge-purple{background:#EEEDFE;color:#3C3489}
 .badge-teal{background:#E1F5EE;color:#085041}
-.badge-amber{background:#FAEEDA;color:#633806}
+.badge-blue{background:#E3F0FD;color:#0B3D91}
 .badge-gray{background:#F1EFE8;color:#444441}
 .badge-green{background:#D4F0E0;color:#0A4A30}
-.badge-blue{background:#E3F0FD;color:#0B3D91}
+.badge-amber{background:#FAEEDA;color:#633806}
 .badge-red{background:#FDEAEA;color:#8B1A1A}
 [lang-content]{display:none}
 [lang-content].visible{display:block}
@@ -53,7 +53,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div class="tl-header">
   <div class="tl-header-left">
     <h2 id="main-title">FOrcaSlicer — Flexible OrcaSlicer dev roadmap</h2>
-    <span id="main-sub">Snapmaker U1 · OrcaSlicer fork · May 15 – Jun 7 2026 · click any card to expand</span>
+    <span id="main-sub">Snapmaker U1 · OrcaSlicer fork · May 15 – Jun 8 2026 · click any card to expand</span>
   </div>
   <div class="lang-toggle">
     <button class="lang-btn active" onclick="setLang('en')">EN</button>
@@ -171,11 +171,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 </div>
 
-<div class="tl-date">Repo pivot — May 16, 2026</div>
+<div class="tl-date">Phase 3 — Repo pivot + NozzleVerifyDialog + print gate — May 16–17</div>
 <div class="tl-row">
-<div class="tl-spine"><div class="tl-dot" style="background:#BA7517"></div><div class="tl-line"></div></div>
+<div class="tl-spine"><div class="tl-dot" style="background:#0B3D91"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-amber">Pivot</span><div><div class="tl-title">Fork from Snapmaker Orca instead of FullSpectrum</div><div class="tl-sub">Cleaner base, Filament for Features already working</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-blue">Phase 3a</span><div><div class="tl-title">Fork from Snapmaker Orca instead of FullSpectrum</div><div class="tl-sub">Cleaner base, Filament for Features already working</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <div class="tl-decision">Major Decision</div>
     <ul>
@@ -187,11 +187,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 </div>
 
-<div class="tl-date">Phase 3 — NozzleVerifyDialog + print gate — May 16–17</div>
 <div class="tl-row">
-<div class="tl-spine"><div class="tl-dot" style="background:#BA7517"></div><div class="tl-line"></div></div>
+<div class="tl-spine"><div class="tl-dot" style="background:#0B3D91"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-amber">Phase 3</span><div><div class="tl-title">NozzleVerifyDialog fully wired + print gate</div><div class="tl-sub">Dialog shows after slice, print button gated until verify</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-blue">Phase 3b</span><div><div class="tl-title">NozzleVerifyDialog fully wired + print gate</div><div class="tl-sub">Dialog shows after slice, print button gated until verify</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <span class="tl-section-label">Plater.cpp</span>
     <ul>
@@ -213,9 +212,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 <div class="tl-date">Phase 4 — OW/IW toolpath split + UI + per-nozzle line width — May 17 ✅ (OW=Outer Wall, IW=Inner Wall)</div>
 <div class="tl-row">
-<div class="tl-spine"><div class="tl-dot" style="background:#1A7A4A"></div><div class="tl-line"></div></div>
+<div class="tl-spine"><div class="tl-dot" style="background:#BA7517"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">Phase 4a</span><div><div class="tl-title">inner_wall_filament field + UI</div><div class="tl-sub">New extruder selector for inner wall, dropdown registered</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-amber">Phase 4a</span><div><div class="tl-title">inner_wall_filament field + UI</div><div class="tl-sub">New extruder selector for inner wall, dropdown registered</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <ul>
       <li>inner_wall_filament (coInt): gui_type=i_enum_open, min=1, default=1 · wall_loops label → "All walls" · wall_filament label → "Outer wall"</li>
@@ -231,9 +230,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 
 <div class="tl-row">
-<div class="tl-spine"><div class="tl-dot" style="background:#1A7A4A"></div><div class="tl-line"></div></div>
+<div class="tl-spine"><div class="tl-dot" style="background:#BA7517"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">Phase 4b–c</span><div><div class="tl-title">PrintRegion toolpath routing + GCode.cpp perimeter split</div><div class="tl-sub">frExternalPerimeter → wall_filament · frPerimeter → inner_wall_filament</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-amber">Phase 4b–c</span><div><div class="tl-title">PrintRegion toolpath routing + GCode.cpp perimeter split</div><div class="tl-sub">frExternalPerimeter → wall_filament · frPerimeter → inner_wall_filament</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <span class="tl-section-label">PrintRegion.cpp + ToolOrdering.cpp</span>
     <ul>
@@ -254,9 +253,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 
 <div class="tl-row">
-<div class="tl-spine"><div class="tl-dot" style="background:#1A7A4A"></div><div class="tl-line"></div></div>
+<div class="tl-spine"><div class="tl-dot" style="background:#BA7517"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">Phase 4d–f</span><div><div class="tl-title">OW&gt;1, per-nozzle line width, UI polish</div><div class="tl-sub">outer_wall_loops drives loop tagging · line widths rescaled per extruder nozzle diameter</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-amber">Phase 4d–f</span><div><div class="tl-title">OW&gt;1, per-nozzle line width, UI polish</div><div class="tl-sub">outer_wall_loops drives loop tagging · line widths rescaled per extruder nozzle diameter</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <ul>
       <li>classic path: is_external = loop.depth &lt; std::max(1, outer_wall_loops)</li>
@@ -276,9 +275,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 <div class="tl-date">Phase 5 — Color patch pipeline — May 18–28 ✅ Complete</div>
 <div class="tl-row">
-<div class="tl-spine"><div class="tl-dot" style="background:#0B3D91"></div><div class="tl-line"></div></div>
+<div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-blue">Phase 5a</span><div><div class="tl-title">Color patch — convex + concave surfaces working ✅</div><div class="tl-sub">Committed ba3d32bc68 — single red loop on painted face, inner core correct</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-purple">Phase 5a</span><div><div class="tl-title">Color patch — convex + concave surfaces working ✅</div><div class="tl-sub">Committed ba3d32bc68 — single red loop on painted face, inner core correct</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <span class="tl-section-label">What works at commit ba3d32bc68</span>
     <ul>
@@ -301,9 +300,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 
 <div class="tl-row">
-<div class="tl-spine"><div class="tl-dot" style="background:#0B3D91"></div><div class="tl-line"></div></div>
+<div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-blue">Phase 5b</span><div><div class="tl-title">Color patch pipeline — complete ✅</div><div class="tl-sub">All CL values, all surface types, per-object settings, Original mode verified</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-purple">Phase 5b</span><div><div class="tl-title">Color patch pipeline — complete ✅</div><div class="tl-sub">All CL values, all surface types, per-object settings, Original mode verified</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <span class="tl-section-label">What works</span>
     <ul>
@@ -331,9 +330,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 
 <div class="tl-row">
-<div class="tl-spine"><div class="tl-dot" style="background:#0B3D91"></div><div class="tl-line"></div></div>
+<div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-blue">Phase 5c</span><div><div class="tl-title">Architecture — final implementation</div><div class="tl-sub">Key files, per-object CL flow, loop_width formula, config propagation</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-purple">Phase 5c</span><div><div class="tl-title">Architecture — final implementation</div><div class="tl-sub">Key files, per-object CL flow, loop_width formula, config propagation</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <span class="tl-section-label">PrintConfig.cpp + PrintConfig.hpp</span>
     <ul>
@@ -384,9 +383,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 <div class="tl-date">Phase 6 — App rename &amp; branding — May 28 ✅</div>
 <div class="tl-row">
-<div class="tl-spine"><div class="tl-dot" style="background:#1A7A4A"></div><div class="tl-line"></div></div>
+<div class="tl-spine"><div class="tl-dot" style="background:#0F6E56"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">Phase 6</span><div><div class="tl-title">Renamed to FOrcaSlicer — Flexible OrcaSlicer + Fork-a-Slicer</div><div class="tl-sub">Exe, DLL, installer, icon, web UI, splash, README all updated · v2.3.2-fos.1 released</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-teal">Phase 6</span><div><div class="tl-title">Renamed to FOrcaSlicer — Flexible OrcaSlicer + Fork-a-Slicer</div><div class="tl-sub">Exe, DLL, installer, icon, web UI, splash, README all updated · v2.3.2-fos.1 released</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <div class="tl-decision">Major Decision</div>
     <span class="tl-section-label">Files changed</span>
@@ -559,9 +558,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 <div class="tl-date">Phase 8 — Foreign preset crash fixes + mixed nozzle polish — May 31 ✅ · v2.3.2-fos.2 released</div>
 <div class="tl-row">
-<div class="tl-spine"><div class="tl-dot" style="background:#1A7A4A"></div><div class="tl-line"></div></div>
+<div class="tl-spine"><div class="tl-dot" style="background:#BA7517"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">Phase 8a</span><div><div class="tl-title">Foreign preset crash fixes — 7 issues resolved</div><div class="tl-sub">Fresh install with Bambu/generic presets no longer crashes · system preset auto-sync disabled</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-amber">Phase 8a</span><div><div class="tl-title">Foreign preset crash fixes — 7 issues resolved</div><div class="tl-sub">Fresh install with Bambu/generic presets no longer crashes · system preset auto-sync disabled</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <span class="tl-section-label">Root cause</span>
     <ul>
@@ -615,9 +614,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 
 <div class="tl-row">
-<div class="tl-spine"><div class="tl-dot" style="background:#1A7A4A"></div><div class="tl-line"></div></div>
+<div class="tl-spine"><div class="tl-dot" style="background:#BA7517"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">Phase 8b</span><div><div class="tl-title">Mixed nozzle + color patch polish</div><div class="tl-sub">SLIC3R_APP_KEY rename · inner_wall_filament fix · CL=1 large nozzle refinement</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-amber">Phase 8b</span><div><div class="tl-title">Mixed nozzle + color patch polish</div><div class="tl-sub">SLIC3R_APP_KEY rename · inner_wall_filament fix · CL=1 large nozzle refinement</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <span class="tl-section-label">SLIC3R_APP_KEY renamed to FOrcaSlicer</span>
     <ul>
@@ -648,9 +647,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 
 <div class="tl-row">
-<div class="tl-spine"><div class="tl-dot" style="background:#1A7A4A"></div><div class="tl-line"></div></div>
+<div class="tl-spine"><div class="tl-dot" style="background:#BA7517"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">Phase 8c</span><div><div class="tl-title">top_surface_line_width .3mf load fix + v2.3.2-fos.2 release</div><div class="tl-sub">Percentage line widths loading as absolute mm from saved .3mf · fos.2 ships all Phase 8 fixes</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-amber">Phase 8c</span><div><div class="tl-title">top_surface_line_width .3mf load fix + v2.3.2-fos.2 release</div><div class="tl-sub">Percentage line widths loading as absolute mm from saved .3mf · fos.2 ships all Phase 8 fixes</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <span class="tl-section-label">Bug fix</span>
     <ul>
@@ -675,9 +674,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 <div class="tl-date">Phase 9 — Nozzle panel redesign + mixed nozzle spacing + stability — Jun 3 · v2.3.2-fos.3/fos.4</div>
 <div class="tl-row">
-<div class="tl-spine"><div class="tl-dot" style="background:#1A7A4A"></div><div class="tl-line"></div></div>
+<div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">Phase 9a</span><div><div class="tl-title">Mixed nozzle OW/IW spacing fix + flow clamp + stability</div><div class="tl-sub">Correct OW-to-IW transition spacing · Flow.cpp crash prevention · null guards</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-purple">Phase 9a</span><div><div class="tl-title">Mixed nozzle OW/IW spacing fix + flow clamp + stability</div><div class="tl-sub">Correct OW-to-IW transition spacing · Flow.cpp crash prevention · null guards</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <span class="tl-section-label">Mixed nozzle OW/IW spacing fix (PerimeterGenerator.cpp)</span>
     <ul>
@@ -710,9 +709,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 
 <div class="tl-row">
-<div class="tl-spine"><div class="tl-dot" style="background:#1A7A4A"></div><div class="tl-line"></div></div>
+<div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">Phase 9b</span><div><div class="tl-title">Nozzle diameter panel redesign (fos.4)</div><div class="tl-sub">2-column grid UI · mixed mode toggle · auto-detect · PRP refresh chain</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-purple">Phase 9b</span><div><div class="tl-title">Nozzle diameter panel redesign (fos.4)</div><div class="tl-sub">2-column grid UI · mixed mode toggle · auto-detect · PRP refresh chain</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <div class="tl-decision">Major Decision</div>
     <span class="tl-section-label">New UI (Plater.cpp, ParamsPanel.cpp)</span>
@@ -753,9 +752,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 <div class="tl-date">Phase 10 — OW nozzle → model color sync + painting erase warning — Jun 4 · v2.3.2-fos.5</div>
 <div class="tl-row">
-<div class="tl-spine"><div class="tl-dot" style="background:#1A7A4A"></div><div class="tl-line"></div></div>
+<div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">Phase 10a</span><div><div class="tl-title">Nozzle diameter title icon</div><div class="tl-sub">nozzle_diameter.svg added · ScalableButton wired in Plater.cpp</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-purple">Phase 10a</span><div><div class="tl-title">Nozzle diameter title icon</div><div class="tl-sub">nozzle_diameter.svg added · ScalableButton wired in Plater.cpp</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <ul>
       <li>Added nozzle_diameter.svg to resources/images/ — grey top arc, green side lines, outer green-stroked ellipse, inner green-filled ellipse representing nozzle tip</li>
@@ -767,9 +766,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 
 <div class="tl-row">
-<div class="tl-spine"><div class="tl-dot" style="background:#1A7A4A"></div><div class="tl-line"></div></div>
+<div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">Phase 10b</span><div><div class="tl-title">OW nozzle → model preview color sync</div><div class="tl-sub">3D viewport and paint gizmo now reflect OW nozzle color assignment</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-purple">Phase 10b</span><div><div class="tl-title">OW nozzle → model preview color sync</div><div class="tl-sub">3D viewport and paint gizmo now reflect OW nozzle color assignment</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <span class="tl-section-label">Root cause</span>
     <ul>
@@ -796,9 +795,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 
 <div class="tl-row">
-<div class="tl-spine"><div class="tl-dot" style="background:#1A7A4A"></div><div class="tl-line"></div></div>
+<div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">Phase 10c</span><div><div class="tl-title">Multi-material painting erase warning on OW change</div><div class="tl-sub">Prompt to erase MMU painting when OW nozzle changed · currently commented out pending testing</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-purple">Phase 10c</span><div><div class="tl-title">Multi-material painting erase warning on OW change</div><div class="tl-sub">Prompt to erase MMU painting when OW nozzle changed · currently commented out pending testing</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <ul>
       <li>When wall_filament changes: check mv-&gt;is_mm_painted() across all objects</li>
@@ -813,9 +812,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 <div class="tl-date">Phase 11 — OW color override + right drag rotate + startup fixes — Jun 4 · v2.3.2-fos.6</div>
 <div class="tl-row">
-<div class="tl-spine"><div class="tl-dot" style="background:#1A7A4A"></div><div class="tl-line"></div></div>
+<div class="tl-spine"><div class="tl-dot" style="background:#0B3D91"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">Phase 11a</span><div><div class="tl-title">OW color override — complete fix across all render paths</div><div class="tl-sub">3DScene.cpp core fix · paint gizmo base color · thumbnail render · data_changed tracking</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-blue">Phase 11a</span><div><div class="tl-title">OW color override — complete fix across all render paths</div><div class="tl-sub">3DScene.cpp core fix · paint gizmo base color · thumbnail render · data_changed tracking</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <span class="tl-section-label">Root cause (remaining from fos.5)</span>
     <ul>
@@ -840,9 +839,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 
 <div class="tl-row">
-<div class="tl-spine"><div class="tl-dot" style="background:#1A7A4A"></div><div class="tl-line"></div></div>
+<div class="tl-spine"><div class="tl-dot" style="background:#0B3D91"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">Phase 11b</span><div><div class="tl-title">Right mouse drag rotates view + startup + PRP save fix</div><div class="tl-sub">Right drag → rotate · mixed mode auto-detect on startup · PRP refresh after save</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-blue">Phase 11b</span><div><div class="tl-title">Right mouse drag rotates view + startup + PRP save fix</div><div class="tl-sub">Right drag → rotate · mixed mode auto-detect on startup · PRP refresh after save</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <span class="tl-section-label">Right drag rotates view (GLCanvas3D.cpp / Plater.cpp)</span>
     <ul>
@@ -869,9 +868,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 <div class="tl-date">Phase 12 — Nozzle verify panel + mouse config + GCode legend — Jun 5 · v2.3.2-fos.7</div>
 <div class="tl-row">
-<div class="tl-spine"><div class="tl-dot" style="background:#1A7A4A"></div><div class="tl-line"></div></div>
+<div class="tl-spine"><div class="tl-dot" style="background:#BA7517"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">Phase 12a</span><div><div class="tl-title">Nozzle verification integrated into GCode legend panel</div><div class="tl-sub">Floating dialog replaced with inline panel in Filament legend · Print button gate preserved</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-amber">Phase 12a</span><div><div class="tl-title">Nozzle verification integrated into GCode legend panel</div><div class="tl-sub">Floating dialog replaced with inline panel in Filament legend · Print button gate preserved</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <div class="tl-decision">Major Decision</div>
     <span class="tl-section-label">New behavior</span>
@@ -893,9 +892,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 
 <div class="tl-row">
-<div class="tl-spine"><div class="tl-dot" style="background:#1A7A4A"></div><div class="tl-line"></div></div>
+<div class="tl-spine"><div class="tl-dot" style="background:#BA7517"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">Phase 12b</span><div><div class="tl-title">Mouse drag button assignment in Preferences + GCode legend defaults</div><div class="tl-sub">Settings → General: per-button rotate/pan/none · Filament view default · OW first in Line Type</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-amber">Phase 12b</span><div><div class="tl-title">Mouse drag button assignment in Preferences + GCode legend defaults</div><div class="tl-sub">Settings → General: per-button rotate/pan/none · Filament view default · OW first in Line Type</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <div class="tl-decision">Major Decision</div>
     <span class="tl-section-label">Mouse drag assignment UI (Preferences.cpp, AppConfig.cpp, GLCanvas3D.cpp)</span>
@@ -922,11 +921,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 </div>
 
-<div class="tl-date">Phase 13 — Per-nozzle FLP (Filament Preset) filtering for mixed nozzle — Jun 7 · v2.3.2-fos.8</div>
+<div class="tl-date">Phase 13 — Per-nozzle FLP (Filament Preset) filtering for mixed nozzle — Jun 7–8 · v2.3.2-fos.8 / fos.8.1</div>
 <div class="tl-row">
-<div class="tl-spine"><div class="tl-dot" style="background:#1A7A4A"></div><div class="tl-line"></div></div>
+<div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">Phase 13a</span><div><div class="tl-title">Per-nozzle filament profile filtering — correct volumetric speed per slot</div><div class="tl-sub">Slot 3/4 (0.2mm) now auto-selects 0.2mm FLP · 1.6mm³/s instead of 12mm³/s</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-purple">Phase 13a</span><div><div class="tl-title">Per-nozzle filament profile filtering — correct volumetric speed per slot</div><div class="tl-sub">Slot 3/4 (0.2mm) now auto-selects 0.2mm FLP · 1.6mm³/s instead of 12mm³/s</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <div class="tl-decision">Major Decision</div>
     <span class="tl-section-label">Root cause</span>
@@ -939,7 +938,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <span class="tl-section-label">Fix — Preset.cpp</span>
     <ul>
       <li>update_compatible_internal: FOS block marks filament presets compatible if compatible_printers matches any nozzle diameter in mixed nozzle printer config</li>
-      <li>Restricted to TYPE_FILAMENT only · uses vector copy of cp-&gt;values to avoid pointer invalidation</li>
+      <li>Restricted to TYPE_FILAMENT only · uses vector copy of cp->values to avoid pointer invalidation</li>
     </ul>
     <span class="tl-section-label">Fix — PresetBundle.cpp</span>
     <ul>
@@ -961,6 +960,35 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 </div>
 
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-purple">Phase 13b</span><div><div class="tl-title">Hotfix — FLP dropdown lockup + crash on preset reselection · v2.3.2-fos.8.1</div><div class="tl-sub">fos.8 get_preset_name fabricated names broke 0.4mm slot dropdown · nullptr crashes fixed</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-detail">
+    <span class="tl-section-label">Root causes</span>
+    <ul>
+      <li>fos.8 get_preset_name fabricated "Generic PLA @U1 0.4 nozzle" — no actual preset with that name exists in bundle; broke system_presets map key matching → drop_down stuck, ComboBox unable to reopen. 0.2mm slots unaffected because "Generic PLA @U1 0.2 nozzle" is a real preset name.</li>
+      <li>DynamicFilamentList::update and DynamicFilamentList1Based::update called find_preset()->get_filament_type() without null guard — nullptr crash during preset selection state transition</li>
+      <li>combo->update() called synchronously during selection event in on_select_preset — potential dropdown state corruption</li>
+    </ul>
+    <span class="tl-section-label">Fix — Plater.cpp</span>
+    <ul>
+      <li>Null guard in DynamicFilamentList::update and DynamicFilamentList1Based::update — checks find_preset() result before calling get_filament_type()</li>
+      <li>Deferred combo->update() in on_select_preset via wxTheApp->CallAfter to avoid corrupting dropdown state during selection event</li>
+    </ul>
+    <span class="tl-section-label">Fix — PresetComboBoxes.cpp</span>
+    <ul>
+      <li>Simplified get_preset_name: returns preset.name directly in mixed nozzle mode — no fabricated suffix; 0.4mm base presets shown as-is (e.g. "Generic PLA"), non-0.4mm already have nozzle suffix in actual name</li>
+      <li>FOS suffix-stripping in switch_to_tab: if display name not found in bundle, strips @U1 X.X nozzle via regex before alias lookup</li>
+    </ul>
+    <div class="tl-milestone">Milestone</div>
+    <ul>
+      <li>FLP dropdown on 0.4mm slots reopens correctly · no crash on reselection, multimaterial tab, or slice · fos.8 per-nozzle filtering intact · v2.3.2-fos.8.1 released</li>
+    </ul>
+  </div>
+</div>
+</div>
+
 <div class="tl-date">Outstanding / TODO</div>
 <div class="tl-row">
 <div class="tl-spine"><div class="tl-dot" style="background:#888780"></div><div class="tl-line"></div></div>
@@ -974,7 +1002,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <li>PRP dropdown width not adaptive in mixed nozzle mode</li>
       <li>Per-nozzle FLP — full architecture deferred: requires per-slot speed overrides in PRP (OW/IW/infill/top surface speeds per nozzle)</li>
       <li>IW dropdown incorrect on absolute first launch — low priority, clicking refreshes</li>
-      <li>Comment cleanup — replace T1/T2 in FOS comments with "base extruder" / "painted extruder"</li>
       <li>GitHub wiki: mixed nozzle OW/IW behavior vs stock OrcaSlicer · wiki started in closed environment</li>
     </ul>
     <span class="tl-section-label">Beta test goal</span>
@@ -998,7 +1025,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 </div>
 
-</div><!-- end EN --><!-- end EN --><!-- end EN --><!-- end EN --><!-- end EN -->
+</div><!-- end EN --><!-- end EN -->
 
 <!-- ============================================================ CHINESE ============================================================ -->
 <div lang-content="zh">
@@ -1108,11 +1135,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 </div>
 
-<div class="tl-date">代码库切换 — 2026年5月16日</div>
+<div class="tl-date">第三阶段 — 代码库切换 + 挤出口验证对话框 + 打印门控 — 5月16–17日</div>
 <div class="tl-row">
-<div class="tl-spine"><div class="tl-dot" style="background:#BA7517"></div><div class="tl-line"></div></div>
+<div class="tl-spine"><div class="tl-dot" style="background:#0B3D91"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-amber">切换</span><div><div class="tl-title">从 FullSpectrum 切换至 Snapmaker Orca 分支</div><div class="tl-sub">更干净的基础，Filament for Features 已可用</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-blue">第3a阶段</span><div><div class="tl-title">从 FullSpectrum 切换至 Snapmaker Orca 分支</div><div class="tl-sub">更干净的基础，Filament for Features 已可用</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <div class="tl-decision">重大决策</div>
     <ul>
@@ -1124,11 +1151,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 </div>
 
-<div class="tl-date">第三阶段 — 挤出口验证对话框 + 打印门控 — 5月16–17日</div>
 <div class="tl-row">
-<div class="tl-spine"><div class="tl-dot" style="background:#BA7517"></div><div class="tl-line"></div></div>
+<div class="tl-spine"><div class="tl-dot" style="background:#0B3D91"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-amber">第3阶段</span><div><div class="tl-title">NozzleVerifyDialog 完整连接 + 打印门控</div><div class="tl-sub">切片后显示对话框，打印按钮需验证后才可用</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-blue">第3b阶段</span><div><div class="tl-title">NozzleVerifyDialog 完整连接 + 打印门控</div><div class="tl-sub">切片后显示对话框，打印按钮需验证后才可用</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <span class="tl-section-label">Plater.cpp</span>
     <ul>
@@ -1150,9 +1176,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 <div class="tl-date">第四阶段 — OW/IW 挤出路径分离 + UI + 逐挤出口线宽 — 5月17日 ✅（OW=外墙，IW=内壁）</div>
 <div class="tl-row">
-<div class="tl-spine"><div class="tl-dot" style="background:#1A7A4A"></div><div class="tl-line"></div></div>
+<div class="tl-spine"><div class="tl-dot" style="background:#BA7517"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">第4a阶段</span><div><div class="tl-title">inner_wall_filament 字段 + UI</div><div class="tl-sub">内壁新增挤出机选择器，下拉列表已注册</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-amber">第4a阶段</span><div><div class="tl-title">inner_wall_filament 字段 + UI</div><div class="tl-sub">内壁新增挤出机选择器，下拉列表已注册</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <ul>
       <li>inner_wall_filament (coInt)：gui_type=i_enum_open，min=1，默认值=1 · wall_loops 标签 → "All walls" · wall_filament 标签 → "Outer wall"</li>
@@ -1168,9 +1194,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 
 <div class="tl-row">
-<div class="tl-spine"><div class="tl-dot" style="background:#1A7A4A"></div><div class="tl-line"></div></div>
+<div class="tl-spine"><div class="tl-dot" style="background:#BA7517"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">第4b–c阶段</span><div><div class="tl-title">PrintRegion 挤出路径规划 + GCode.cpp 周界分割</div><div class="tl-sub">frExternalPerimeter → wall_filament · frPerimeter → inner_wall_filament</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-amber">第4b–c阶段</span><div><div class="tl-title">PrintRegion 挤出路径规划 + GCode.cpp 周界分割</div><div class="tl-sub">frExternalPerimeter → wall_filament · frPerimeter → inner_wall_filament</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <span class="tl-section-label">PrintRegion.cpp + ToolOrdering.cpp</span>
     <ul>
@@ -1191,9 +1217,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 
 <div class="tl-row">
-<div class="tl-spine"><div class="tl-dot" style="background:#1A7A4A"></div><div class="tl-line"></div></div>
+<div class="tl-spine"><div class="tl-dot" style="background:#BA7517"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">第4d–f阶段</span><div><div class="tl-title">OW&gt;1、逐挤出口线宽、UI 润色</div><div class="tl-sub">outer_wall_loops 驱动循环标记 · 线宽按挤出机出口直径重新缩放</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-amber">第4d–f阶段</span><div><div class="tl-title">OW&gt;1、逐挤出口线宽、UI 润色</div><div class="tl-sub">outer_wall_loops 驱动循环标记 · 线宽按挤出机出口直径重新缩放</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <ul>
       <li>classic 路径：is_external = loop.depth &lt; std::max(1, outer_wall_loops)</li>
@@ -1213,9 +1239,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 <div class="tl-date">第五阶段 — 着色区域流水线 — 5月18–28日 ✅ 已完成</div>
 <div class="tl-row">
-<div class="tl-spine"><div class="tl-dot" style="background:#0B3D91"></div><div class="tl-line"></div></div>
+<div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-blue">第5a阶段</span><div><div class="tl-title">着色区域 — 凸面与凹面均已正确工作 ✅</div><div class="tl-sub">已提交 ba3d32bc68 — 涂色面单条红色循环，内核正确</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-purple">第5a阶段</span><div><div class="tl-title">着色区域 — 凸面与凹面均已正确工作 ✅</div><div class="tl-sub">已提交 ba3d32bc68 — 涂色面单条红色循环，内核正确</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <span class="tl-section-label">提交 ba3d32bc68 时的工作状态</span>
     <ul>
@@ -1238,9 +1264,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 
 <div class="tl-row">
-<div class="tl-spine"><div class="tl-dot" style="background:#0B3D91"></div><div class="tl-line"></div></div>
+<div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-blue">第5b阶段</span><div><div class="tl-title">着色区域流水线 — 已完成 ✅</div><div class="tl-sub">所有 CL 值、所有面类型、逐对象设置、原始模式已验证</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-purple">第5b阶段</span><div><div class="tl-title">着色区域流水线 — 已完成 ✅</div><div class="tl-sub">所有 CL 值、所有面类型、逐对象设置、原始模式已验证</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <span class="tl-section-label">已正常工作</span>
     <ul>
@@ -1268,9 +1294,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 
 <div class="tl-row">
-<div class="tl-spine"><div class="tl-dot" style="background:#0B3D91"></div><div class="tl-line"></div></div>
+<div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-blue">第5c阶段</span><div><div class="tl-title">最终架构实现</div><div class="tl-sub">关键文件、逐对象 CL 流程、循环宽度公式、配置传递</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-purple">第5c阶段</span><div><div class="tl-title">最终架构实现</div><div class="tl-sub">关键文件、逐对象 CL 流程、循环宽度公式、配置传递</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <span class="tl-section-label">PrintConfig.cpp + PrintConfig.hpp</span>
     <ul>
@@ -1321,9 +1347,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 <div class="tl-date">第六阶段 — 应用重命名与品牌更新 — 5月28日 ✅</div>
 <div class="tl-row">
-<div class="tl-spine"><div class="tl-dot" style="background:#1A7A4A"></div><div class="tl-line"></div></div>
+<div class="tl-spine"><div class="tl-dot" style="background:#0F6E56"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">第6阶段</span><div><div class="tl-title">重命名为 FOrcaSlicer — Flexible OrcaSlicer + Fork-a-Slicer</div><div class="tl-sub">可执行文件、DLL、安装程序、图标、Web UI、启动画面、README 全部更新 · v2.3.2-fos.1 已发布</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-teal">第6阶段</span><div><div class="tl-title">重命名为 FOrcaSlicer — Flexible OrcaSlicer + Fork-a-Slicer</div><div class="tl-sub">可执行文件、DLL、安装程序、图标、Web UI、启动画面、README 全部更新 · v2.3.2-fos.1 已发布</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <div class="tl-decision">重大决策</div>
     <span class="tl-section-label">修改的文件</span>
@@ -1496,9 +1522,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 <div class="tl-date">第八阶段 — 外部预设崩溃修复 + 混合挤出口完善 — 5月31日 ✅ · v2.3.2-fos.2 已发布</div>
 <div class="tl-row">
-<div class="tl-spine"><div class="tl-dot" style="background:#1A7A4A"></div><div class="tl-line"></div></div>
+<div class="tl-spine"><div class="tl-dot" style="background:#BA7517"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">第8a阶段</span><div><div class="tl-title">外部预设崩溃修复 — 7 项问题已解决</div><div class="tl-sub">使用 Bambu/通用预设全新安装不再崩溃 · 系统预设自动同步已禁用</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-amber">第8a阶段</span><div><div class="tl-title">外部预设崩溃修复 — 7 项问题已解决</div><div class="tl-sub">使用 Bambu/通用预设全新安装不再崩溃 · 系统预设自动同步已禁用</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <span class="tl-section-label">根本原因</span>
     <ul>
@@ -1551,9 +1577,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 
 <div class="tl-row">
-<div class="tl-spine"><div class="tl-dot" style="background:#1A7A4A"></div><div class="tl-line"></div></div>
+<div class="tl-spine"><div class="tl-dot" style="background:#BA7517"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">第8b阶段</span><div><div class="tl-title">混合挤出口 + 仅外壳着色完善</div><div class="tl-sub">SLIC3R_APP_KEY 重命名 · inner_wall_filament 修复 · CL=1 大挤出口精细化</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-amber">第8b阶段</span><div><div class="tl-title">混合挤出口 + 仅外壳着色完善</div><div class="tl-sub">SLIC3R_APP_KEY 重命名 · inner_wall_filament 修复 · CL=1 大挤出口精细化</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <span class="tl-section-label">SLIC3R_APP_KEY 重命名为 FOrcaSlicer</span>
     <ul>
@@ -1584,9 +1610,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 
 <div class="tl-row">
-<div class="tl-spine"><div class="tl-dot" style="background:#1A7A4A"></div><div class="tl-line"></div></div>
+<div class="tl-spine"><div class="tl-dot" style="background:#BA7517"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">第8c阶段</span><div><div class="tl-title">top_surface_line_width .3mf 读取修复 + v2.3.2-fos.2 发布</div><div class="tl-sub">百分比线宽从 .3mf 读取时变为绝对 mm 值 · fos.2 包含第八阶段全部修复</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-amber">第8c阶段</span><div><div class="tl-title">top_surface_line_width .3mf 读取修复 + v2.3.2-fos.2 发布</div><div class="tl-sub">百分比线宽从 .3mf 读取时变为绝对 mm 值 · fos.2 包含第八阶段全部修复</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <span class="tl-section-label">缺陷修复</span>
     <ul>
@@ -1611,9 +1637,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 <div class="tl-date">第九阶段 — 挤出口面板重设计 + 混合挤出口间距 + 稳定性 — 6月3日 · v2.3.2-fos.3/fos.4</div>
 <div class="tl-row">
-<div class="tl-spine"><div class="tl-dot" style="background:#1A7A4A"></div><div class="tl-line"></div></div>
+<div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">第9a阶段</span><div><div class="tl-title">混合挤出口 OW/IW 间距修复 + 流量封顶 + 稳定性</div><div class="tl-sub">正确的外墙至内壁过渡间距 · Flow.cpp 崩溃防护 · 空值防护</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-purple">第9a阶段</span><div><div class="tl-title">混合挤出口 OW/IW 间距修复 + 流量封顶 + 稳定性</div><div class="tl-sub">正确的外墙至内壁过渡间距 · Flow.cpp 崩溃防护 · 空值防护</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <span class="tl-section-label">混合挤出口 OW/IW 间距修复（PerimeterGenerator.cpp）</span>
     <ul>
@@ -1646,9 +1672,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 
 <div class="tl-row">
-<div class="tl-spine"><div class="tl-dot" style="background:#1A7A4A"></div><div class="tl-line"></div></div>
+<div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">第9b阶段</span><div><div class="tl-title">挤出口直径面板重设计（fos.4）</div><div class="tl-sub">两行两列 UI · 混直径模式切换 · 自动检测 · 打印流程预设刷新链</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-purple">第9b阶段</span><div><div class="tl-title">挤出口直径面板重设计（fos.4）</div><div class="tl-sub">两行两列 UI · 混直径模式切换 · 自动检测 · 打印流程预设刷新链</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <div class="tl-decision">重大决策</div>
     <span class="tl-section-label">新 UI（Plater.cpp、ParamsPanel.cpp）</span>
@@ -1689,9 +1715,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 <div class="tl-date">第十阶段 — 外墙挤出口 → 模型颜色同步 + 涂色擦除警告 — 6月4日 · v2.3.2-fos.5</div>
 <div class="tl-row">
-<div class="tl-spine"><div class="tl-dot" style="background:#1A7A4A"></div><div class="tl-line"></div></div>
+<div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">第10a阶段</span><div><div class="tl-title">挤出口直径标题图标</div><div class="tl-sub">新增 nozzle_diameter.svg · Plater.cpp 中接入 ScalableButton</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-purple">第10a阶段</span><div><div class="tl-title">挤出口直径标题图标</div><div class="tl-sub">新增 nozzle_diameter.svg · Plater.cpp 中接入 ScalableButton</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <ul>
       <li>新增 nozzle_diameter.svg 至 resources/images/ — 灰色顶部弧线、绿色侧线、绿色描边外椭圆、绿色填充内椭圆代表挤出口尖端</li>
@@ -1703,9 +1729,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 
 <div class="tl-row">
-<div class="tl-spine"><div class="tl-dot" style="background:#1A7A4A"></div><div class="tl-line"></div></div>
+<div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">第10b阶段</span><div><div class="tl-title">外墙挤出口 → 模型预览颜色同步</div><div class="tl-sub">3D 视口和涂色工具现正确反映外墙挤出口颜色</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-purple">第10b阶段</span><div><div class="tl-title">外墙挤出口 → 模型预览颜色同步</div><div class="tl-sub">3D 视口和涂色工具现正确反映外墙挤出口颜色</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <span class="tl-section-label">根本原因</span>
     <ul>
@@ -1732,9 +1758,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 
 <div class="tl-row">
-<div class="tl-spine"><div class="tl-dot" style="background:#1A7A4A"></div><div class="tl-line"></div></div>
+<div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">第10c阶段</span><div><div class="tl-title">外墙挤出口变更时的多材料涂色擦除警告</div><div class="tl-sub">已实现但暂时注释 — 待测试后启用</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-purple">第10c阶段</span><div><div class="tl-title">外墙挤出口变更时的多材料涂色擦除警告</div><div class="tl-sub">已实现但暂时注释 — 待测试后启用</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <ul>
       <li>wall_filament 变更时：检查所有实体上 mv-&gt;is_mm_painted()</li>
@@ -1749,9 +1775,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 <div class="tl-date">第十一阶段 — 外墙颜色全路径修复 + 右键旋转 + 启动修复 — 6月4日 · v2.3.2-fos.6</div>
 <div class="tl-row">
-<div class="tl-spine"><div class="tl-dot" style="background:#1A7A4A"></div><div class="tl-line"></div></div>
+<div class="tl-spine"><div class="tl-dot" style="background:#0B3D91"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">第11a阶段</span><div><div class="tl-title">外墙颜色覆盖 — 所有渲染路径完整修复</div><div class="tl-sub">3DScene.cpp 核心修复 · 涂色工具基础颜色 · 缩略图渲染 · data_changed 追踪</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-blue">第11a阶段</span><div><div class="tl-title">外墙颜色覆盖 — 所有渲染路径完整修复</div><div class="tl-sub">3DScene.cpp 核心修复 · 涂色工具基础颜色 · 缩略图渲染 · data_changed 追踪</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <span class="tl-section-label">fos.5 遗留根本原因</span>
     <ul>
@@ -1776,9 +1802,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 
 <div class="tl-row">
-<div class="tl-spine"><div class="tl-dot" style="background:#1A7A4A"></div><div class="tl-line"></div></div>
+<div class="tl-spine"><div class="tl-dot" style="background:#0B3D91"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">第11b阶段</span><div><div class="tl-title">右键拖拽旋转视图 + 启动修复 + 打印流程预设保存后刷新</div><div class="tl-sub">右键拖拽 → 旋转 · 启动时混直径模式自动检测 · 保存新打印机预设后刷新打印流程预设</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-blue">第11b阶段</span><div><div class="tl-title">右键拖拽旋转视图 + 启动修复 + 打印流程预设保存后刷新</div><div class="tl-sub">右键拖拽 → 旋转 · 启动时混直径模式自动检测 · 保存新打印机预设后刷新打印流程预设</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <span class="tl-section-label">右键拖拽旋转视图（GLCanvas3D.cpp / Plater.cpp）</span>
     <ul>
@@ -1805,9 +1831,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 <div class="tl-date">第十二阶段 — 挤出口验证面板 + 鼠标配置 + GCode 图例 — 6月5日 · v2.3.2-fos.7</div>
 <div class="tl-row">
-<div class="tl-spine"><div class="tl-dot" style="background:#1A7A4A"></div><div class="tl-line"></div></div>
+<div class="tl-spine"><div class="tl-dot" style="background:#BA7517"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">第12a阶段</span><div><div class="tl-title">挤出口验证集成至 GCode 图例面板</div><div class="tl-sub">浮动对话框替换为耗材图例内嵌面板 · 打印按钮门控保留</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-amber">第12a阶段</span><div><div class="tl-title">挤出口验证集成至 GCode 图例面板</div><div class="tl-sub">浮动对话框替换为耗材图例内嵌面板 · 打印按钮门控保留</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <div class="tl-decision">重大决策</div>
     <span class="tl-section-label">新行为</span>
@@ -1829,9 +1855,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 
 <div class="tl-row">
-<div class="tl-spine"><div class="tl-dot" style="background:#1A7A4A"></div><div class="tl-line"></div></div>
+<div class="tl-spine"><div class="tl-dot" style="background:#BA7517"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">第12b阶段</span><div><div class="tl-title">偏好设置中的鼠标按键分配 + GCode 图例默认值</div><div class="tl-sub">设置 → 通用：逐按键旋转/平移/不分配 · 耗材视图为默认 · 外墙在线型图例中排首位</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-amber">第12b阶段</span><div><div class="tl-title">偏好设置中的鼠标按键分配 + GCode 图例默认值</div><div class="tl-sub">设置 → 通用：逐按键旋转/平移/不分配 · 耗材视图为默认 · 外墙在线型图例中排首位</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <div class="tl-decision">重大决策</div>
     <span class="tl-section-label">鼠标拖拽分配 UI（Preferences.cpp、AppConfig.cpp、GLCanvas3D.cpp）</span>
@@ -1858,11 +1884,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 </div>
 
-<div class="tl-date">第十三阶段 — 混合挤出口逐槽耗材配置文件（FLP=耗材预设）过滤 — 6月7日 · v2.3.2-fos.8</div>
+<div class="tl-date">第十三阶段 — 混合挤出口逐槽耗材配置文件（FLP=耗材预设）过滤 — 6月7–8日 · v2.3.2-fos.8 / fos.8.1</div>
 <div class="tl-row">
-<div class="tl-spine"><div class="tl-dot" style="background:#1A7A4A"></div><div class="tl-line"></div></div>
+<div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
-  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-green">第13a阶段</span><div><div class="tl-title">逐挤出口耗材配置文件过滤 — 各槽独立体积流速</div><div class="tl-sub">槽 3/4（0.2mm）现自动选择 0.2mm 耗材配置 · 1.6mm³/s 而非 12mm³/s</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-purple">第13a阶段</span><div><div class="tl-title">逐挤出口耗材配置文件过滤 — 各槽独立体积流速</div><div class="tl-sub">挤出口 3/4（0.2mm）现自动选择 0.2mm 耗材配置 · 1.6mm³/s 而非 12mm³/s</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
     <div class="tl-decision">重大决策</div>
     <span class="tl-section-label">根本原因</span>
@@ -1875,7 +1901,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <span class="tl-section-label">修复 — Preset.cpp</span>
     <ul>
       <li>update_compatible_internal：FOS 块在混合挤出口打印机配置中，若 compatible_printers 匹配任意挤出口直径则标记耗材列表为兼容</li>
-      <li>仅限 TYPE_FILAMENT · 使用 cp-&gt;values 的向量副本避免指针失效</li>
+      <li>仅限 TYPE_FILAMENT · 使用 cp->values 的向量副本避免指针失效</li>
     </ul>
     <span class="tl-section-label">修复 — PresetBundle.cpp</span>
     <ul>
@@ -1897,23 +1923,51 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 </div>
 
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-purple">第13b阶段</span><div><div class="tl-title">热修复 — FLP 下拉框锁死 + 预设重新选择时崩溃 · v2.3.2-fos.8.1</div><div class="tl-sub">fos.8 get_preset_name 假名称导致 0.4mm 槽下拉框卡死 · 空指针崩溃已修复</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-detail">
+    <span class="tl-section-label">根本原因</span>
+    <ul>
+      <li>fos.8 get_preset_name 构造了"Generic PLA @U1 0.4 nozzle"虚假名称 — 预设包中实际不存在该名称；破坏 system_presets 的 map 键匹配 → drop_down 状态卡死，ComboBox 无法重新打开。0.2mm 槽不受影响，因为"Generic PLA @U1 0.2 nozzle"是真实存在的预设名称。</li>
+      <li>DynamicFilamentList::update 和 DynamicFilamentList1Based::update 调用 find_preset()->get_filament_type() 时缺少空值检查 — 预设选择状态切换期间 find_preset() 返回 nullptr 导致崩溃</li>
+      <li>on_select_preset 中 combo->update() 在选择事件期间同步调用 — 可能导致下拉框状态损坏</li>
+    </ul>
+    <span class="tl-section-label">修复 — Plater.cpp</span>
+    <ul>
+      <li>DynamicFilamentList::update 和 DynamicFilamentList1Based::update 中添加空值防护 — 调用 get_filament_type() 前先检查 find_preset() 返回值</li>
+      <li>on_select_preset 中通过 wxTheApp->CallAfter 延迟执行 combo->update() — 避免选择事件处理期间损坏下拉框状态</li>
+    </ul>
+    <span class="tl-section-label">修复 — PresetComboBoxes.cpp</span>
+    <ul>
+      <li>简化 get_preset_name：混直径模式下直接返回 preset.name，不再构造虚假后缀；0.4mm 基础预设原样显示（如"Generic PLA"），非 0.4mm 预设的实际名称中已含挤出口后缀</li>
+      <li>switch_to_tab 中添加 FOS 后缀剥离：若显示名称在预设包中找不到，通过正则表达式剥离 @U1 X.X nozzle 后缀再进行别名查找</li>
+    </ul>
+    <div class="tl-milestone">里程碑</div>
+    <ul>
+      <li>0.4mm 槽 FLP 下拉框可正常重新打开 · 重新选择、多材料标签页、切片后均无崩溃 · fos.8 逐挤出口过滤功能保持完整 · v2.3.2-fos.8.1 已发布</li>
+    </ul>
+  </div>
+</div>
+</div>
+
 <div class="tl-date">待完成 / TODO</div>
 <div class="tl-row">
 <div class="tl-spine"><div class="tl-dot" style="background:#888780"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
   <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-gray">TODO</span><div><div class="tl-title">待处理事项</div><div class="tl-sub">回归修复、代码清理、待实现功能</div></div></div><span class="tl-chevron">▾</span></div>
   <div class="tl-detail">
-    <span class="tl-section-label">内测版目标</span>
+    <span class="tl-section-label">内测阶段目标</span>
     <ul>
       <li>混合挤出口尺寸下仅外壳着色 FlowErrorNegativeSpacing — 尚未诊断</li>
       <li>外墙挤出口变更时的涂色擦除警告 — 已实现但注释，待测试后启用</li>
       <li>打印流程预设下拉框宽度在混直径模式下不自适应</li>
       <li>逐挤出口耗材列表完整架构延后 — 需要在 PRP 中实现逐槽速度覆盖（各挤出口的外墙/内壁/填充/顶面速度）</li>
       <li>绝对首次启动时内壁下拉框显示异常 — 优先级低，点击可刷新</li>
-      <li>注释清理 — 将 FOS 注释中的 T1/T2 引用替换为"基础挤出机"/"涂色挤出机"</li>
       <li>GitHub Wiki：说明混合挤出口外墙/内壁行为与原版 OrcaSlicer 的区别 · wiki 已在封闭环境中启动</li>
     </ul>
-    <span class="tl-section-label">公测版目标</span>
+    <span class="tl-section-label">公测阶段目标</span>
     <ul>
       <li>曲面着色区域回归 — 验证球体/环形/锥体 CL 路径是否正常；如有问题，在 48c601c3b1 与当前版本之间进行二分排查</li>
       <li>仅外壳着色 CL=1 弧线端点接缝伪影（最近/对齐接缝位置）— 变通方法：使用随机接缝</li>
@@ -1949,10 +2003,10 @@ function setLang(lang){
   var s=document.getElementById('main-sub');
   if(lang==='zh'){
     t.textContent='FOrcaSlicer — 灵活版 OrcaSlicer 开发路线图';
-    s.textContent='Snapmaker U1 · OrcaSlicer 分支 · 2026年5月15日 – 6月7日 · 点击任意卡片展开';
+    s.textContent='Snapmaker U1 · OrcaSlicer 分支 · 2026年5月15日 – 6月8日 · 点击任意卡片展开';
   } else {
     t.textContent='FOrcaSlicer — Flexible OrcaSlicer dev roadmap';
-    s.textContent='Snapmaker U1 · OrcaSlicer fork · May 15 – Jun 7 2026 · click any card to expand';
+    s.textContent='Snapmaker U1 · OrcaSlicer fork · May 15 – Jun 8 2026 · click any card to expand';
   }
 }
 </script>
