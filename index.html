@@ -53,7 +53,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div class="tl-header">
   <div class="tl-header-left">
     <h2 id="main-title">FOrcaSlicer — Flexible OrcaSlicer dev roadmap</h2>
-    <span id="main-sub">Snapmaker U1 · OrcaSlicer fork · May 15 – Jun 8 2026 · click any card to expand</span>
+    <span id="main-sub">Snapmaker U1 · OrcaSlicer fork · May 15 – Jul 12 2026 · click any card to expand</span>
   </div>
   <div class="lang-toggle">
     <button class="lang-btn active" onclick="setLang('en')">EN</button>
@@ -989,6 +989,46 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 </div>
 
+<div class="tl-date">Phase 13c — Inner wall filament + outer wall loops save/load fix — Jul 12 · v2.3.2-fos.8.2</div>
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-purple">Phase 13c</span><div><div class="tl-title">Fix — inner wall filament + outer wall loops not surviving project save/load · v2.3.2-fos.8.2</div><div class="tl-sub">Both FOS keys missing from s_Preset_print_options · dropped by apply_only on project reload</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-detail">
+    <div class="tl-decision">Major Decision</div>
+    <span class="tl-section-label">Initial public release</span>
+    <ul>
+      <li>v2.3.2-fos.8.2 designated the initial public release of FOrcaSlicer</li>
+    </ul>
+    <span class="tl-section-label">Problem</span>
+    <ul>
+      <li>Inner wall filament: saved assignment (e.g. N3) came back as the Outer wall nozzle on reload — exported G-code routed inner perimeters to the OW tool</li>
+      <li>Outer wall loops: saved quantity discarded on reload, silently reverted to default</li>
+      <li>Both applied correctly within a session — loss only visible after close/reopen, or via the two keys missing from a reloaded project's G-code config header</li>
+    </ul>
+    <span class="tl-section-label">Root cause</span>
+    <ul>
+      <li>inner_wall_filament and outer_wall_loops were defined in PrintConfig.cpp with set_key_value defaults in Preset.cpp, but neither was listed in s_Preset_print_options — the registry of valid print-preset keys</li>
+      <li>On project load PresetCollection::load_external_preset rebuilds the config via apply_only(combined_config, print_options) — keys absent from print_options are filtered out; both keys were written on save but dropped before reaching the preset</li>
+      <li>wall_filament / sparse_infill_filament / solid_infill_filament unaffected because already registered — only the two FOS-added keys were missing, which is why the bug looked selective</li>
+    </ul>
+    <span class="tl-section-label">Fix — Preset.cpp + installer.nsi</span>
+    <ul>
+      <li>Added "outer_wall_loops" to s_Preset_print_options (after "wall_loops") and "inner_wall_filament" (after "wall_filament")</li>
+      <li>installer.nsi: VIProductVersion bumped to 2.3.2.8 (stale at 2.3.2.7 since fos.7) · no slicing code changed</li>
+    </ul>
+    <span class="tl-section-label">Known issue (not a regression)</span>
+    <ul>
+      <li>Thick internal bridges: internal bridge extruded at nozzle_diameter × sqrt(bridge_flow) with no clamp against layer height — extreme under mixed nozzles (0.8mm nozzle on 0.1mm layer → 0.8mm-tall extrusion, 8× layer height, overlapping sparse infill beneath). Upstream Orca behavior, not FOS-specific — stock Orca with uniform 0.8mm nozzles at 0.24mm layers shows the same. Workaround: disable Thick internal bridges when solid-infill nozzle ≫ layer height; layer-height-aware clamp under consideration</li>
+    </ul>
+    <div class="tl-milestone">Milestone</div>
+    <ul>
+      <li>IW filament survives save/load (saved IW=N3 reloads as N3, G-code routes inner perimeters to that tool) ✓ · outer wall loops survives save/load ✓ · both keys now in reloaded G-code config header ✓ · both regain reset-dot and preset-baseline tracking ✓ · v2.3.2-fos.8.2 released</li>
+    </ul>
+  </div>
+</div>
+</div>
+
 <div class="tl-date">Outstanding / TODO</div>
 <div class="tl-row">
 <div class="tl-spine"><div class="tl-dot" style="background:#888780"></div><div class="tl-line"></div></div>
@@ -1012,6 +1052,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <li>Accumulator layer height sync (NozzleLayerPlanner) — not yet started</li>
       <li>Drag-and-drop STL after fresh install fails — workaround: run OrcaSlicer once; fix: investigate installer.nsi shell registration</li>
       <li>Dark mode nozzle color bars — not yet tested</li>
+      <li>Thick internal bridges: layer-height-aware clamp on bridge extrusion height (upstream Orca behavior, extreme under mixed nozzles — see fos.8.2 known issue)</li>
       <li>outer_wall_loops: no hard UI cap (label turns red as warning — accepted)</li>
       <li>CL slider max hardcoded to 10 in UI — increase if needed</li>
       <li>Per-object CL not exposed in Objects tab — only via gizmo</li>
@@ -1952,6 +1993,46 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 </div>
 
+<div class="tl-date">第13c阶段 — 内壁耗材 + 外墙圈数保存/加载修复 — 7月12日 · v2.3.2-fos.8.2</div>
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-purple">第13c阶段</span><div><div class="tl-title">修复 — 内壁耗材 + 外墙圈数在工程保存/加载后丢失 · v2.3.2-fos.8.2</div><div class="tl-sub">两个 FOS 键均未注册到 s_Preset_print_options · 工程重新加载时被 apply_only 过滤丢弃</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-detail">
+    <div class="tl-decision">重大决策</div>
+    <span class="tl-section-label">首个公开发布版本</span>
+    <ul>
+      <li>v2.3.2-fos.8.2 定为 FOrcaSlicer 首个公开发布版本</li>
+    </ul>
+    <span class="tl-section-label">问题</span>
+    <ul>
+      <li>内壁耗材：已保存的分配（如 N3）重新加载后变回外墙挤出口 — 导出的 G-code 将内圈周界路由到外墙工具</li>
+      <li>外墙圈数：已保存的数量在重新加载时被丢弃，静默恢复为默认值</li>
+      <li>两项设置在会话内均正常生效 — 仅在关闭并重新打开工程后才暴露丢失，或从重新加载工程的 G-code 配置头中缺失这两个键可见</li>
+    </ul>
+    <span class="tl-section-label">根本原因</span>
+    <ul>
+      <li>inner_wall_filament 与 outer_wall_loops 均已在 PrintConfig.cpp 中定义、在 Preset.cpp 中有 set_key_value 默认值，但都未列入 s_Preset_print_options — 即打印预设有效键的注册表</li>
+      <li>工程加载时 PresetCollection::load_external_preset 通过 apply_only(combined_config, print_options) 重建配置 — 不在 print_options 中的键会被过滤；两个键在保存时写入了工程文件，但在加载时尚未到达预设即被丢弃</li>
+      <li>wall_filament / sparse_infill_filament / solid_infill_filament 不受影响，因为三者均已注册 — 仅两个 FOS 新增键缺失，这就是该 bug 看起来具有选择性的原因</li>
+    </ul>
+    <span class="tl-section-label">修复 — Preset.cpp + installer.nsi</span>
+    <ul>
+      <li>在 s_Preset_print_options 中添加 "outer_wall_loops"（位于 "wall_loops" 之后）和 "inner_wall_filament"（位于 "wall_filament" 之后）</li>
+      <li>installer.nsi：VIProductVersion 提升至 2.3.2.8（自 fos.7 起一直滞留在 2.3.2.7）· 未改动任何切片代码</li>
+    </ul>
+    <span class="tl-section-label">已知问题（非回归）</span>
+    <ul>
+      <li>厚内部桥接：内部桥接以 nozzle_diameter × sqrt(bridge_flow) 的高度挤出，未对层高做钳制 — 混合挤出口下可能极端（0.8mm 挤出口 + 0.1mm 层高 → 单条 0.8mm 高挤出，为层高 8 倍，与下方稀疏填充重叠）。属上游 OrcaSlicer 行为而非 FOS 特有 — 原版 Orca 统一 0.8mm 挤出口 + 0.24mm 层高也出现同样现象。变通方法：当实心填充挤出口远大于层高时禁用厚内部桥接；层高感知钳制在未来版本考虑中</li>
+    </ul>
+    <div class="tl-milestone">里程碑</div>
+    <ul>
+      <li>内壁耗材可在保存/加载后保留（保存 IW=N3 重新加载仍为 N3，G-code 将内圈周界路由到该工具）✓ · 外墙圈数可在保存/加载后保留 ✓ · 重新加载工程的 G-code 配置头现包含这两个键 ✓ · 两个字段恢复重置圆点与预设基线跟踪 ✓ · v2.3.2-fos.8.2 已发布</li>
+    </ul>
+  </div>
+</div>
+</div>
+
 <div class="tl-date">待完成 / TODO</div>
 <div class="tl-row">
 <div class="tl-spine"><div class="tl-dot" style="background:#888780"></div><div class="tl-line"></div></div>
@@ -1975,6 +2056,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <li>累加器层高同步（NozzleLayerPlanner）— 尚未开始</li>
       <li>全新安装后拖拽 STL 文件失败 — 变通方法：先运行一次 OrcaSlicer 再切换；修复方向：排查 installer.nsi 的 shell 注册</li>
       <li>深色模式挤出口颜色条 — 尚未测试</li>
+      <li>厚内部桥接：为桥接挤出高度添加层高感知钳制（上游 Orca 行为，混合挤出口下尤为极端 — 见 fos.8.2 已知问题）</li>
       <li>outer_wall_loops：UI 无硬性上限（标签变红作为警告 — 已接受）</li>
       <li>CL 滑块最大值在 UI 中硬编码为 10 — 如有需要可调高</li>
       <li>逐对象 CL 仅可通过操作工具设置，未在对象属性面板（Objects 标签）中开放</li>
@@ -2003,10 +2085,10 @@ function setLang(lang){
   var s=document.getElementById('main-sub');
   if(lang==='zh'){
     t.textContent='FOrcaSlicer — 灵活版 OrcaSlicer 开发路线图';
-    s.textContent='Snapmaker U1 · OrcaSlicer 分支 · 2026年5月15日 – 6月8日 · 点击任意卡片展开';
+    s.textContent='Snapmaker U1 · OrcaSlicer 分支 · 2026年5月15日 – 7月12日 · 点击任意卡片展开';
   } else {
     t.textContent='FOrcaSlicer — Flexible OrcaSlicer dev roadmap';
-    s.textContent='Snapmaker U1 · OrcaSlicer fork · May 15 – Jun 8 2026 · click any card to expand';
+    s.textContent='Snapmaker U1 · OrcaSlicer fork · May 15 – Jul 12 2026 · click any card to expand';
   }
 }
 </script>
