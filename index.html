@@ -53,7 +53,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div class="tl-header">
   <div class="tl-header-left">
     <h2 id="main-title">FOrcaSlicer — Flexible OrcaSlicer dev roadmap</h2>
-    <span id="main-sub">Snapmaker U1 · OrcaSlicer fork · May 15 – Jul 12 2026 · click any card to expand</span>
+    <span id="main-sub">Snapmaker U1 · OrcaSlicer fork · May 15 – Jul 13 2026 · click any card to expand</span>
   </div>
   <div class="lang-toggle">
     <button class="lang-btn active" onclick="setLang('en')">EN</button>
@@ -1024,6 +1024,49 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div class="tl-milestone">Milestone</div>
     <ul>
       <li>IW filament survives save/load (saved IW=N3 reloads as N3, G-code routes inner perimeters to that tool) ✓ · outer wall loops survives save/load ✓ · both keys now in reloaded G-code config header ✓ · both regain reset-dot and preset-baseline tracking ✓ · v2.3.2-fos.8.2 released</li>
+    </ul>
+  </div>
+</div>
+</div>
+
+<div class="tl-date">Phase 13d — Vendor profile refresh + duplicate profile cleanup — Jul 13 · v2.3.2-fos.8.3</div>
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-purple">Phase 13d</span><div><div class="tl-title">Fix — corrected Snapmaker profiles never reached existing installs · v2.3.2-fos.8.3</div><div class="tl-sub">Stale bundle version froze cached profiles at the broken 105% state · 20 duplicate-name profiles · FOrcaSlicer branding in About</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-detail">
+    <span class="tl-section-label">Problem</span>
+    <ul>
+      <li>Same project file produced different line widths on two computers — upgraded installs showed a mix of percentages and mm in the Quality tab, including a bare "105" top surface width (105 mm, no % sign)</li>
+      <li>Only 0.4mm nozzle presets affected; 0.2/0.6/0.8 clean · fresh installs also clean, which made it hard to pin down</li>
+      <li>Not cosmetic: line widths are coFloatOrPercent with ratio_over = nozzle_diameter, so a stored 105% resolves to a different physical width per nozzle (0.21mm on 0.2, 0.84mm on 0.8) — under mixed nozzles this silently changes what gets printed</li>
+    </ul>
+    <span class="tl-section-label">Root cause 1 — the fix existed but was never delivered</span>
+    <ul>
+      <li>U1 process presets went through three revisions: df0a7e9d58 (mm → 105%/110%, top_surface became bare 105), 03a404bda3 (repaired 105 → 105%), 7b5c73e1af (everything back to absolute mm) — corrected mm values shipped in resources/profiles/ ever since</li>
+      <li>PresetUpdater::check_installed_vendor_profiles only refreshes %APPDATA%/FOrcaSlicer/system/&lt;Vendor&gt;/ when the resource bundle declares a newer version — Snapmaker.json sat at "02.02.46.02" through every FOS profile edit, so the check never fired and machines kept whatever profiles they first installed (the df0a7e9d58 state, frozen)</li>
+      <li>Every profile fix was faithfully packaged into the installer, then silently ignored on upgrade</li>
+    </ul>
+    <span class="tl-section-label">Root cause 2 — duplicate profile names</span>
+    <ul>
+      <li>20 process profiles declared the same "name" key as a real sibling → nondeterministic preset binding: 19 "* copy.json" files (0.2/0.6/0.8 presets) + "0.20 Standard @Snapmaker U1 (0.4 nozzle)_old.json"</li>
+      <li>The _old.json is the 0.4-nozzle collision — exactly why 0.4 misbehaved; an older thinner revision, not referenced by the Snapmaker.json index (prior cleanups eeebb38a47 / 710caf2ac1 never shipped — dev branch only)</li>
+    </ul>
+    <span class="tl-section-label">Changes — profiles</span>
+    <ul>
+      <li>Snapmaker.json bundle version 02.02.46.02 → 02.02.47.00 — Semver::parse is 3-component (4th field invisible to comparison), so bumping .02 → .03 would have done nothing; moving the patch field (46 → 47) makes 2.2.46 &lt; 2.2.47 true and triggers the refresh · also keeps FOS ahead of Snapmaker's official 02.02.46.x so their online updater won't overwrite it</li>
+      <li>Deleted the 20 duplicate-name profiles — install_bundles_rsrc calls remove_all() on the vendor folder before recopying, so the bump both delivers corrected profiles and sweeps stale files off existing machines</li>
+    </ul>
+    <span class="tl-section-label">Changes — branding</span>
+    <ul>
+      <li>libslic3r.h SLIC3R_APP_FULL_NAME "Snapmaker Orca" → "FOrcaSlicer" — drives Help &gt; About menu, About dialog title, error captions, MessageDialog titles; display-only (paths driven by SLIC3R_APP_KEY, already FOrcaSlicer)</li>
+      <li>common_func.hpp: added FOS_VERSION "2.3.2-fos.8.3" — kept separate from Snapmaker_VERSION deliberately (that macro is written into 3mf metadata, project settings, user_backup folder name; changing it would break project round-trips and orphan backups)</li>
+      <li>AboutDialog.cpp: version line reads "FOrcaSlicer 2.3.2-fos.8.3" with "Based on Snapmaker Orca 2.3.2 / Orca Slicer" beneath · fixed mojibake © — raw U+00A9 in a narrow literal decoded via current locale (GBK → CJK glyph); now pure ASCII, decoded explicitly via wxString::FromUTF8</li>
+      <li>No slicing code changed · upgrade note: corrected profiles apply automatically on first launch; customized user presets untouched — only the system bundle under %APPDATA%\FOrcaSlicer\system\Snapmaker\ is replaced</li>
+    </ul>
+    <div class="tl-milestone">Milestone</div>
+    <ul>
+      <li>Upgrading to 8.3 refreshes the cached vendor bundle — all U1 line widths load as absolute mm on every nozzle ✓ · 20 duplicate-name profiles removed from existing installs ✓ · zero percentage line widths and zero duplicate names remain in the Snapmaker profile tree ✓ · same project yields identical line widths across machines ✓ · Help &gt; About reads "About FOrcaSlicer", dialog shows FOrcaSlicer 2.3.2-fos.8.3 with correct © ✓ · v2.3.2-fos.8.3 released</li>
     </ul>
   </div>
 </div>
@@ -2033,6 +2076,49 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 </div>
 
+<div class="tl-date">第13d阶段 — 厂商配置文件刷新 + 重复配置清理 — 7月13日 · v2.3.2-fos.8.3</div>
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-purple">第13d阶段</span><div><div class="tl-title">修复 — 修正后的 Snapmaker 配置文件从未送达已安装机器 · v2.3.2-fos.8.3</div><div class="tl-sub">预设包版本号滞留导致缓存配置冻结在损坏的 105% 状态 · 20 个重名配置文件 · About 对话框 FOrcaSlicer 品牌化</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-detail">
+    <span class="tl-section-label">问题</span>
+    <ul>
+      <li>同一工程文件在两台电脑上产生不同的线宽 — 升级安装的机器在质量标签页中显示百分比与毫米混杂，其中顶面线宽为裸"105"（无 % 号，即 105 毫米）</li>
+      <li>仅 0.4mm 挤出口预设受影响；0.2/0.6/0.8 正常 · 全新安装也正常 — 这正是问题难以定位的原因</li>
+      <li>并非表面问题：线宽为 coFloatOrPercent 类型且 ratio_over = nozzle_diameter，存储的 105% 在每个挤出口上解析为不同的物理宽度（0.2 挤出口 0.21mm，0.8 挤出口 0.84mm）— 混合挤出口下会静默改变实际打印结果</li>
+    </ul>
+    <span class="tl-section-label">根本原因一 — 修复早已存在，却从未送达</span>
+    <ul>
+      <li>U1 打印预设经历三次修订：df0a7e9d58（毫米 → 105%/110%，顶面线宽变成裸 105）、03a404bda3（修复 105 → 105%）、7b5c73e1af（全部改回绝对毫米值）— 修正后的毫米值此后一直随 resources/profiles/ 打包发布</li>
+      <li>PresetUpdater::check_installed_vendor_profiles 仅在资源包声明更新版本时才刷新 %APPDATA%/FOrcaSlicer/system/&lt;Vendor&gt;/ — Snapmaker.json 在历次 FOS 配置修改中始终停留在"02.02.46.02"，检查从未触发，机器一直保留最初安装的配置（冻结在 df0a7e9d58 状态）</li>
+      <li>每次配置修复都被如实打入安装包，然后在升级时被静默忽略</li>
+    </ul>
+    <span class="tl-section-label">根本原因二 — 配置文件重名</span>
+    <ul>
+      <li>20 个打印配置文件与真实同级文件声明了相同的"name"键 → 预设绑定不确定：19 个"* copy.json"文件（0.2/0.6/0.8 预设）+ "0.20 Standard @Snapmaker U1 (0.4 nozzle)_old.json"</li>
+      <li>_old.json 正是 0.4 挤出口的重名冲突 — 这就是 0.4 出问题的原因；它是更早更瘦的旧修订版，且未被 Snapmaker.json 索引引用（此前的清理提交 eeebb38a47 / 710caf2ac1 仅在开发分支，从未发布）</li>
+    </ul>
+    <span class="tl-section-label">改动 — 配置文件</span>
+    <ul>
+      <li>Snapmaker.json 预设包版本 02.02.46.02 → 02.02.47.00 — Semver::parse 仅解析 3 段版本号（第 4 段对比较不可见），将 .02 改为 .03 毫无作用；提升补丁段（46 → 47）才使 2.2.46 &lt; 2.2.47 成立并触发刷新 · 同时使 FOS 版本号领先于 Snapmaker 官方的 02.02.46.x，官方在线更新器不会将其覆盖</li>
+      <li>删除上述 20 个重名配置文件 — install_bundles_rsrc 在重新复制前对厂商文件夹调用 remove_all()，因此版本提升既送达修正配置，也将陈旧文件从已安装机器上清除</li>
+    </ul>
+    <span class="tl-section-label">改动 — 品牌化</span>
+    <ul>
+      <li>libslic3r.h SLIC3R_APP_FULL_NAME "Snapmaker Orca" → "FOrcaSlicer" — 驱动帮助 &gt; 关于菜单项、关于对话框标题、错误标题和 MessageDialog 标题；仅影响显示（路径由 SLIC3R_APP_KEY 驱动，已是 FOrcaSlicer）</li>
+      <li>common_func.hpp：新增 FOS_VERSION "2.3.2-fos.8.3" — 刻意与 Snapmaker_VERSION 分离（该宏写入 3mf 元数据、工程设置及 user_backup 文件夹名，改动会破坏工程往返并孤立现有备份）</li>
+      <li>AboutDialog.cpp：版本行显示"FOrcaSlicer 2.3.2-fos.8.3"，下方标注"Based on Snapmaker Orca 2.3.2 / Orca Slicer" · 修复版权符号乱码 — 窄字符串字面量中的原始 U+00A9 按当前区域设置解码（GBK 代码页下渲染为汉字）；现改为纯 ASCII，通过 wxString::FromUTF8 显式解码</li>
+      <li>未改动任何切片代码 · 升级说明：修正配置在 8.3 首次启动时自动应用；自定义用户预设不受影响 — 仅替换 %APPDATA%\FOrcaSlicer\system\Snapmaker\ 下的系统预设包</li>
+    </ul>
+    <div class="tl-milestone">里程碑</div>
+    <ul>
+      <li>升级至 8.3 刷新缓存的厂商预设包 — 所有 U1 线宽在每个挤出口上均以绝对毫米值加载 ✓ · 20 个重名配置从已安装机器上移除 ✓ · Snapmaker 配置树中不再有任何百分比线宽和重名 ✓ · 同一工程在不同机器上产生一致线宽 ✓ · 帮助 &gt; 关于显示"About FOrcaSlicer"，对话框显示 FOrcaSlicer 2.3.2-fos.8.3 且版权符号正确 ✓ · v2.3.2-fos.8.3 已发布</li>
+    </ul>
+  </div>
+</div>
+</div>
+
 <div class="tl-date">待完成 / TODO</div>
 <div class="tl-row">
 <div class="tl-spine"><div class="tl-dot" style="background:#888780"></div><div class="tl-line"></div></div>
@@ -2085,10 +2171,10 @@ function setLang(lang){
   var s=document.getElementById('main-sub');
   if(lang==='zh'){
     t.textContent='FOrcaSlicer — 灵活版 OrcaSlicer 开发路线图';
-    s.textContent='Snapmaker U1 · OrcaSlicer 分支 · 2026年5月15日 – 7月12日 · 点击任意卡片展开';
+    s.textContent='Snapmaker U1 · OrcaSlicer 分支 · 2026年5月15日 – 7月13日 · 点击任意卡片展开';
   } else {
     t.textContent='FOrcaSlicer — Flexible OrcaSlicer dev roadmap';
-    s.textContent='Snapmaker U1 · OrcaSlicer fork · May 15 – Jul 12 2026 · click any card to expand';
+    s.textContent='Snapmaker U1 · OrcaSlicer fork · May 15 – Jul 13 2026 · click any card to expand';
   }
 }
 </script>
