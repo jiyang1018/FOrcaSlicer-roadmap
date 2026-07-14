@@ -53,7 +53,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div class="tl-header">
   <div class="tl-header-left">
     <h2 id="main-title">FOrcaSlicer — Flexible OrcaSlicer dev roadmap</h2>
-    <span id="main-sub">Snapmaker U1 · OrcaSlicer fork · May 15 – Jul 13 2026 · click any card to expand</span>
+    <span id="main-sub">Snapmaker U1 · OrcaSlicer fork · May 15 – Jul 14 2026 · click any card to expand</span>
   </div>
   <div class="lang-toggle">
     <button class="lang-btn active" onclick="setLang('en')">EN</button>
@@ -1072,6 +1072,55 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 </div>
 
+<div class="tl-date">Phase 13e — Support, tree support + prime tower were all sized for nozzle 1 — Jul 14 · v2.3.2-fos.8.4</div>
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-purple">Phase 13e</span><div><div class="tl-title">Fix — support, tree support and prime tower all computed geometry from nozzle 1 · v2.3.2-fos.8.4</div><div class="tl-sub">Single theme: three features sized for nozzle 1 regardless of printing tool · no-op on uniform-nozzle machines</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-detail">
+    <span class="tl-section-label">Problem</span>
+    <ul>
+      <li>Support on filament 2 of a 0.2/0.4/0.6/0.8 machine: slicer picks the right nozzle, then tells it to lay a 0.22mm line — nozzle 1's width; the 0.4mm tip asked for a bead thinner than itself</li>
+      <li>Prime tower worse: every tool wiped at 1.0mm and rammed at 2.0mm — the 0.2mm nozzle included, at 5× and 10× its own diameter</li>
+      <li>Not rounding errors — extrusions a nozzle physically cannot lay</li>
+    </ul>
+    <span class="tl-section-label">Root cause — the ratio rule existed, only walls/infill used it</span>
+    <ul>
+      <li>Absolute line widths in a process preset are authored against nozzle 1 (the reference nozzle); any feature printed by a different tool must re-derive the width by ratio. PrintRegion::flow() has done this all along for frExternalPerimeter/frPerimeter/frInfill/frSolidInfill/frTopSolidInfill — but support roles aren't in that list, and support never passes through PrintRegion::flow() at all: it goes through free functions in Flow.cpp that pick the right nozzle then hand it an unadjusted width</li>
+      <li>Tree support wrong a second way: support_extrusion_width (sizes the tree base) was read from support_interface_filament's nozzle, not the base's · two further sites hardcoded nozzle_diameter.get_at(0), pinning branch spacing and collision resolution to nozzle 1 outright</li>
+      <li>Prime tower kept a single scalar and overwrote it: WipeTower2::m_perimeter_width assigned inside set_extruder(), called once per filament — last filament configured won by accident of iteration order (0.8 × 1.25 = 1.0mm for everyone); the code even states "all extruders are now assumed to have the same diameter" · meanwhile m_filpar[idx].nozzle_diameter was populated all along and never read</li>
+    </ul>
+    <span class="tl-section-label">Fix — Flow.cpp/.hpp + SupportParameters.hpp + TreeSupport.cpp</span>
+    <ul>
+      <li>New fos_width_for_nozzle() — the nozzle-1 → printing-nozzle ratio rule, exported so support, SupportParameters and TreeSupport all derive widths identically instead of three different ways; percent widths pass through untouched (get_abs_value already ratios over the nozzle it's given) · support_material_flow, support_material_1st_layer_flow, support_material_interface_flow now route through it</li>
+      <li>SupportParameters: support_extrusion_width now comes from support_filament (was support_interface_filament), ratio-derived — it sizes the support base, so it was taking dimensions from the wrong tool</li>
+      <li>TreeSupport: two hardcoded nozzle_diameter.get_at(0) reads replaced with the support filament's nozzle, ratio-derived — these drive collision resolution and branch spacing; a tree printed by a 0.6mm tool was built to 0.2mm dimensions</li>
+    </ul>
+    <span class="tl-section-label">Fix — WipeTower2.cpp/.hpp: the scalar was doing two jobs, now separate</span>
+    <ul>
+      <li>Structure width (footprint, box margins, brim spacing, tower perimeter + sparse fill) bound to wipe_tower_filament — the tool that genuinely prints them (set_extruder marks it the only non-soluble one, so first_toolchange_to_nonsoluble lands finish_layer on it); previously whichever set_extruder call ran last</li>
+      <li>Wipe and ramming now extrude at each tool's own width and flow, from m_filpar[tool].nozzle_diameter</li>
+      <li>Depth planning follows: plan_toolchange() and save_on_last_wipe() reserve depth with the same per-tool widths — width and spacing must move together or the purge block over/under-fills and reserved depth stops matching emitted lines · ramming E is volumetric (ramming_speed × time / filament_area) so only line length changes, purged volume unaffected</li>
+    </ul>
+    <span class="tl-section-label">Fix — GUI + Print.cpp: "Default" gated under mixed nozzles</span>
+    <ul>
+      <li>Support/raft base, Support/raft interface and Wipe tower offer "Default" = whichever filament is already loaded — invalid under mixed nozzles and unfixable: support paths are generated once at slicing time with a single flow, but the tool isn't chosen until G-code export, where ToolOrdering reassigns the tool on already-generated extrusions and nothing re-renders them; a path built for a 0.2mm tip can be handed to a 0.8mm tip</li>
+      <li>When nozzle diameters differ: those three dropdowns show "Empty" instead of "Default", and the slicer refuses to slice until a filament is chosen, naming which dropdown is blank · deliberately NOT auto-filled with filament 1 — silently landing on nozzle 1 is precisely the bug being fixed · uniform-nozzle machines: "Default" behaves exactly as before</li>
+      <li>FOS_VERSION → 2.3.2-fos.8.4 · installer VIProductVersion 2.3.2.8 → 2.3.2.9 · upgrade note: mixed-nozzle users with support/prime tower asked to pick filaments on first slice; pre-8.4 projects may open with these blank and the slicer names which it needs</li>
+    </ul>
+    <span class="tl-section-label">Known issues (new)</span>
+    <ul>
+      <li>Support layer height still follows nozzle 1 — consistent with the 8.x rule (all nozzles follow nozzle 1's process settings), but a 0.8mm nozzle can be asked to print 0.1mm support layers; a layer-height clamp would be a new feature, not a fix — deferred</li>
+      <li>Ramming-to-wipe alignment: Y offsets aligning the ramming block to the first wipe line still use the tower's structure width — with per-tool widths can be off up to ~0.4mm; cosmetic, no effect on purge volume or tower geometry</li>
+    </ul>
+    <div class="tl-milestone">Milestone</div>
+    <ul>
+      <li>Verified in G-code (0.2/0.4/0.6/0.8, support base fil.3, interface fil.2, tower fil.2): support 0.22 → 0.66mm on 0.6 tool ✓ · interface 0.22 → 0.44mm on 0.4 tool ✓ · tower wipe 1.0×4 → 0.25/0.5/0.75/1.0 ✓ · ramming 2.0×4 → 0.5/1.0/1.5/2.0 ✓ · purge block stays inside tower wall ✓ · tree branch spacing scales with support nozzle ✓ · uniform-nozzle slices unchanged (0.6×4: same 0.62mm support, same 0.75/1.5 tower widths, same extrusion counts) ✓ · v2.3.2-fos.8.4 released</li>
+    </ul>
+  </div>
+</div>
+</div>
+
 <div class="tl-date">Outstanding / TODO</div>
 <div class="tl-row">
 <div class="tl-spine"><div class="tl-dot" style="background:#888780"></div><div class="tl-line"></div></div>
@@ -1096,6 +1145,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <li>Drag-and-drop STL after fresh install fails — workaround: run OrcaSlicer once; fix: investigate installer.nsi shell registration</li>
       <li>Dark mode nozzle color bars — not yet tested</li>
       <li>Thick internal bridges: layer-height-aware clamp on bridge extrusion height (upstream Orca behavior, extreme under mixed nozzles — see fos.8.2 known issue)</li>
+      <li>Support layer height clamp for large nozzles — support still follows nozzle 1's layer height; a 0.8mm nozzle can be asked to print 0.1mm support layers (new feature, deferred — see fos.8.4 known issue)</li>
+      <li>Ramming-to-wipe Y alignment uses tower structure width — up to ~0.4mm off with per-tool widths; cosmetic (see fos.8.4 known issue)</li>
       <li>outer_wall_loops: no hard UI cap (label turns red as warning — accepted)</li>
       <li>CL slider max hardcoded to 10 in UI — increase if needed</li>
       <li>Per-object CL not exposed in Objects tab — only via gizmo</li>
@@ -2119,6 +2170,55 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 </div>
 
+<div class="tl-date">第13e阶段 — 支撑、树状支撑 + 擦料塔均按 1 号挤出口取尺寸 — 7月14日 · v2.3.2-fos.8.4</div>
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-purple">第13e阶段</span><div><div class="tl-title">修复 — 支撑、树状支撑与擦料塔的几何尺寸全部按 1 号挤出口计算 · v2.3.2-fos.8.4</div><div class="tl-sub">单一主题：三个功能无论由哪个工具打印均按 1 号挤出口取尺寸 · 统一口径机器完全不受影响</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-detail">
+    <span class="tl-section-label">问题</span>
+    <ul>
+      <li>在 0.2/0.4/0.6/0.8 机器上将支撑分配给 2 号耗材：切片器选对了挤出口，却让它铺 0.22mm 的线 — 那是 1 号挤出口的线宽；0.4mm 口径被要求挤出比自身还细的线条</li>
+      <li>擦料塔更严重：所有工具均以 1.0mm 擦拭、2.0mm 冲料 — 包括 0.2mm 挤出口，达到自身口径的 5 倍和 10 倍</li>
+      <li>这不是舍入误差 — 而是挤出口物理上无法铺出的挤出线</li>
+    </ul>
+    <span class="tl-section-label">根本原因 — 比例换算规则早已存在，但只有墙和填充在用</span>
+    <ul>
+      <li>打印预设中的绝对线宽是按 1 号挤出口（预设解析时的参考挤出口）制定的；由其他工具打印的功能必须按比例重新推导线宽。PrintRegion::flow() 一直对外墙/内壁/填充/实心填充/顶面实心填充这样做 — 但支撑角色不在该列表中，且支撑根本不经过 PrintRegion::flow()：它走 Flow.cpp 中的自由函数，选对了挤出口却传入未调整的线宽</li>
+      <li>树状支撑还有第二处错误：support_extrusion_width（决定树状支撑主体尺寸）从 support_interface_filament 的挤出口读取，而非主体自己的 · 另有两处硬编码 nozzle_diameter.get_at(0)，将分支间距和碰撞解析直接钉死在 1 号挤出口</li>
+      <li>擦料塔只保留一个标量并反复覆盖：WipeTower2::m_perimeter_width 在 set_extruder() 内赋值、每个耗材调用一次 — 最后配置的耗材因迭代顺序的偶然而胜出（0.8 × 1.25 = 1.0mm，人人如此）；代码甚至明说"此后假定所有挤出机口径相同" · 而 m_filpar[idx].nozzle_diameter 一直被填充却从未被读取</li>
+    </ul>
+    <span class="tl-section-label">修复 — Flow.cpp/.hpp + SupportParameters.hpp + TreeSupport.cpp</span>
+    <ul>
+      <li>新增 fos_width_for_nozzle() — 1 号挤出口 → 实际打印挤出口的比例换算规则，导出后支撑、SupportParameters 与 TreeSupport 以完全一致的方式推导线宽，而非三套各自的算法；百分比线宽原样通过（get_abs_value 本就按传入挤出口取比例） · support_material_flow、support_material_1st_layer_flow、support_material_interface_flow 均改经此函数</li>
+      <li>SupportParameters：support_extrusion_width 改从 support_filament 读取（原为 support_interface_filament）并按比例推导 — 它决定支撑主体尺寸，此前从错误的工具取尺寸</li>
+      <li>TreeSupport：两处硬编码 nozzle_diameter.get_at(0) 改为支撑耗材的挤出口并按比例推导 — 二者驱动碰撞解析与分支间距；由 0.6mm 工具打印的树曾按 0.2mm 尺寸构建</li>
+    </ul>
+    <span class="tl-section-label">修复 — WipeTower2.cpp/.hpp：一个标量身兼二职，现已分离</span>
+    <ul>
+      <li>结构线宽（占地、边距、裙边间距、塔周界 + 稀疏填充）绑定到 wipe_tower_filament — 真正打印它们的工具（set_extruder 将其标记为唯一非水溶性耗材，first_toolchange_to_nonsoluble 因此将 finish_layer 落在其上）；此前取决于哪次 set_extruder 调用最后运行</li>
+      <li>擦拭与冲料现按各工具自身的线宽和流量挤出，取自 m_filpar[tool].nozzle_diameter</li>
+      <li>深度规划同步跟进：plan_toolchange() 与 save_on_last_wipe() 用同一套逐工具线宽预留深度 — 线宽与间距必须同步调整，否则冲料块会过满/欠满、预留深度与实际挤出线不再吻合 · 冲料的 E 值按体积计算（ramming_speed × 时间 / 耗材截面积），仅线条长度变化，清料体积不受影响</li>
+    </ul>
+    <span class="tl-section-label">修复 — GUI + Print.cpp：混合口径下禁用"默认"选项</span>
+    <ul>
+      <li>支撑/筏底、支撑/筏接触面与擦料塔提供"默认"选项 = 当前已装载的耗材打印 — 混合口径下这不是有效选择且无法修复：支撑路径在切片时以单一流量一次性生成，而工具直到 G-code 导出才确定 — ToolOrdering 在已生成的挤出线上直接改派工具，无任何重新渲染；为 0.2mm 口径构建的路径可能交给 0.8mm 口径</li>
+      <li>口径不一致时：三个下拉框显示"Empty"而非"默认"，且切片器拒绝切片直至选定耗材，并指明哪个下拉框为空 · 刻意不自动填充 1 号耗材 — 静默落到 1 号挤出口正是本次要修的 bug · 统一口径机器上"默认"行为与以前完全一致</li>
+      <li>FOS_VERSION → 2.3.2-fos.8.4 · 安装包 VIProductVersion 2.3.2.8 → 2.3.2.9 · 升级说明：使用混合口径且启用支撑/擦料塔的用户首次切片时需选定耗材；8.4 之前保存的工程打开后这些项可能为空，切片器会指明缺哪一项</li>
+    </ul>
+    <span class="tl-section-label">已知问题（新增）</span>
+    <ul>
+      <li>支撑层高仍跟随 1 号挤出口 — 与 8.x 规则（所有挤出口跟随 1 号挤出口的打印设置）一致，但 0.8mm 挤出口可能被要求打印 0.1mm 支撑层；层高钳制属新功能而非修复 — 延后</li>
+      <li>冲料块与擦拭线对齐：将冲料块对齐到首条擦拭线的 Y 偏移仍使用塔的结构线宽 — 逐工具线宽下偏差可达约 0.4mm；仅外观问题，不影响清料体积和塔体几何</li>
+    </ul>
+    <div class="tl-milestone">里程碑</div>
+    <ul>
+      <li>G-code 验证（0.2/0.4/0.6/0.8，支撑主体耗材 3、接触面耗材 2、擦料塔耗材 2）：支撑 0.22 → 0.66mm（0.6 工具）✓ · 接触面 0.22 → 0.44mm（0.4 工具）✓ · 塔擦拭 1.0×4 → 0.25/0.5/0.75/1.0 ✓ · 冲料 2.0×4 → 0.5/1.0/1.5/2.0 ✓ · 冲料块保持在塔壁之内 ✓ · 树状支撑分支间距随支撑挤出口缩放 ✓ · 统一口径切片完全不变（0.6×4：支撑同为 0.62mm、塔线宽同为 0.75/1.5、挤出线数量一致）✓ · v2.3.2-fos.8.4 已发布</li>
+    </ul>
+  </div>
+</div>
+</div>
+
 <div class="tl-date">待完成 / TODO</div>
 <div class="tl-row">
 <div class="tl-spine"><div class="tl-dot" style="background:#888780"></div><div class="tl-line"></div></div>
@@ -2143,6 +2243,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <li>全新安装后拖拽 STL 文件失败 — 变通方法：先运行一次 OrcaSlicer 再切换；修复方向：排查 installer.nsi 的 shell 注册</li>
       <li>深色模式挤出口颜色条 — 尚未测试</li>
       <li>厚内部桥接：为桥接挤出高度添加层高感知钳制（上游 Orca 行为，混合挤出口下尤为极端 — 见 fos.8.2 已知问题）</li>
+      <li>大口径挤出口的支撑层高钳制 — 支撑仍跟随 1 号挤出口的层高；0.8mm 挤出口可能被要求打印 0.1mm 支撑层（属新功能，延后 — 见 fos.8.4 已知问题）</li>
+      <li>冲料块与擦拭线的 Y 对齐仍用塔结构线宽 — 逐工具线宽下偏差可达约 0.4mm；仅外观问题（见 fos.8.4 已知问题）</li>
       <li>outer_wall_loops：UI 无硬性上限（标签变红作为警告 — 已接受）</li>
       <li>CL 滑块最大值在 UI 中硬编码为 10 — 如有需要可调高</li>
       <li>逐对象 CL 仅可通过操作工具设置，未在对象属性面板（Objects 标签）中开放</li>
@@ -2171,10 +2273,10 @@ function setLang(lang){
   var s=document.getElementById('main-sub');
   if(lang==='zh'){
     t.textContent='FOrcaSlicer — 灵活版 OrcaSlicer 开发路线图';
-    s.textContent='Snapmaker U1 · OrcaSlicer 分支 · 2026年5月15日 – 7月13日 · 点击任意卡片展开';
+    s.textContent='Snapmaker U1 · OrcaSlicer 分支 · 2026年5月15日 – 7月14日 · 点击任意卡片展开';
   } else {
     t.textContent='FOrcaSlicer — Flexible OrcaSlicer dev roadmap';
-    s.textContent='Snapmaker U1 · OrcaSlicer fork · May 15 – Jul 13 2026 · click any card to expand';
+    s.textContent='Snapmaker U1 · OrcaSlicer fork · May 15 – Jul 14 2026 · click any card to expand';
   }
 }
 </script>
