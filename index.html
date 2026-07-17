@@ -53,7 +53,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div class="tl-header">
   <div class="tl-header-left">
     <h2 id="main-title">FOrcaSlicer — Flexible OrcaSlicer dev roadmap</h2>
-    <span id="main-sub">Snapmaker U1 · OrcaSlicer fork · May 15 – Jul 14 2026 · click any card to expand</span>
+    <span id="main-sub">Snapmaker U1 · OrcaSlicer fork · May 15 – Jul 15 2026 · click any card to expand</span>
   </div>
   <div class="lang-toggle">
     <button class="lang-btn active" onclick="setLang('en')">EN</button>
@@ -1116,6 +1116,61 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div class="tl-milestone">Milestone</div>
     <ul>
       <li>Verified in G-code (0.2/0.4/0.6/0.8, support base fil.3, interface fil.2, tower fil.2): support 0.22 → 0.66mm on 0.6 tool ✓ · interface 0.22 → 0.44mm on 0.4 tool ✓ · tower wipe 1.0×4 → 0.25/0.5/0.75/1.0 ✓ · ramming 2.0×4 → 0.5/1.0/1.5/2.0 ✓ · purge block stays inside tower wall ✓ · tree branch spacing scales with support nozzle ✓ · uniform-nozzle slices unchanged (0.6×4: same 0.62mm support, same 0.75/1.5 tower widths, same extrusion counts) ✓ · v2.3.2-fos.8.4 released</li>
+    </ul>
+  </div>
+</div>
+</div>
+
+<div class="tl-date">Phase 14 — Per-nozzle line width and speed — Jul 15 · v2.3.2-fos.8.5</div>
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#085041"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-teal">Phase 14</span><div><div class="tl-title">Per-nozzle line width and speed · v2.3.2-fos.8.5</div><div class="tl-sub">Each feature prints at the width and speed of the nozzle that actually prints it — not Nozzle 1 for everything · per-nozzle prime tower width · layer height guarded by smallest used nozzle</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-detail">
+    <span class="tl-section-label">Per-nozzle line width and speed</span>
+    <ul>
+      <li>On mixed-nozzle printers, each print feature now takes its line width and speed from the nozzle that actually prints it — set in Quality and Speed, per-nozzle tabs (Nozzle 1–4); assignment follows the Process filament dropdowns (outer wall, inner wall, infill, solid infill, support)</li>
+      <li>Line width: outer wall, inner wall, top surface, sparse infill, internal solid infill, support · Speed: outer wall, inner wall, small perimeter, sparse infill, internal solid infill, top surface, gap infill, ironing, support, support interface</li>
+      <li>Values typed in the Nozzle 2–4 tabs take effect immediately — no preset reload needed</li>
+    </ul>
+    <span class="tl-section-label">Per-nozzle prime tower line width</span>
+    <ul>
+      <li>Each nozzle gets a Prime tower line width field (Quality tab) — 0 for auto (1.25 × that nozzle's diameter), or set a value; every tool wipes and rams at its own width, tower walls/footprint use the wipe-tower filament's value</li>
+      <li>Previously the whole tower used a single width from whichever tool was configured last — a 0.2 nozzle could be laying 1.0mm tower lines</li>
+    </ul>
+    <span class="tl-section-label">One layer height, guarded by the smallest nozzle</span>
+    <ul>
+      <li>Layer height and initial layer height remain a single global setting, shown below the nozzle tabs — automatically limited to the range the smallest nozzle actually used can print (can't ask a 0.2mm tip to lay a 0.6mm layer); the limit follows assignments, so using only larger nozzles opens the range up</li>
+      <li>The limit counts the object's own filament too — if a layer-height limit looks too low, check the filament assigned to the object in the object list, not just the Process dropdowns</li>
+    </ul>
+    <div class="tl-milestone">Milestone</div>
+    <ul>
+      <li>Verified in G-code across mixed 0.2/0.4/0.6/0.8 setups and a uniform 0.6 regression — single-nozzle-size printers unchanged, output identical to before ✓ · not yet bed-tested — real-print reports wanted on mixed-nozzle models · v2.3.2-fos.8.5 released</li>
+    </ul>
+  </div>
+</div>
+</div>
+
+<div class="tl-date">Phase 14a — Hotfix: painted patch width + Nozzle 1 preset — Jul 15 · v2.3.2-fos.8.5.1</div>
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-purple">Phase 14a</span><div><div class="tl-title">Hotfix over 8.5 — per-nozzle width on painted patches + Nozzle 1 keeps its own preset · v2.3.2-fos.8.5.1</div><div class="tl-sub">Two fixes, no new features</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-detail">
+    <span class="tl-section-label">Per-nozzle line width now applies to painted color patches</span>
+    <ul>
+      <li>On a mixed-nozzle printer, a surface assigned to a nozzle by painting (color patch / segmentation) now prints at that nozzle's line width — same as a surface assigned through the Process feature dropdowns</li>
+      <li>In 8.5, painted patches printed at the base region's width regardless of which nozzle laid them: a 0.2mm tip could be pushed to ~0.4mm and a 0.8mm tip held to ~0.4mm; feature-dropdown assignment (outer wall, inner wall, infill, solid infill) was unaffected — only painted regions. Restores the behavior that shipped before 8.5</li>
+      <li>After the fix, a painted 0.2/0.4/0.6/0.8 model lays roughly 0.22/0.42/0.62/0.82 per nozzle — occasional wider lines on the large nozzle are normal gap infill</li>
+    </ul>
+    <span class="tl-section-label">Nozzle 1 keeps its own process preset</span>
+    <ul>
+      <li>Nozzle 1's process preset now follows Nozzle 1's own diameter · previously it was tied to whichever nozzle printed the outer wall: assigning the outer wall to a different nozzle — or painting a model so the outer-wall filament wasn't nozzle 1 — locked Nozzle 1's preset to that nozzle's diameter, and it would snap back on reload</li>
+      <li>Nozzle 1 now stays on its own preset regardless of the outer-wall assignment; nozzles 2–4 keep their own presets as before</li>
+    </ul>
+    <div class="tl-milestone">Milestone</div>
+    <ul>
+      <li>Single-nozzle-size printers unchanged, output identical to before ✓ · if you don't paint color patches or reassign the outer wall on a mixed-nozzle machine, these fixes change nothing · v2.3.2-fos.8.5.1 released</li>
     </ul>
   </div>
 </div>
@@ -2219,6 +2274,61 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 </div>
 
+<div class="tl-date">第十四阶段 — 逐挤出口线宽与速度 — 7月15日 · v2.3.2-fos.8.5</div>
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#085041"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-teal">第14阶段</span><div><div class="tl-title">逐挤出口线宽与速度 · v2.3.2-fos.8.5</div><div class="tl-sub">每个打印特征按实际打印它的挤出口的线宽与速度打印 — 不再全部跟随 1 号挤出口 · 逐挤出口擦料塔线宽 · 层高由实际使用的最小挤出口限定</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-detail">
+    <span class="tl-section-label">逐挤出口线宽与速度</span>
+    <ul>
+      <li>混合口径打印机上，每个打印特征的线宽与速度现取自实际打印它的挤出口 — 在质量和速度页的逐挤出口标签（挤出口 1–4）中设置；分配跟随打印流程耗材下拉框（外墙、内壁、填充、实心填充、支撑）</li>
+      <li>线宽：外墙、内壁、顶面、稀疏填充、内部实心填充、支撑 · 速度：外墙、内壁、小周界、稀疏填充、内部实心填充、顶面、间隙填充、熨烫、支撑、支撑接触面</li>
+      <li>在挤出口 2–4 标签中输入的数值立即生效 — 无需先重新加载预设</li>
+    </ul>
+    <span class="tl-section-label">逐挤出口擦料塔线宽</span>
+    <ul>
+      <li>每个挤出口新增擦料塔线宽字段（质量页）— 填 0 为自动（该挤出口直径 × 1.25），或手动设值；每个工具按自身线宽擦拭和冲料，塔壁与占地使用擦料塔耗材的数值</li>
+      <li>此前整座塔使用最后配置的工具的单一线宽 — 0.2 挤出口可能在铺 1.0mm 的塔线</li>
+    </ul>
+    <span class="tl-section-label">单一层高，由最小挤出口限定</span>
+    <ul>
+      <li>层高与首层层高仍为单一全局设置，显示在挤出口标签下方 — 自动限制在实际使用的最小挤出口可打印的范围内（不能让 0.2mm 口径铺 0.6mm 的层）；限制跟随分配变化，只用大口径时范围随之放宽</li>
+      <li>限制也计入对象自身的耗材 — 若层高上限看起来过低，请检查对象列表中分配给对象的耗材，而不只是打印流程下拉框</li>
+    </ul>
+    <div class="tl-milestone">里程碑</div>
+    <ul>
+      <li>已在 0.2/0.4/0.6/0.8 混合配置及 0.6 统一口径回归中通过 G-code 验证 — 统一口径打印机完全不受影响，输出与之前一致 ✓ · 尚未实机打印测试 — 欢迎反馈混合口径模型的实际打印问题 · v2.3.2-fos.8.5 已发布</li>
+    </ul>
+  </div>
+</div>
+</div>
+
+<div class="tl-date">第14a阶段 — 热修复：涂色区域线宽 + 1 号挤出口预设 — 7月15日 · v2.3.2-fos.8.5.1</div>
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-purple">第14a阶段</span><div><div class="tl-title">8.5 热修复 — 涂色区域应用逐挤出口线宽 + 1 号挤出口保留自身预设 · v2.3.2-fos.8.5.1</div><div class="tl-sub">两处修复，无新功能</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-detail">
+    <span class="tl-section-label">逐挤出口线宽现应用于涂色区域</span>
+    <ul>
+      <li>混合口径打印机上，通过涂色（色块 / 分割）分配给某挤出口的表面现按该挤出口的线宽打印 — 与通过打印流程特征下拉框分配的表面一致</li>
+      <li>在 8.5 中，涂色区域无论由哪个挤出口铺设都按基础区域的线宽打印：0.2mm 口径可能被推到约 0.4mm，0.8mm 口径被压到约 0.4mm；特征下拉框分配（外墙、内壁、填充、实心填充）不受影响 — 仅涂色区域受影响。此修复恢复了 8.5 之前的行为</li>
+      <li>修复后，涂色的 0.2/0.4/0.6/0.8 模型每个挤出口约铺 0.22/0.42/0.62/0.82 — 大口径上偶见较宽线条为正常的间隙填充</li>
+    </ul>
+    <span class="tl-section-label">1 号挤出口保留自身打印流程预设</span>
+    <ul>
+      <li>1 号挤出口的打印流程预设现跟随 1 号挤出口自身的直径 · 此前它被绑定到打印外墙的那个挤出口：将外墙分配给其他挤出口 — 或涂色使外墙耗材非 1 号 — 会将 1 号挤出口的预设锁定到该挤出口的直径，并在重新加载时弹回</li>
+      <li>1 号挤出口现无论外墙分配如何都保留自身预设；挤出口 2–4 一如既往保留各自预设</li>
+    </ul>
+    <div class="tl-milestone">里程碑</div>
+    <ul>
+      <li>统一口径打印机完全不受影响，输出与之前一致 ✓ · 若不在混合口径机器上涂色或重新分配外墙，这些修复对你毫无影响 · v2.3.2-fos.8.5.1 已发布</li>
+    </ul>
+  </div>
+</div>
+</div>
+
 <div class="tl-date">待完成 / TODO</div>
 <div class="tl-row">
 <div class="tl-spine"><div class="tl-dot" style="background:#888780"></div><div class="tl-line"></div></div>
@@ -2273,10 +2383,10 @@ function setLang(lang){
   var s=document.getElementById('main-sub');
   if(lang==='zh'){
     t.textContent='FOrcaSlicer — 灵活版 OrcaSlicer 开发路线图';
-    s.textContent='Snapmaker U1 · OrcaSlicer 分支 · 2026年5月15日 – 7月14日 · 点击任意卡片展开';
+    s.textContent='Snapmaker U1 · OrcaSlicer 分支 · 2026年5月15日 – 7月15日 · 点击任意卡片展开';
   } else {
     t.textContent='FOrcaSlicer — Flexible OrcaSlicer dev roadmap';
-    s.textContent='Snapmaker U1 · OrcaSlicer fork · May 15 – Jul 14 2026 · click any card to expand';
+    s.textContent='Snapmaker U1 · OrcaSlicer fork · May 15 – Jul 15 2026 · click any card to expand';
   }
 }
 </script>
