@@ -53,7 +53,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div class="tl-header">
   <div class="tl-header-left">
     <h2 id="main-title">FOrcaSlicer — Flexible OrcaSlicer dev roadmap</h2>
-    <span id="main-sub">Snapmaker U1 · OrcaSlicer fork · May 15 – Jul 15 2026 · click any card to expand</span>
+    <span id="main-sub">Snapmaker U1 · OrcaSlicer fork · May 15 – Jul 16 2026 · click any card to expand</span>
   </div>
   <div class="lang-toggle">
     <button class="lang-btn active" onclick="setLang('en')">EN</button>
@@ -1176,6 +1176,42 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 </div>
 
+<div class="tl-date">Phase 14b — Hotfix: crash when adding U1 PTP on a fresh install — Jul 16 · v2.3.2-fos.8.5.2</div>
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#8B1A1A"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-red">Phase 14b</span><div><div class="tl-title">Hotfix over 8.5.1 — crash when adding the Snapmaker U1 on a fresh install · v2.3.2-fos.8.5.2</div><div class="tl-sub">Dangling raw pointers into a resized std::vector in the per-nozzle notebook · one crash fix, no new features</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-detail">
+    <span class="tl-section-label">Problem</span>
+    <ul>
+      <li>On a fresh install, adding the Snapmaker U1 (mixed-nozzle PTP) crashed immediately — hard access violation, no dialog, no error message</li>
+      <li>Longstanding latent bug in the per-nozzle notebook, exposed only on the fresh-install path; independent of the 8.5.1 fixes</li>
+    </ul>
+    <span class="tl-section-label">Root cause (from a live VS stack trace)</span>
+    <ul>
+      <li>Stack: TabPrint::fos_reload_slot_config (Tab.cpp ~3517) → ConfigOptionsGroup::reload_config (OptionsGroup.cpp ~750) → get_config_value → crash at config.def() (~945)</li>
+      <li>Per-nozzle slot optgroups are built with raw pointers into the m_fos_slot_configs std::vector (&amp;m_fos_slot_configs[n]) · the notebook build and fos_reload_slot_config call resize(nozzle_count) at three sites — when resize GROWS the vector it reallocates the buffer, dangling every optgroup's m_config; the next reload_config() reads the freed config and faults</li>
+      <li>Adding the U1 on a fresh install grows the slot vector (1 → 4) — that reallocation is the trigger; on an existing profile the vector is already sized, hence "fresh install only"</li>
+      <li>Ruled out (recorded so they aren't re-chased): the "contains incorrect keys: color_patch_enabled, inner_wall_filament..." log flood is BENIGN — process/object-scope keys correctly stripped from machine presets, not the crash · an initial null-guard on get_config_value's opt deref was a misread of the crashing line (the fault is the config access at 945, before any opt deref)</li>
+    </ul>
+    <span class="tl-section-label">Fix — Tab.hpp + OptionsGroup.cpp</span>
+    <ul>
+      <li>Tab.hpp: m_fos_slot_configs changed from std::vector to std::deque — deque keeps existing element addresses stable across resize/grow at the end, so the optgroup raw pointers never dangle; verified no contiguity assumption on the container (only single-element addresses, no .data()/.reserve()/.capacity()), so it's a drop-in and one change covers all three resize sites</li>
+      <li>OptionsGroup.cpp: null guard in get_config_value and get_config_value2 — if config.def()-&gt;get(opt_key) returns null, return empty instead of dereferencing; defensive hardening for a separate latent null-deref, NOT this crash</li>
+      <li>FOS_VERSION 2.3.2-fos.8.5.1 → 2.3.2-fos.8.5.2 · installer VIProductVersion 2.3.2.11 → 2.3.2.12 · everything from 8.5.1 unchanged</li>
+    </ul>
+    <span class="tl-section-label">Diagnostics playbook (for the next no-message crash)</span>
+    <ul>
+      <li>The release log truncates mid-write at a hard crash and carries no stack. Best: Visual Studio on the build machine — rename %APPDATA%\FOrcaSlicer aside to force a fresh config, run under the debugger with symbols, reproduce · WER local dumps (HKLM LocalDumps, DumpType=2) → .dmp opened in VS with the matching PDB · quick triage: Event Viewer → Application Error → faulting module + offset</li>
+    </ul>
+    <div class="tl-milestone">Milestone</div>
+    <ul>
+      <li>Reproduced on a fresh config (delete %APPDATA%\FOrcaSlicer, add U1 PTP) → hard crash with the stack above; after the deque fix + rebuild, same path → no crash, confirmed by user ✓ · v2.3.2-fos.8.5.2 released</li>
+    </ul>
+  </div>
+</div>
+</div>
+
 <div class="tl-date">Outstanding / TODO</div>
 <div class="tl-row">
 <div class="tl-spine"><div class="tl-dot" style="background:#888780"></div><div class="tl-line"></div></div>
@@ -1187,6 +1223,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <li>Color patch FlowErrorNegativeSpacing with mixed nozzle sizes — not yet diagnosed</li>
       <li>Painting erase warning on OW change — implemented but commented out, pending testing</li>
       <li>PRP dropdown width not adaptive in mixed nozzle mode</li>
+      <li>Nozzle-1 independent PRP selector not built — nozzle 1 is still the main Process preset (carried from 8.5.x)</li>
+      <li>initial_layer_line_width still global, not per-nozzle (carried from 8.5.x)</li>
       <li>Per-nozzle FLP — full architecture deferred: requires per-slot speed overrides in PRP (OW/IW/infill/top surface speeds per nozzle)</li>
       <li>IW dropdown incorrect on absolute first launch — low priority, clicking refreshes</li>
       <li>GitHub wiki: mixed nozzle OW/IW behavior vs stock OrcaSlicer · wiki started in closed environment</li>
@@ -2329,6 +2367,42 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 </div>
 
+<div class="tl-date">第14b阶段 — 热修复：全新安装添加 U1 PTP 时崩溃 — 7月16日 · v2.3.2-fos.8.5.2</div>
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#8B1A1A"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-red">第14b阶段</span><div><div class="tl-title">8.5.1 热修复 — 全新安装时添加 Snapmaker U1 崩溃 · v2.3.2-fos.8.5.2</div><div class="tl-sub">逐挤出口标签页中指向已扩容 std::vector 的裸指针失效 · 单一崩溃修复，无新功能</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-detail">
+    <span class="tl-section-label">问题</span>
+    <ul>
+      <li>全新安装时添加 Snapmaker U1（混合口径 PTP）立即崩溃 — 硬性访问违例，无对话框、无错误提示</li>
+      <li>逐挤出口标签页中长期存在的潜伏 bug，仅在全新安装路径上暴露；与 8.5.1 的修复无关</li>
+    </ul>
+    <span class="tl-section-label">根本原因（源自实时 VS 堆栈跟踪）</span>
+    <ul>
+      <li>堆栈：TabPrint::fos_reload_slot_config（Tab.cpp ~3517）→ ConfigOptionsGroup::reload_config（OptionsGroup.cpp ~750）→ get_config_value → 在 config.def() 处崩溃（~945）</li>
+      <li>逐挤出口槽位的 optgroup 使用指向 m_fos_slot_configs std::vector 的裸指针构建（&amp;m_fos_slot_configs[n]）· 标签页构建与 fos_reload_slot_config 在三处调用 resize(nozzle_count) — 当 resize 使 vector 增长时会重新分配缓冲区，令所有 optgroup 的 m_config 变为悬空；下一次 reload_config() 读取已释放的 config 并崩溃</li>
+      <li>全新安装时添加 U1 会使槽位 vector 增长（1 → 4）— 正是这次重新分配触发了崩溃；已有配置文件的 vector 已具备所需大小，因此不复现，故表现为"仅全新安装"</li>
+      <li>已排除（记录在此以免重复排查）："contains incorrect keys: color_patch_enabled, inner_wall_filament..." 的日志刷屏是良性的 — 这些是打印流程/对象作用域的键，加载器正确地将其从机器预设中剥离，与崩溃无关 · 最初对 get_config_value 中 opt 解引用添加的空值防护是对崩溃行的误读（故障点是第 945 行的 config 访问，发生在任何 opt 解引用之前）</li>
+    </ul>
+    <span class="tl-section-label">修复 — Tab.hpp + OptionsGroup.cpp</span>
+    <ul>
+      <li>Tab.hpp：m_fos_slot_configs 由 std::vector 改为 std::deque — deque 在尾部 resize/增长时保持已有元素地址稳定，optgroup 的裸指针因此永不悬空；已确认容器无连续内存假设（仅取单元素地址，无 .data()/.reserve()/.capacity()），可直接替换，一处改动覆盖全部三个 resize 调用点</li>
+      <li>OptionsGroup.cpp：在 get_config_value 与 get_config_value2 中添加空值防护 — 若 config.def()-&gt;get(opt_key) 返回空则返回空值而非解引用；这是针对另一处潜伏空指针解引用的防御性加固，并非本次崩溃的修复</li>
+      <li>FOS_VERSION 2.3.2-fos.8.5.1 → 2.3.2-fos.8.5.2 · 安装包 VIProductVersion 2.3.2.11 → 2.3.2.12 · 8.5.1 的全部内容保持不变</li>
+    </ul>
+    <span class="tl-section-label">诊断手册（供下次无提示崩溃参考）</span>
+    <ul>
+      <li>发布版日志在硬性崩溃时会写入中断且不含堆栈。最佳方式：在构建机上用 Visual Studio — 将 %APPDATA%\FOrcaSlicer 改名以强制全新配置，带符号在调试器下运行并复现 · WER 本地转储（HKLM LocalDumps，DumpType=2）→ 生成 .dmp，用匹配的 PDB 在 VS 中打开 · 快速定位：事件查看器 → 应用程序错误 → 故障模块 + 偏移量</li>
+    </ul>
+    <div class="tl-milestone">里程碑</div>
+    <ul>
+      <li>已在全新配置下复现（删除 %APPDATA%\FOrcaSlicer 后添加 U1 PTP）→ 出现上述堆栈的硬性崩溃；应用 deque 修复并重新构建后，同一路径 → 不再崩溃，已由用户确认 ✓ · v2.3.2-fos.8.5.2 已发布</li>
+    </ul>
+  </div>
+</div>
+</div>
+
 <div class="tl-date">待完成 / TODO</div>
 <div class="tl-row">
 <div class="tl-spine"><div class="tl-dot" style="background:#888780"></div><div class="tl-line"></div></div>
@@ -2340,6 +2414,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <li>混合挤出口尺寸下仅外壳着色 FlowErrorNegativeSpacing — 尚未诊断</li>
       <li>外墙挤出口变更时的涂色擦除警告 — 已实现但注释，待测试后启用</li>
       <li>打印流程预设下拉框宽度在混直径模式下不自适应</li>
+      <li>1 号挤出口的独立打印流程预设选择器尚未实现 — 1 号挤出口仍为主打印流程预设（自 8.5.x 延续）</li>
+      <li>initial_layer_line_width（首层线宽）仍为全局设置，非逐挤出口（自 8.5.x 延续）</li>
       <li>逐挤出口耗材列表完整架构延后 — 需要在 PRP 中实现逐槽速度覆盖（各挤出口的外墙/内壁/填充/顶面速度）</li>
       <li>绝对首次启动时内壁下拉框显示异常 — 优先级低，点击可刷新</li>
       <li>GitHub Wiki：说明混合挤出口外墙/内壁行为与原版 OrcaSlicer 的区别 · wiki 已在封闭环境中启动</li>
@@ -2383,10 +2459,10 @@ function setLang(lang){
   var s=document.getElementById('main-sub');
   if(lang==='zh'){
     t.textContent='FOrcaSlicer — 灵活版 OrcaSlicer 开发路线图';
-    s.textContent='Snapmaker U1 · OrcaSlicer 分支 · 2026年5月15日 – 7月15日 · 点击任意卡片展开';
+    s.textContent='Snapmaker U1 · OrcaSlicer 分支 · 2026年5月15日 – 7月16日 · 点击任意卡片展开';
   } else {
     t.textContent='FOrcaSlicer — Flexible OrcaSlicer dev roadmap';
-    s.textContent='Snapmaker U1 · OrcaSlicer fork · May 15 – Jul 15 2026 · click any card to expand';
+    s.textContent='Snapmaker U1 · OrcaSlicer fork · May 15 – Jul 16 2026 · click any card to expand';
   }
 }
 </script>
