@@ -53,7 +53,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div class="tl-header">
   <div class="tl-header-left">
     <h2 id="main-title">FOrcaSlicer — Flexible OrcaSlicer dev roadmap</h2>
-    <span id="main-sub">Snapmaker U1 · OrcaSlicer fork · May 15 – Jul 16 2026 · click any card to expand</span>
+    <span id="main-sub">Snapmaker U1 · OrcaSlicer fork · May 15 – Jul 17 2026 · click any card to expand</span>
   </div>
   <div class="lang-toggle">
     <button class="lang-btn active" onclick="setLang('en')">EN</button>
@@ -1207,6 +1207,42 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div class="tl-milestone">Milestone</div>
     <ul>
       <li>Reproduced on a fresh config (delete %APPDATA%\FOrcaSlicer, add U1 PTP) → hard crash with the stack above; after the deque fix + rebuild, same path → no crash, confirmed by user ✓ · v2.3.2-fos.8.5.2 released</li>
+    </ul>
+  </div>
+</div>
+</div>
+
+<div class="tl-date">Phase 14c — Hotfix: per-nozzle widths apply on PTP create — Jul 17 · v2.3.2-fos.8.5.3</div>
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-purple">Phase 14c</span><div><div class="tl-title">Hotfix over 8.5.2 — per-nozzle line widths now apply the moment a mixed-nozzle PTP is created · v2.3.2-fos.8.5.3</div><div class="tl-sub">Lazy optgroup build meant the first slice used Nozzle 1's width until the Quality tab was opened · one fix, no new features</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-detail">
+    <span class="tl-section-label">Problem</span>
+    <ul>
+      <li>On a mixed-nozzle printer, creating a new print-type profile (PTP) assigned each nozzle the correct process preset, but the slice still used Nozzle 1's line width for every nozzle until you opened the Quality tab (or re-picked a nozzle's process preset)</li>
+      <li>Painted color-patch surfaces showed the same thing — the painted nozzle's width didn't take effect until you visited Quality; explains the cross-machine difference where one install had visited Quality and the other hadn't</li>
+    </ul>
+    <span class="tl-section-label">Root cause (probe-confirmed, live tree)</span>
+    <ul>
+      <li>update_prp_nozzle_rows (ParamsPanel.cpp) auto-selects the correct per-nozzle PRP for each slot then calls fos_reload_slot_config(i) to resolve the fos_nozzle_*_line_width arrays — but fos_reload_slot_config bails early on m_fos_slot_optgroups[slot_idx].empty(), and the per-nozzle notebook optgroups build LAZILY, only when Quality is first opened</li>
+      <li>So on a freshly created PTP the slot configs never load; fos_resolve_nozzle_arrays keeps the arrays mirrored to slot 0 (Nozzle 1). Opening Quality builds the optgroups, the reload finally runs, and the widths snap correct — probe showed RESOLVE stuck at ow=0.220×4 (nd=0.2,0.4,0.6,0.8) until Quality was opened, then reaching 0.220,0.420,0.620,0.820</li>
+      <li>Ruled out: the s21 "N1 eviction" fix was NOT the mechanism — the probe showed Nozzle 1 / slot 0 correct throughout, never evicted; this is a different mechanism (PTP-create optgroup timing)</li>
+    </ul>
+    <span class="tl-section-label">Wrong first attempt (recorded so it isn't repeated)</span>
+    <ul>
+      <li>First fix removed the bail so the load+resolve run even with empty optgroups — fixed create but REGRESSED normal use: clicking a per-nozzle tab collapsed all lines to 0.2. The bail is load-bearing — during normal use the print tab is torn down and rebuilt constantly, firing fos_reload_slot_config(0) alone while slots 1..N are momentarily empty; the bail stops fos_resolve_nozzle_arrays running on that partial snapshot. Reverted in full</li>
+      <li>Lesson: the optgroup-empty bail is not just a UI guard — it protects the resolved arrays from single-slot resolves during tab teardown/rebuild churn. Any create-time populate must load the COMPLETE set first and resolve exactly once</li>
+    </ul>
+    <span class="tl-section-label">Fix — Tab.hpp/.cpp + ParamsPanel.cpp</span>
+    <ul>
+      <li>New TabPrint::fos_populate_all_slots(bool mixed_active) — loads every slot config from its source (slot 0 from *m_config; slots 1..N-1 from each nozzle tab's stored selected_preset_name(), which survives optgroup teardown) then calls fos_resolve_nozzle_arrays() ONCE on the complete set; no optgroup dependency, no UI reload · uniform mode mirrors N1 · a per-slot change-guard preserves slot hand-edits</li>
+      <li>ParamsPanel.cpp: after the per-slot auto-select loop in update_prp_nozzle_rows, call fos_populate_all_slots(mixed_active) — the create/diameter-change path · fos_reload_slot_config's optgroup-empty bail left intact so the churn path stays protected</li>
+      <li>FOS_VERSION 2.3.2-fos.8.5.2 → 2.3.2-fos.8.5.3 · installer VIProductVersion 2.3.2.12 → 2.3.2.13 · everything from 8.5.2/8.5.1 unchanged</li>
+    </ul>
+    <div class="tl-milestone">Milestone</div>
+    <ul>
+      <li>G-code (cube_build_3.gcode) toolpath ;WIDTH: tags by active tool — T0=0.22, T1=0.45, T2=0.62, T3 ~0.82; each nozzle extrudes its own width, config block fos_nozzle_outer_wall_line_width = 0.22,0.42,0.62,0.82 · create is correct with NO Quality visit; Nozzle 2 tab-click no longer collapses; uniform mode mirrors N1 correctly ✓ · v2.3.2-fos.8.5.3 released</li>
     </ul>
   </div>
 </div>
@@ -2403,6 +2439,42 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 </div>
 
+<div class="tl-date">第14c阶段 — 热修复：逐挤出口线宽在创建 PTP 时即生效 — 7月17日 · v2.3.2-fos.8.5.3</div>
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-purple">第14c阶段</span><div><div class="tl-title">8.5.2 热修复 — 逐挤出口线宽在创建混合口径 PTP 时即刻生效 · v2.3.2-fos.8.5.3</div><div class="tl-sub">optgroup 惰性构建导致首次切片在打开质量页前对所有挤出口都用 1 号线宽 · 单一修复，无新功能</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-detail">
+    <span class="tl-section-label">问题</span>
+    <ul>
+      <li>混合口径打印机上，创建新的打印类型配置（PTP）时已为每个挤出口分配了正确的打印流程预设，但切片仍对所有挤出口使用 1 号挤出口的线宽，直到你打开质量页（或重新选择某挤出口的打印流程预设）</li>
+      <li>涂色区域表现相同 — 涂色挤出口的线宽在访问质量页前不生效；这解释了跨机器差异：一台安装访问过质量页，另一台没有</li>
+    </ul>
+    <span class="tl-section-label">根本原因（探针确认，实时代码树）</span>
+    <ul>
+      <li>update_prp_nozzle_rows（ParamsPanel.cpp）为每个槽位自动选择正确的逐挤出口 PRP，随后调用 fos_reload_slot_config(i) 以解析 fos_nozzle_*_line_width 数组 — 但 fos_reload_slot_config 在 m_fos_slot_optgroups[slot_idx].empty() 时提前返回，而逐挤出口标签页的 optgroup 是惰性构建的，仅在首次打开质量页时才创建</li>
+      <li>因此新建的 PTP 上槽位配置从未加载；fos_resolve_nozzle_arrays 使数组一直镜像自槽位 0（1 号挤出口）。打开质量页构建 optgroup 后重载才终于运行，线宽随即修正 — 探针显示 RESOLVE 卡在 ow=0.220×4（nd=0.2,0.4,0.6,0.8），打开质量页后才达到 0.220,0.420,0.620,0.820</li>
+      <li>已排除：s21 的"N1 驱逐"修复并非本机制 — 探针显示 1 号挤出口 / 槽位 0 始终正确、从未被驱逐；这是不同的机制（PTP 创建时的 optgroup 时序）</li>
+    </ul>
+    <span class="tl-section-label">错误的首次尝试（记录在此以免重复）</span>
+    <ul>
+      <li>首次修复移除了提前返回，使加载+解析在 optgroup 为空时也运行 — 修好了创建路径，却令正常使用回归：点击某个逐挤出口标签会使所有线条塌缩为 0.2。该 bail 是承重的 — 正常使用中打印标签页会不断被销毁重建，触发单独的 fos_reload_slot_config(0)，此时槽位 1..N 短暂为空；bail 阻止 fos_resolve_nozzle_arrays 在这一部分快照上运行。已完整还原</li>
+      <li>教训：optgroup 为空的 bail 不只是 UI 防护 — 它保护已解析的数组不被标签页销毁/重建期间的单槽解析破坏。任何创建时的填充都必须先加载完整集合、再解析恰好一次</li>
+    </ul>
+    <span class="tl-section-label">修复 — Tab.hpp/.cpp + ParamsPanel.cpp</span>
+    <ul>
+      <li>新增 TabPrint::fos_populate_all_slots(bool mixed_active) — 从各自来源加载每个槽位配置（槽位 0 取自 *m_config；槽位 1..N-1 取自各挤出口标签存储的 selected_preset_name()，该选择在 optgroup 销毁后仍保留），随后对完整集合调用一次 fos_resolve_nozzle_arrays()；不依赖 optgroup、不触发 UI 重载 · 统一模式镜像 N1 · 逐槽变更防护保留槽位手动编辑</li>
+      <li>ParamsPanel.cpp：在 update_prp_nozzle_rows 的逐槽自动选择循环之后调用 fos_populate_all_slots(mixed_active) — 即创建/口径变更路径 · fos_reload_slot_config 的 optgroup 为空 bail 保持不变，churn 路径仍受保护</li>
+      <li>FOS_VERSION 2.3.2-fos.8.5.2 → 2.3.2-fos.8.5.3 · 安装包 VIProductVersion 2.3.2.12 → 2.3.2.13 · 8.5.2/8.5.1 的全部内容保持不变</li>
+    </ul>
+    <div class="tl-milestone">里程碑</div>
+    <ul>
+      <li>G-code（cube_build_3.gcode）刀路 ;WIDTH: 按活动工具标记 — T0=0.22、T1=0.45、T2=0.62、T3 约 0.82；每个挤出口挤出自身线宽，配置块 fos_nozzle_outer_wall_line_width = 0.22,0.42,0.62,0.82 · 无需访问质量页创建即正确；点击 2 号挤出口标签不再塌缩；统一模式正确镜像 N1 ✓ · v2.3.2-fos.8.5.3 已发布</li>
+    </ul>
+  </div>
+</div>
+</div>
+
 <div class="tl-date">待完成 / TODO</div>
 <div class="tl-row">
 <div class="tl-spine"><div class="tl-dot" style="background:#888780"></div><div class="tl-line"></div></div>
@@ -2459,10 +2531,10 @@ function setLang(lang){
   var s=document.getElementById('main-sub');
   if(lang==='zh'){
     t.textContent='FOrcaSlicer — 灵活版 OrcaSlicer 开发路线图';
-    s.textContent='Snapmaker U1 · OrcaSlicer 分支 · 2026年5月15日 – 7月16日 · 点击任意卡片展开';
+    s.textContent='Snapmaker U1 · OrcaSlicer 分支 · 2026年5月15日 – 7月17日 · 点击任意卡片展开';
   } else {
     t.textContent='FOrcaSlicer — Flexible OrcaSlicer dev roadmap';
-    s.textContent='Snapmaker U1 · OrcaSlicer fork · May 15 – Jul 16 2026 · click any card to expand';
+    s.textContent='Snapmaker U1 · OrcaSlicer fork · May 15 – Jul 17 2026 · click any card to expand';
   }
 }
 </script>
