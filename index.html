@@ -53,7 +53,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div class="tl-header">
   <div class="tl-header-left">
     <h2 id="main-title">FOrcaSlicer — Flexible OrcaSlicer dev roadmap</h2>
-    <span id="main-sub">Snapmaker U1 · OrcaSlicer fork · May 15 – Jul 17 2026 · click any card to expand</span>
+    <span id="main-sub">Snapmaker U1 · OrcaSlicer fork · May 15 – Jul 18 2026 · click any card to expand</span>
   </div>
   <div class="lang-toggle">
     <button class="lang-btn active" onclick="setLang('en')">EN</button>
@@ -1248,6 +1248,43 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 </div>
 
+<div class="tl-date">Phase 14d — Hotfix: global Filament-for-Features regression + "Global" label + CJK/i18n — Jul 18 · v2.3.2-fos.8.5.4</div>
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-purple">Phase 14d</span><div><div class="tl-title">Hotfix over 8.5.3 — global Filament-for-Features slicing regression + per-object "Global" label + imgui CJK + zh_CN pass · v2.3.2-fos.8.5.4</div><div class="tl-sub">Forced object extruder=1 clobbered every per-feature assignment · four fixes, no new features</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-detail">
+    <span class="tl-section-label">1 · Slicing regression — global Filament-for-Features collapsed to Filament 1</span>
+    <ul>
+      <li>Objects were stored with a forced extruder=1 · PrintObject apply_to_print_region_config step-1 fill does, in effect: if (extruder != 0) { sparse_infill = solid_infill = wall = inner_wall = extruder; } — so a non-zero object extruder OVERWRITES every global per-feature assignment with that one filament</li>
+      <li>With OW=1/IW=2/infill=3/solid=4 set globally, all four collapsed to Filament 1 and the prime tower vanished (only one filament in use)</li>
+      <li>Fix: keep object extruder = 0 (unassigned) so the clobber branch is skipped and features resolve from the global assignment · Model.cpp (3 spots ConfigOptionInt(1) → (0)), GUI_ObjectList.cpp (update_filament_values_for_items + add-mesh path back to 0) · also restored OrcaSlicer's per-object model (object display color driven by object-level filament only; misleading per-feature outer-wall color preview removed)</li>
+    </ul>
+    <span class="tl-section-label">2 · Per-object label "default" → "Global"</span>
+    <ul>
+      <li>extruder=0 previously displayed "default", which was misleading — it's the fallback/global state (features fall back to the global assignment), not literally a default · now reads "Global" (全局), reusing the existing msgid and matching the Global/Objects mode toggle</li>
+      <li>Six sites, all // FOS: tagged: wxExtensions.cpp get_default_extruder_color_icon (shared icon covers editor dropdown row + modifier/layer icons), ExtraRenderers.cpp dropdown fallback row, ObjectDataViewModel.cpp object/modifier/layer display strings · for modifier parts / layer ranges 0 means "inherit parent" but it's one shared icon, so all read "Global"</li>
+    </ul>
+    <span class="tl-section-label">3 · imgui nozzle-verify overlay — garbled button + English nozzle labels</span>
+    <ul>
+      <li>Garbled button: ImGuiWrapper::button() only has wxString overloads; imgui.button(_u8L("...")) passed a UTF-8 std::string, which hit the implicit wxString(std::string) ANSI/Latin-1 ctor → translated CJK bytes mis-decoded → mojibake (imgui.title takes std::string directly, so the adjacent title looked fine) · fix: _u8L → _L on both buttons ("Verify nozzle sizes", "Nozzle sizes verified")</li>
+      <li>English nozzle labels: the Nozzle 1..N header used raw sprintf("Nozzle %d") with no translation → fixed to wxString::Format(_L("Nozzle %d")) → 出口 %d</li>
+      <li>General trap (recorded): any translated _u8L passed to a wxString-only sink mojibakes via the implicit std::string → wxString ANSI ctor · rule: _L for wxString sinks, _u8L only for std::string/char* sinks — only the nozzle-verify overlay was audited this round</li>
+    </ul>
+    <span class="tl-section-label">4 · zh_CN translation overhaul + i18n pipeline repair</span>
+    <ul>
+      <li>Broad zh_CN pass: 耗材丝 → 耗材 (137 incl. a 耗材丝丝 double), default → 默认 (was 缺省), Global → 全局, Filament for Features → 特征对应的耗材, Wipe tower → 擦拭塔, Ooze prevention → 预防渗出, added Preheat delta temperature → 预热温差 (msgid was never extracted to the .po), stripped leftover English "Skirt"/"Brim" from field labels (Brim header → 加固边沿); zh_TW untouched</li>
+      <li>Pipeline root cause (probe-confirmed): the app loads AddCatalog(SLIC3R_APP_KEY) = FOrcaSlicer.mo, but gettext_po_to_mo emitted Snapmaker_Orca.mo (wrong name) and called bare msgfmt (not on Windows PATH → target always failed) — so the runtime zh_CN catalog was frozen at a hand-made May-17 .mo and .po edits never reached the app</li>
+      <li>Fix: gettext_po_to_mo now calls bundled tools/msgfmt.exe and emits ${SLIC3R_APP_KEY}.mo = FOrcaSlicer.mo; sibling gettext_merge_po_with_pot uses tools/msgmerge.exe · verified building the gettext_po_to_mo target regenerates FOrcaSlicer.mo from the .po via the official pipeline · all *.mo gitignored, catalog now reproducible from source (was a manual artifact that vanished on clean build)</li>
+    </ul>
+    <div class="tl-milestone">Milestone</div>
+    <ul>
+      <li>Global Filament-for-Features resolves correctly (OW=1/IW=2/infill=3/solid=4 no longer collapse, prime tower returns) ✓ · per-object no-filament cell reads "Global"/全局 ✓ · nozzle-verify overlay button and Nozzle 1–4 headers display correct Chinese ✓ · zh_CN translations survive a clean build ✓ · single-nozzle-size printers unaffected · FOS_VERSION → 2.3.2-fos.8.5.4, installer VIProductVersion 2.3.2.13 → 2.3.2.14 · v2.3.2-fos.8.5.4 released</li>
+    </ul>
+  </div>
+</div>
+</div>
+
 <div class="tl-date">Outstanding / TODO</div>
 <div class="tl-row">
 <div class="tl-spine"><div class="tl-dot" style="background:#888780"></div><div class="tl-line"></div></div>
@@ -1261,6 +1298,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <li>PRP dropdown width not adaptive in mixed nozzle mode</li>
       <li>Nozzle-1 independent PRP selector not built — nozzle 1 is still the main Process preset (carried from 8.5.x)</li>
       <li>initial_layer_line_width still global, not per-nozzle (carried from 8.5.x)</li>
+      <li>_u8L → wxString mojibake trap may exist wherever a translated _u8L is passed to a wxString-only sink — only the nozzle-verify overlay was audited (8.5.4)</li>
+      <li>Modifier/layer fallback icon reads "Global" though it semantically means "inherit parent" (shared icon) — revisit if per-type labels are wanted</li>
       <li>Per-nozzle FLP — full architecture deferred: requires per-slot speed overrides in PRP (OW/IW/infill/top surface speeds per nozzle)</li>
       <li>IW dropdown incorrect on absolute first launch — low priority, clicking refreshes</li>
       <li>GitHub wiki: mixed nozzle OW/IW behavior vs stock OrcaSlicer · wiki started in closed environment</li>
@@ -2475,6 +2514,43 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 </div>
 
+<div class="tl-date">第14d阶段 — 热修复：全局特征耗材回归 + "Global" 标签 + CJK/i18n — 7月18日 · v2.3.2-fos.8.5.4</div>
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-purple">第14d阶段</span><div><div class="tl-title">8.5.3 热修复 — 全局特征对应耗材切片回归 + 单对象 "Global" 标签 + imgui CJK + zh_CN 整理 · v2.3.2-fos.8.5.4</div><div class="tl-sub">对象被强制设为 extruder=1 覆盖了所有逐特征分配 · 四处修复，无新功能</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-detail">
+    <span class="tl-section-label">1 · 切片回归 — 全局特征对应耗材塌缩为 1 号耗材</span>
+    <ul>
+      <li>对象被存储为强制 extruder=1 · PrintObject apply_to_print_region_config 第 1 步填充实质上执行：if (extruder != 0) { sparse_infill = solid_infill = wall = inner_wall = extruder; } — 因此非零的对象 extruder 会用该单一耗材覆盖所有全局逐特征分配</li>
+      <li>全局设置 OW=1/IW=2/填充=3/实心=4 时，四者全部塌缩为 1 号耗材，擦拭塔消失（仅用到一种耗材）</li>
+      <li>修复：保持对象 extruder = 0（未分配），从而跳过覆盖分支，特征从全局分配解析 · Model.cpp（3 处 ConfigOptionInt(1) → (0)）、GUI_ObjectList.cpp（update_filament_values_for_items + 添加网格路径改回 0）· 同时恢复 OrcaSlicer 的单对象模型（对象显示颜色仅由对象级耗材决定；移除了误导性的逐特征外墙颜色预览）</li>
+    </ul>
+    <span class="tl-section-label">2 · 单对象标签 "default" → "Global"（全局）</span>
+    <ul>
+      <li>extruder=0 此前显示为 "default"，容易误解 — 它是回退/全局状态（特征回退到全局分配），并非字面意义的默认值 · 现显示为 "Global"（全局），复用已有 msgid 并与 全局/对象 模式切换保持一致</li>
+      <li>六处，均带 // FOS: 标记：wxExtensions.cpp get_default_extruder_color_icon（共享图标覆盖编辑器下拉行 + 修改器/层图标）、ExtraRenderers.cpp 下拉回退行、ObjectDataViewModel.cpp 对象/修改器/层显示字符串 · 对修改器部件 / 层范围而言 0 意为"继承父级"，但为同一共享图标，故均显示 "Global"</li>
+    </ul>
+    <span class="tl-section-label">3 · imgui 验证出口叠加层 — 乱码按钮 + 英文出口标签</span>
+    <ul>
+      <li>乱码按钮：ImGuiWrapper::button() 仅有 wxString 重载；imgui.button(_u8L("...")) 传入 UTF-8 std::string，命中隐式 wxString(std::string) ANSI/Latin-1 构造函数 → 翻译后的 CJK 字节被错误解码 → 乱码（imgui.title 直接接受 std::string，故相邻标题显示正常）· 修复：两个按钮 _u8L → _L（"验证出口尺寸"、"出口尺寸已验证"）</li>
+      <li>英文出口标签：出口 1..N 表头使用原始 sprintf("Nozzle %d") 未翻译 → 修复为 wxString::Format(_L("Nozzle %d")) → 出口 %d</li>
+      <li>通用陷阱（已记录）：任何翻译后的 _u8L 传入仅接受 wxString 的接收端都会经隐式 std::string → wxString ANSI 构造函数产生乱码 · 规则：wxString 接收端用 _L，仅 std::string/char* 接收端用 _u8L — 本轮仅审计了验证出口叠加层</li>
+    </ul>
+    <span class="tl-section-label">4 · zh_CN 翻译整理 + i18n 构建管线修复</span>
+    <ul>
+      <li>大范围 zh_CN 整理：耗材丝 → 耗材（137 处，含一处 耗材丝丝 重复）、default → 默认（原为 缺省）、Global → 全局、Filament for Features → 特征对应的耗材、Wipe tower → 擦拭塔、Ooze prevention → 预防渗出、新增 Preheat delta temperature → 预热温差（该 msgid 从未被提取到 .po）、移除字段标签中残留的英文 "Skirt"/"Brim"（Brim 表头 → 加固边沿）；zh_TW 未改动</li>
+      <li>管线根本原因（探针确认）：应用加载 AddCatalog(SLIC3R_APP_KEY) = FOrcaSlicer.mo，但 gettext_po_to_mo 输出的是 Snapmaker_Orca.mo（名称错误）且调用裸 msgfmt（不在 Windows PATH 上 → 目标始终失败）— 因此运行时 zh_CN 目录冻结在手工制作的 5 月 17 日 .mo 上，.po 的修改从未到达应用</li>
+      <li>修复：gettext_po_to_mo 现调用随附的 tools/msgfmt.exe 并输出 ${SLIC3R_APP_KEY}.mo = FOrcaSlicer.mo；同级 gettext_merge_po_with_pot 使用 tools/msgmerge.exe · 已验证构建 gettext_po_to_mo 目标可经官方管线从 .po 重新生成 FOrcaSlicer.mo · 所有 *.mo 已被 gitignore，目录现可从源文件复现（此前是全新构建即消失的手工产物）</li>
+    </ul>
+    <div class="tl-milestone">里程碑</div>
+    <ul>
+      <li>全局特征对应耗材正确解析（OW=1/IW=2/填充=3/实心=4 不再塌缩，擦拭塔恢复）✓ · 单对象无耗材单元格显示 "Global"/全局 ✓ · 验证出口叠加层按钮与出口 1–4 表头正确显示中文 ✓ · zh_CN 翻译在全新构建后依然生效 ✓ · 单口径打印机不受影响 · FOS_VERSION → 2.3.2-fos.8.5.4，安装包 VIProductVersion 2.3.2.13 → 2.3.2.14 · v2.3.2-fos.8.5.4 已发布</li>
+    </ul>
+  </div>
+</div>
+</div>
+
 <div class="tl-date">待完成 / TODO</div>
 <div class="tl-row">
 <div class="tl-spine"><div class="tl-dot" style="background:#888780"></div><div class="tl-line"></div></div>
@@ -2488,6 +2564,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <li>打印流程预设下拉框宽度在混直径模式下不自适应</li>
       <li>1 号挤出口的独立打印流程预设选择器尚未实现 — 1 号挤出口仍为主打印流程预设（自 8.5.x 延续）</li>
       <li>initial_layer_line_width（首层线宽）仍为全局设置，非逐挤出口（自 8.5.x 延续）</li>
+      <li>_u8L → wxString 乱码陷阱可能存在于任何将翻译后的 _u8L 传入仅接受 wxString 接收端之处 — 本轮仅审计了验证出口叠加层（8.5.4）</li>
+      <li>修改器/层的回退图标显示 "Global"，但语义为"继承父级"（共享图标）— 若需要逐类型标签则重新审视</li>
       <li>逐挤出口耗材列表完整架构延后 — 需要在 PRP 中实现逐槽速度覆盖（各挤出口的外墙/内壁/填充/顶面速度）</li>
       <li>绝对首次启动时内壁下拉框显示异常 — 优先级低，点击可刷新</li>
       <li>GitHub Wiki：说明混合挤出口外墙/内壁行为与原版 OrcaSlicer 的区别 · wiki 已在封闭环境中启动</li>
@@ -2531,10 +2609,10 @@ function setLang(lang){
   var s=document.getElementById('main-sub');
   if(lang==='zh'){
     t.textContent='FOrcaSlicer — 灵活版 OrcaSlicer 开发路线图';
-    s.textContent='Snapmaker U1 · OrcaSlicer 分支 · 2026年5月15日 – 7月17日 · 点击任意卡片展开';
+    s.textContent='Snapmaker U1 · OrcaSlicer 分支 · 2026年5月15日 – 7月18日 · 点击任意卡片展开';
   } else {
     t.textContent='FOrcaSlicer — Flexible OrcaSlicer dev roadmap';
-    s.textContent='Snapmaker U1 · OrcaSlicer fork · May 15 – Jul 17 2026 · click any card to expand';
+    s.textContent='Snapmaker U1 · OrcaSlicer fork · May 15 – Jul 18 2026 · click any card to expand';
   }
 }
 </script>
