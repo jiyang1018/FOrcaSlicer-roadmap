@@ -53,7 +53,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div class="tl-header">
   <div class="tl-header-left">
     <h2 id="main-title">FOrcaSlicer — Flexible OrcaSlicer dev roadmap</h2>
-    <span id="main-sub">Snapmaker U1 · OrcaSlicer fork · May 15 – Jul 18 2026 · click any card to expand</span>
+    <span id="main-sub">Snapmaker U1 · OrcaSlicer fork · May 15 – Jul 27 2026 · click any card to expand</span>
   </div>
   <div class="lang-toggle">
     <button class="lang-btn active" onclick="setLang('en')">EN</button>
@@ -1121,7 +1121,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 </div>
 
-<div class="tl-date">Phase 14 — Per-nozzle line width and speed — Jul 15 · v2.3.2-fos.8.5</div>
+<div class="tl-date">Phase 14 — Per-nozzle line width and speed — Jul 14 · v2.3.2-fos.8.5</div>
 <div class="tl-row">
 <div class="tl-spine"><div class="tl-dot" style="background:#085041"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
@@ -1151,7 +1151,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 </div>
 
-<div class="tl-date">Phase 14a — Hotfix: painted patch width + Nozzle 1 preset — Jul 15 · v2.3.2-fos.8.5.1</div>
+<div class="tl-date">Phase 14a — Hotfix: painted patch width + Nozzle 1 preset — Jul 17 · v2.3.2-fos.8.5.1</div>
 <div class="tl-row">
 <div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
@@ -1176,7 +1176,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 </div>
 
-<div class="tl-date">Phase 14b — Hotfix: crash when adding U1 PTP on a fresh install — Jul 16 · v2.3.2-fos.8.5.2</div>
+<div class="tl-date">Phase 14b — Hotfix: crash when adding U1 PTP on a fresh install — Jul 19 · v2.3.2-fos.8.5.2</div>
 <div class="tl-row">
 <div class="tl-spine"><div class="tl-dot" style="background:#8B1A1A"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
@@ -1212,7 +1212,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 </div>
 
-<div class="tl-date">Phase 14c — Hotfix: per-nozzle widths apply on PTP create — Jul 17 · v2.3.2-fos.8.5.3</div>
+<div class="tl-date">Phase 14c — Hotfix: per-nozzle widths apply on PTP create — Jul 20 · v2.3.2-fos.8.5.3</div>
 <div class="tl-row">
 <div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
@@ -1248,7 +1248,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 </div>
 
-<div class="tl-date">Phase 14d — Hotfix: global Filament-for-Features regression + "Global" label + CJK/i18n — Jul 18 · v2.3.2-fos.8.5.4</div>
+<div class="tl-date">Phase 14d — Hotfix: global Filament-for-Features regression + "Global" label + CJK/i18n — Jul 21 · v2.3.2-fos.8.5.4</div>
 <div class="tl-row">
 <div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
@@ -1280,6 +1280,84 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div class="tl-milestone">Milestone</div>
     <ul>
       <li>Global Filament-for-Features resolves correctly (OW=1/IW=2/infill=3/solid=4 no longer collapse, prime tower returns) ✓ · per-object no-filament cell reads "Global"/全局 ✓ · nozzle-verify overlay button and Nozzle 1–4 headers display correct Chinese ✓ · zh_CN translations survive a clean build ✓ · single-nozzle-size printers unaffected · FOS_VERSION → 2.3.2-fos.8.5.4, installer VIProductVersion 2.3.2.13 → 2.3.2.14 · v2.3.2-fos.8.5.4 released</li>
+    </ul>
+  </div>
+</div>
+</div>
+
+<div class="tl-date">Phase 14e — Outer-wall object identity + Default-filament cleanup + PRP scaling — Jul 22 · v2.3.2-fos.8.5.5</div>
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-purple">Phase 14e</span><div><div class="tl-title">An object's filament is now its outer wall · Default/Global fallback removed · PRP panel DPI scaling fixed · v2.3.2-fos.8.5.5</div><div class="tl-sub">Objects always carry a concrete filament — no more invisible default</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-detail">
+    <span class="tl-section-label">Outer wall is the object's filament</span>
+    <ul>
+      <li>An object's filament is now defined by its outer wall (wall_filament) end to end — the per-object Filament column and the 3D object color both show the outer-wall filament (what you see on the print), not a separate object "default"; the old "Global" label is gone</li>
+      <li>Every entry point stays in sync and drives the same value: right-click menu, inline Filament dropdown, Object Table dropdown, outer-wall filament selector, 3D preview · one shared feature group is the source of truth; the step-1 object-extruder clobber in apply_to_print_region_config is deleted, features resolve from the step-2 copy loop</li>
+    </ul>
+    <span class="tl-section-label">"Unify Object Filaments" menu</span>
+    <ul>
+      <li>Right-click "Change Default Filament" → "Unify Object Filaments" — sets outer wall, inner wall, sparse infill and solid infill of the selected object(s) to one filament in a single action (the "print this whole object on filament N" shortcut); the Object Table dropdown does the same · both menu strings translated to Simplified Chinese</li>
+      <li>Support base/interface and the wipe tower keep their own filament controls — on mixed-nozzle printers they still must be a concrete filament (gate unchanged)</li>
+    </ul>
+    <span class="tl-section-label">Cleaner filament dropdowns (no more "Default")</span>
+    <ul>
+      <li>Object-list Fila. column no longer offers a "Global" row for objects/model parts — they list filaments 1..N and default to filament 1; parameter modifiers and layer ranges keep the inherit row (0 = inherit is still meaningful there)</li>
+      <li>Filament for Features dropdowns (walls, inner walls, sparse infill, solid infill) list filaments only; a feature still holding 0 is printed on filament 1 · the four feature filaments now default 1 / min 1 (were 0/0), and clamp_feature_extruder stays as the crash-guard for legacy/hand-edited configs holding 0</li>
+    </ul>
+    <span class="tl-section-label">"Other line widths" tooltips + PRP panel scaling fix</span>
+    <ul>
+      <li>Outer wall, inner wall, top surface, sparse infill, solid infill and support line-width tooltips now state that setting the value to 0 uses the Default line width (documents existing behavior so 0 reads as "inherit"); Chinese tooltips updated</li>
+      <li>On two monitors at different scaling (e.g. 100% + 150%), the Nozzle 2–4 PRP rows stayed frozen at build-time scale while Nozzle 1 tracked the current monitor — their combos, save/search buttons and row spacing looked oversized. Root cause: N2–N4 are TabPrintNozzle tabs that remove themselves from tabs_list and sit in no msw_rescale path · fix: new TabPrintNozzle::fos_rescale_row (rescales the owned combo/buttons/bitmaps/row-height only — the full Tab::msw_rescale is UB on nozzle tabs) plus a TabPrint::msw_rescale override for the per-nozzle notebook slot optgroups; no more toggling tabs to fix spacing</li>
+      <li>Also since 8.5.4: fixed a false "Too small line width" error that could block slicing a mixed-nozzle object at a tall layer height · FOS_VERSION → 2.3.2-fos.8.5.5, installer VIProductVersion 2.3.2.14 → 2.3.2.15</li>
+    </ul>
+    <div class="tl-milestone">Milestone</div>
+    <ul>
+      <li>Object identity is its outer wall across Fila column, 3D tint, menu, all dropdowns and preview ✓ · Default/Global row removed where objects/features carry a concrete filament ✓ · PRP rows and per-nozzle notebook tabs rescale with the current monitor ✓ · false too-small-width slice block fixed ✓ · single-nozzle-size printers unaffected · v2.3.2-fos.8.5.5 released</li>
+    </ul>
+  </div>
+</div>
+</div>
+
+<div class="tl-date">Phase 15 — First macOS build · cross-platform release — Jul 27 · v2.3.2-fos.8.5.6</div>
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#085041"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-teal">Phase 15</span><div><div class="tl-title">First macOS build — universal DMG, rename finished on macOS, unified user data · v2.3.2-fos.8.5.6</div><div class="tl-sub">No slicing behavior changed — Windows slicing output identical to 8.5.5</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-detail">
+    <div class="tl-decision">Major Decision</div>
+    <span class="tl-section-label">First cross-platform release</span>
+    <ul>
+      <li>v2.3.2-fos.8.5.6 is the first release with a macOS build — FOrcaSlicer is now cross-platform (Windows + macOS)</li>
+    </ul>
+    <span class="tl-section-label">macOS build (new)</span>
+    <ul>
+      <li>Ships a macOS DMG built from source in GitHub Actions — a universal binary (app, crash handler and Sentry library all carry x86_64 + arm64 slices), running natively on Intel and Apple Silicon; minimum macOS 12.0 (Monterey), tested on Intel and Apple Silicon (M4 Max, macOS 26)</li>
+      <li>Not signed or notarized (no Apple Developer certificate) — first launch is refused with "Apple cannot check it for malicious software"; clear quarantine once: xattr -dr com.apple.quarantine "/Applications/FOrcaSlicer.app", or System Settings &gt; Privacy &amp; Security &gt; Open Anyway (the Control-click bypass was removed in macOS 15)</li>
+    </ul>
+    <span class="tl-section-label">macOS: the rename is finished</span>
+    <ul>
+      <li>The 8.x rename covered the Windows app name/icon/exe; several macOS-only code paths were outside its scope and never exercised (no macOS build existed). Now all correct: app bundle + executable are FOrcaSlicer (not "Snapmaker Orca"); the FOrcaSlicer icon shows everywhere including the Dock tile (previously reverted to the Snapmaker icon while running); the language list is populated again — the mac build generated catalogs under the old name so the app found no FOrcaSlicer.mo and offered no languages, now all ~20 locales load</li>
+    </ul>
+    <span class="tl-section-label">User data unified under "FOrcaSlicer" (Windows + macOS)</span>
+    <ul>
+      <li>Several paths were still hardcoded to Snapmaker_Orca, so FOrcaSlicer read/wrote a mixture of its own directory and Snapmaker Orca's; every path now derives from the application key, so FOrcaSlicer is fully independent of any other Orca-family slicer installed alongside it</li>
+      <li>Now from FOrcaSlicer's own directory: profile/web version files read at startup, language/region detection (reads FOrcaSlicer.conf, was Snapmaker_Orca.conf), crash report data (FOrcaSlicer/SentryData) · Windows users: no action needed, no settings lost — presets/profiles were always in the FOrcaSlicer directory</li>
+    </ul>
+    <span class="tl-section-label">CI pipeline (both workflows manual-dispatch only)</span>
+    <ul>
+      <li>Two GitHub Actions workflows: universal release build (deps matrix → universal build, DMG + dSYM) and a single-arch x86_64 fast-test · three CI defects fixed, each costing a failed run: pinned CMake 3.31.6 (brew yields CMake 4.x which drops cmake_minimum_required &lt;3.5 compat); uninstall Homebrew zstd before any cache action (zstd removal mid-job changed the cache compression method so every lookup missed); compute the dep cache key once after checkout (a restored dep prefix mutated hashFiles() for the next restore) · required step order: Checkout → Remove zstd → Compute dep cache key → cache action → rest</li>
+    </ul>
+    <span class="tl-section-label">Known limitations</span>
+    <ul>
+      <li>Nozzle tabs after adding a U1 PTP: the per-nozzle notebook shows only one tab until you click away and back — cosmetic, presets created correctly</li>
+      <li>macOS dark mode on first launch: notebook and nozzle-diameter labels can render light-on-light until the system appearance is toggled — the app samples appearance before the window exists and doesn't re-check; cosmetic, macOS only</li>
+      <li>macOS builds are unsigned and unnotarized (see quarantine note)</li>
+    </ul>
+    <div class="tl-milestone">Milestone</div>
+    <ul>
+      <li>Universal DMG verified genuinely universal (CI audit: all three Mach-O files carry x86_64 + arm64; everything else statically linked) ✓ · launches natively on Intel and Apple Silicon (M4 Max, macOS 26) ✓ · clean Mac creates only ~/Library/Application Support/FOrcaSlicer/, no Snapmaker_Orca directory ✓ · Windows data unified, nothing written to Snapmaker_Orca ✓ · FOS_VERSION → 2.3.2-fos.8.5.6, installer VIProductVersion 2.3.2.15 → 2.3.2.16 · v2.3.2-fos.8.5.6 released with Windows installer, portable zip and universal macOS DMG</li>
     </ul>
   </div>
 </div>
@@ -2387,7 +2465,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 </div>
 
-<div class="tl-date">第十四阶段 — 逐挤出口线宽与速度 — 7月15日 · v2.3.2-fos.8.5</div>
+<div class="tl-date">第十四阶段 — 逐挤出口线宽与速度 — 7月14日 · v2.3.2-fos.8.5</div>
 <div class="tl-row">
 <div class="tl-spine"><div class="tl-dot" style="background:#085041"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
@@ -2417,7 +2495,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 </div>
 
-<div class="tl-date">第14a阶段 — 热修复：涂色区域线宽 + 1 号挤出口预设 — 7月15日 · v2.3.2-fos.8.5.1</div>
+<div class="tl-date">第14a阶段 — 热修复：涂色区域线宽 + 1 号挤出口预设 — 7月17日 · v2.3.2-fos.8.5.1</div>
 <div class="tl-row">
 <div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
@@ -2442,7 +2520,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 </div>
 
-<div class="tl-date">第14b阶段 — 热修复：全新安装添加 U1 PTP 时崩溃 — 7月16日 · v2.3.2-fos.8.5.2</div>
+<div class="tl-date">第14b阶段 — 热修复：全新安装添加 U1 PTP 时崩溃 — 7月19日 · v2.3.2-fos.8.5.2</div>
 <div class="tl-row">
 <div class="tl-spine"><div class="tl-dot" style="background:#8B1A1A"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
@@ -2478,7 +2556,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 </div>
 
-<div class="tl-date">第14c阶段 — 热修复：逐挤出口线宽在创建 PTP 时即生效 — 7月17日 · v2.3.2-fos.8.5.3</div>
+<div class="tl-date">第14c阶段 — 热修复：逐挤出口线宽在创建 PTP 时即生效 — 7月20日 · v2.3.2-fos.8.5.3</div>
 <div class="tl-row">
 <div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
@@ -2514,7 +2592,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 </div>
 
-<div class="tl-date">第14d阶段 — 热修复：全局特征耗材回归 + "Global" 标签 + CJK/i18n — 7月18日 · v2.3.2-fos.8.5.4</div>
+<div class="tl-date">第14d阶段 — 热修复：全局特征耗材回归 + "Global" 标签 + CJK/i18n — 7月21日 · v2.3.2-fos.8.5.4</div>
 <div class="tl-row">
 <div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
 <div class="tl-card" onclick="toggle(this)">
@@ -2546,6 +2624,84 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div class="tl-milestone">里程碑</div>
     <ul>
       <li>全局特征对应耗材正确解析（OW=1/IW=2/填充=3/实心=4 不再塌缩，擦拭塔恢复）✓ · 单对象无耗材单元格显示 "Global"/全局 ✓ · 验证出口叠加层按钮与出口 1–4 表头正确显示中文 ✓ · zh_CN 翻译在全新构建后依然生效 ✓ · 单口径打印机不受影响 · FOS_VERSION → 2.3.2-fos.8.5.4，安装包 VIProductVersion 2.3.2.13 → 2.3.2.14 · v2.3.2-fos.8.5.4 已发布</li>
+    </ul>
+  </div>
+</div>
+</div>
+
+<div class="tl-date">第14e阶段 — 对象耗材以外墙为准 + 移除默认耗材回退 + PRP 缩放修复 — 7月22日 · v2.3.2-fos.8.5.5</div>
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-purple">第14e阶段</span><div><div class="tl-title">对象耗材现以其外墙为准 · 移除默认/全局回退 · 修复 PRP 面板 DPI 缩放 · v2.3.2-fos.8.5.5</div><div class="tl-sub">对象始终携带具体耗材 — 不再有不可见的默认值</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-detail">
+    <span class="tl-section-label">对象耗材以"外墙"为准</span>
+    <ul>
+      <li>对象耗材现由其外墙（wall_filament）贯穿定义 — 单对象耗材列与三维对象颜色都显示外墙耗材（即打印件上实际所见），不再显示单独的对象"默认"；旧的"全局"标签已移除</li>
+      <li>所有入口保持同步并写入同一个值：右键菜单、内联耗材下拉框、对象表格下拉框、外墙耗材选择器、三维预览 · 以一个共享的特征组作为唯一真值源；apply_to_print_region_config 中第 1 步的对象 extruder 覆盖已删除，特征改由第 2 步复制循环解析</li>
+    </ul>
+    <span class="tl-section-label">"统一对象耗材"菜单</span>
+    <ul>
+      <li>右键"更改默认耗材" → "统一对象耗材" — 一次性将所选对象的外墙、内墙、稀疏填充与实心填充设为同一耗材（即"整个对象用耗材 N 打印"的快捷操作）；对象表格下拉框执行相同操作 · 两个菜单字符串均已翻译为简体中文</li>
+      <li>支撑底层/接触面与擦拭塔保留各自的耗材控件 — 混合口径打印机上它们仍必须为具体耗材（限制不变）</li>
+    </ul>
+    <span class="tl-section-label">更简洁的耗材下拉框（不再有"默认"）</span>
+    <ul>
+      <li>对象列表耗材列对对象/模型零件不再提供"全局"行 — 它们列出耗材 1..N 并默认为耗材 1；参数修改器与层高范围保留继承行（对它们而言 0 = 继承仍有意义）</li>
+      <li>特征耗材下拉框（外墙、内墙、稀疏填充、实心填充）仅列出耗材；若某特征仍为 0 则用耗材 1 打印 · 四个特征耗材现默认 1 / 最小 1（原为 0/0），clamp_feature_extruder 保留作为处理遗留/手改配置中 0 值的崩溃防护</li>
+    </ul>
+    <span class="tl-section-label">"其他线宽"提示 + PRP 面板缩放修复</span>
+    <ul>
+      <li>外墙、内墙、顶面、稀疏填充、实心填充与支撑线宽提示现说明将值设为 0 时使用默认线宽（说明既有行为，使 0 读作"继承"）；中文提示已更新</li>
+      <li>在两台不同缩放（如 100% + 150%）显示器上，出口 2–4 的 PRP 行停留在构建时缩放而出口 1 跟随当前显示器 — 其下拉框、保存/搜索按钮与行间距显得过大。根本原因：出口 2–4 是 TabPrintNozzle 标签，会将自身从 tabs_list 移除、不在任何 msw_rescale 路径上 · 修复：新增 TabPrintNozzle::fos_rescale_row（仅缩放其拥有的下拉框/按钮/位图/行高 — 对出口标签调用完整 Tab::msw_rescale 是未定义行为）并新增 TabPrint::msw_rescale 覆盖以处理逐出口标签页槽位 optgroup；不再需要切换标签修正间距</li>
+      <li>另自 8.5.4 起：修复了在较高层高下对混合口径对象切片时误报"线宽过小"并阻止切片的问题 · FOS_VERSION → 2.3.2-fos.8.5.5，安装包 VIProductVersion 2.3.2.14 → 2.3.2.15</li>
+    </ul>
+    <div class="tl-milestone">里程碑</div>
+    <ul>
+      <li>对象身份在耗材列、三维着色、菜单、所有下拉框与预览中均以外墙为准 ✓ · 在对象/特征已携带具体耗材之处移除了默认/全局行 ✓ · PRP 行与逐出口标签页随当前显示器缩放 ✓ · 修复误报线宽过小阻止切片 ✓ · 单口径打印机不受影响 · v2.3.2-fos.8.5.5 已发布</li>
+    </ul>
+  </div>
+</div>
+</div>
+
+<div class="tl-date">第十五阶段 — 首个 macOS 版本 · 跨平台发布 — 7月27日 · v2.3.2-fos.8.5.6</div>
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#085041"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-teal">第15阶段</span><div><div class="tl-title">首个 macOS 版本 — 通用 DMG、完成 macOS 上的重命名、统一用户数据 · v2.3.2-fos.8.5.6</div><div class="tl-sub">切片行为无任何变化 — Windows 切片输出与 8.5.5 完全一致</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-detail">
+    <div class="tl-decision">重大决策</div>
+    <span class="tl-section-label">首个跨平台发布</span>
+    <ul>
+      <li>v2.3.2-fos.8.5.6 是首个提供 macOS 版本的发布 — FOrcaSlicer 现已跨平台（Windows + macOS）</li>
+    </ul>
+    <span class="tl-section-label">macOS 版本（新增）</span>
+    <ul>
+      <li>提供由 GitHub Actions 从源码构建的 macOS DMG — 通用二进制（主程序、崩溃处理器与 Sentry 库均同时包含 x86_64 + arm64 切片），在 Intel 与 Apple 芯片上原生运行；最低 macOS 12.0（Monterey），已在 Intel 与 Apple 芯片（M4 Max，macOS 26）上测试</li>
+      <li>未签名、未公证（无 Apple 开发者证书）— 首次启动会被拒绝并提示"Apple 无法检查其是否包含恶意软件"；执行一次以清除隔离标记：xattr -dr com.apple.quarantine "/Applications/FOrcaSlicer.app"，或前往 系统设置 &gt; 隐私与安全性 &gt; 仍要打开（Control 点按绕过方式已在 macOS 15 中移除）</li>
+    </ul>
+    <span class="tl-section-label">macOS：重命名已完成</span>
+    <ul>
+      <li>8.x 的重命名覆盖了 Windows 的应用名/图标/可执行文件；若干 macOS 专有代码路径不在其范围内且从未被执行（此前无 macOS 版本）。现已全部正确：应用包与可执行文件均为 FOrcaSlicer（非 "Snapmaker Orca"）；FOrcaSlicer 图标在各处显示，包括 Dock 图标（此前应用运行时会变回 Snapmaker 图标）；语言列表恢复 — mac 构建曾以旧名生成翻译文件，导致应用找不到 FOrcaSlicer.mo 而无任何语言，现约 20 种语言均可加载</li>
+    </ul>
+    <span class="tl-section-label">用户数据统一至 "FOrcaSlicer" 目录（Windows + macOS）</span>
+    <ul>
+      <li>若干路径仍硬编码为 Snapmaker_Orca，导致 FOrcaSlicer 同时读写自己的目录与 Snapmaker Orca 的目录；现所有路径均由应用标识键派生，FOrcaSlicer 与同时安装的任何其他 Orca 系列切片器完全独立</li>
+      <li>现均从 FOrcaSlicer 自身目录读取：启动时读取的配置/网页版本文件、语言/区域检测（读取 FOrcaSlicer.conf，原为 Snapmaker_Orca.conf）、崩溃报告数据（FOrcaSlicer/SentryData）· Windows 用户：无需操作、不丢失任何设置 — 预设/配置文件一直位于 FOrcaSlicer 目录</li>
+    </ul>
+    <span class="tl-section-label">CI 管线（两个工作流均仅手动触发）</span>
+    <ul>
+      <li>两个 GitHub Actions 工作流：通用发布构建（依赖矩阵 → 通用构建，DMG + dSYM）与单架构 x86_64 快速测试 · 修复三处各需一次失败运行才发现的 CI 缺陷：固定 CMake 3.31.6（brew 提供的 CMake 4.x 移除了 cmake_minimum_required &lt;3.5 兼容）；在任何缓存操作前卸载 Homebrew zstd（作业中途移除 zstd 会改变缓存压缩方式，导致每次查找都未命中）；在检出后一次性计算依赖缓存键（已恢复的依赖前缀会改变下一次恢复的 hashFiles()）· 必需步骤顺序：检出 → 移除 zstd → 计算依赖缓存键 → 缓存操作 → 其余</li>
+    </ul>
+    <span class="tl-section-label">已知限制</span>
+    <ul>
+      <li>添加 U1 PTP 后的出口标签：逐出口标签页仅显示一个标签，切换到其他页再切回即可填充其余标签 — 仅外观，预设创建正确</li>
+      <li>macOS 深色模式首次启动：标签页与出口直径标签可能显示为浅底浅字，切换一次系统外观即可修正 — 应用在窗口创建前采样外观且不再复检；仅外观，仅 macOS</li>
+      <li>macOS 版本未签名、未公证（见上方隔离说明）</li>
+    </ul>
+    <div class="tl-milestone">里程碑</div>
+    <ul>
+      <li>通用 DMG 经验证确为通用（CI 审计：三个 Mach-O 文件均包含 x86_64 + arm64；其余全部静态链接）✓ · 在 Intel 与 Apple 芯片（M4 Max，macOS 26）上原生启动 ✓ · 全新 Mac 仅创建 ~/Library/Application Support/FOrcaSlicer/，无 Snapmaker_Orca 目录 ✓ · Windows 数据已统一，不再写入 Snapmaker_Orca ✓ · FOS_VERSION → 2.3.2-fos.8.5.6，安装包 VIProductVersion 2.3.2.15 → 2.3.2.16 · v2.3.2-fos.8.5.6 已发布，含 Windows 安装包、便携版 zip 与通用 macOS DMG</li>
     </ul>
   </div>
 </div>
@@ -2609,10 +2765,10 @@ function setLang(lang){
   var s=document.getElementById('main-sub');
   if(lang==='zh'){
     t.textContent='FOrcaSlicer — 灵活版 OrcaSlicer 开发路线图';
-    s.textContent='Snapmaker U1 · OrcaSlicer 分支 · 2026年5月15日 – 7月18日 · 点击任意卡片展开';
+    s.textContent='Snapmaker U1 · OrcaSlicer 分支 · 2026年5月15日 – 7月27日 · 点击任意卡片展开';
   } else {
     t.textContent='FOrcaSlicer — Flexible OrcaSlicer dev roadmap';
-    s.textContent='Snapmaker U1 · OrcaSlicer fork · May 15 – Jul 18 2026 · click any card to expand';
+    s.textContent='Snapmaker U1 · OrcaSlicer fork · May 15 – Jul 27 2026 · click any card to expand';
   }
 }
 </script>
