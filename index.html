@@ -53,7 +53,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div class="tl-header">
   <div class="tl-header-left">
     <h2 id="main-title">FOrcaSlicer — Flexible OrcaSlicer dev roadmap</h2>
-    <span id="main-sub">Snapmaker U1 · OrcaSlicer fork · May 15 – Jul 27 2026 · click any card to expand</span>
+    <span id="main-sub">Snapmaker U1 · OrcaSlicer fork · May 15 – Aug 23 2026 · click any card to expand</span>
   </div>
   <div class="lang-toggle">
     <button class="lang-btn active" onclick="setLang('en')">EN</button>
@@ -1363,6 +1363,116 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 </div>
 
+<div class="tl-date">Phase 16 — Beta: per-nozzle presets beyond four nozzles — Jul 29 · v2.3.2-fos.8.5.7-beta.1</div>
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#633806"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-amber">Phase 16 · beta</span><div><div class="tl-title">Pre-release — per-nozzle process presets no longer limited to four nozzles · v2.3.2-fos.8.5.7-beta.1</div><div class="tl-sub">PRP rows and per-nozzle tabs now follow the printer's nozzle count, no upper bound · four-nozzle U1 slicing identical to 8.5.6</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-detail">
+    <span class="tl-section-label">Per-nozzle presets for any nozzle count</span>
+    <ul>
+      <li>The per-nozzle PRP rows and the per-nozzle tabs inside Quality &gt; Line width and Speed were built for exactly four slots — a printer with more than four nozzles got four rows, and slots five and up silently fell back to Nozzle 1's values when slicing</li>
+      <li>The whole set now follows the printer preset's nozzle-diameter list with no upper bound: each slot has its own PRP dropdown filtered to that slot's nozzle diameter and resolves its own line widths and speeds into the slice; selecting a printer with fewer nozzles hides the extra rows rather than leaving them behind</li>
+    </ul>
+    <span class="tl-section-label">Per-nozzle tabs no longer need a page switch to appear</span>
+    <ul>
+      <li>The tab strips fixed their tab count when the page was first drawn — after adding a U1 preset only one tab appeared until you clicked away and back (the known limitation from 8.5.6), and changing to a printer with a different nozzle count left the old tab count in place. Both fixed: the strips rebuild as soon as the nozzle count changes</li>
+    </ul>
+    <span class="tl-section-label">About-box note</span>
+    <ul>
+      <li>The About box reads "2.3.2-fos.8.5.7-beta" without the ".1" — the beta number lives in the tag and file names so later betas don't require a rebuild (expected, not a bug)</li>
+    </ul>
+    <div class="tl-milestone">Milestone</div>
+    <ul>
+      <li>Verified: U1 4-nozzle in software and on hardware · Prusa XL 5 tool heads and a custom 8-toolhead machine in software (PRP assignment, tab behavior, resolved widths/speeds in G-code) · macOS (Intel) tab fix confirmed · four-nozzle U1 slicing output identical to 8.5.6, no slicer code touched · v2.3.2-fos.8.5.7-beta.1 (pre-release) tagged</li>
+    </ul>
+  </div>
+</div>
+</div>
+
+<div class="tl-date">Phase 16a — Beta: preset-key save fix + update notifications + profile bundle — Aug 13 · v2.3.2-fos.8.5.7-beta.2</div>
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#633806"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-amber">Phase 16a · beta</span><div><div class="tl-title">Pre-release — four settings could never be saved · update notification · Snapmaker bundle 02.02.55.02 · v2.3.2-fos.8.5.7-beta.2</div><div class="tl-sub">Slicing otherwise unchanged from beta.1 · does NOT include the in-progress filament/nozzle mapping</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-detail">
+    <span class="tl-section-label">Fixed: four settings could never be saved</span>
+    <ul>
+      <li>Four FOS options were defined but never registered to any preset type, so they were stripped on the next preset load and silently reverted to defaults: Color patch enabled + Color patch loops (filament), Outer wall seam position + Inner wall max layer height (process)</li>
+      <li>The same defect produced hundreds of "contains incorrect keys ... which were removed" log errors on every launch — one per preset, on FOS's own bundled profiles as well as saved ones (up to nine hundred per launch on a machine with many presets); the program was inserting the keys itself right after loading, then removing them and blaming the file · all four now round-trip and the log is clean · pre-fix projects load these at defaults until re-saved once (same as the 8.2 fix)</li>
+    </ul>
+    <span class="tl-section-label">New: update notification</span>
+    <ul>
+      <li>FOS now checks for new releases at startup and on demand · a beta-channel checkbox controls whether pre-releases are offered, "Skip this version" suppresses one version without turning checking off, the download button opens the release page in the browser (FOS never downloads or installs anything itself) · uses GitHub with a self-hosted fallback for networks that block GitHub · only helps from this version on — 8.5.6 and beta.1 have no update check so this one upgrade is manual · About box now reads the full "2.3.2-fos.8.5.7-beta.2" since the update check compares that string exactly</li>
+    </ul>
+    <span class="tl-section-label">Snapmaker profile bundle 02.02.55.02 + 20 duplicate files removed</span>
+    <ul>
+      <li>Brought up to date from 02.02.47.00: many filaments gained 0.2/0.6/0.8 per-nozzle variants alongside 0.4 (Generic/Snapmaker ABS + ASA, Generic PC, Support For PLA, PVA, PLA Silk/Wood/CF, TPU 90A + 95A HF), new filaments (PETG/PLA Translucent, PLA Glow/Marble/Full Spectrum), a rename map so upstream-renamed U1 presets (@U1 → @U1 0.4 nozzle) carry over, a G-code escaping fix, and recognition (store + preserve, not yet acted on) of filament_is_high_temperature</li>
+      <li>20 stray duplicate-name files (19 "... copy.json" + one "..._old.json") removed from the bundle — the _old.json was a stale copy of 0.20 Standard @Snapmaker U1 (0.4 nozzle) with different prime-tower and missing quality settings · NOT removed from existing installs (FOS never deletes vanished profiles) — manual cleanup of copy.json/_old.json in %APPDATA%\FOrcaSlicer\system\Snapmaker\process\, or install fresh</li>
+    </ul>
+    <div class="tl-milestone">Milestone</div>
+    <ul>
+      <li>Verified: all four options round-trip on save/reload · color-patch slice (3 painted faces) · profile bundle loads clean, no preset errors on launch (macOS build pending at write time) · no slicer code modified · v2.3.2-fos.8.5.7-beta.2 (pre-release) tagged</li>
+    </ul>
+  </div>
+</div>
+</div>
+
+<div class="tl-date">Phase 17 — 8.6 release · filament-to-nozzle mapping + multi-material supply — Aug 23 · v2.3.2-fos.8.6.0</div>
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#085041"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-teal">Phase 17</span><div><div class="tl-title">The 8.6 release — mixed nozzle printing that is honest about itself · v2.3.2-fos.8.6.0</div><div class="tl-sub">Map any filament to any nozzle, slice each for the nozzle it prints through, refuse to slice when the combo can't physically work · supersedes both 8.5.7 betas</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-detail">
+    <div class="tl-decision">Major Decision</div>
+    <span class="tl-section-label">The 8.6 line — supersedes 8.5.7-beta.1 and beta.2, includes everything from both</span>
+    <ul>
+      <li>Theme: mixed nozzle printing that is honest about itself — any filament to any nozzle, each sliced for the nozzle it actually prints through, and a hard refusal to slice when the combination cannot physically work; plus multi-material supply support (starting with multiACE) and a large performance fix affecting everyone</li>
+    </ul>
+    <span class="tl-section-label">New: filament to nozzle mapping</span>
+    <ul>
+      <li>Breaks the old assumption that a filament prints on the nozzle with its own number (filament 3 → nozzle 3). Open the map from the nozzle panel and wire each filament to any nozzle by dragging between pins — more filaments than nozzles is fine</li>
+      <li>Each filament is sliced for its nozzle (line widths, speeds, flow all follow the mapped nozzle, not the index); dropdowns filter to presets matching the assigned nozzle diameter; unassigned filaments show unattached and slicing stops until wired · fresh start defaults to the obvious 1:1 map for as many nozzles as the printer has · the map is stored in the project (3mf), not the printer profile</li>
+    </ul>
+    <span class="tl-section-label">New: multi-material supply support (multiACE)</span>
+    <ul>
+      <li>Under Printer settings &gt; Machine &gt; Accessory: Supply system (multiACE; Sidecar listed, not implemented), Printer LAN IP:port, Mode (normal/multi/head, using multiACE's own vocabulary — mode decides how many filaments load per nozzle, a slicing input set before slicing), Supply units / Toolheads with a unit · "Read from printer" queries mode, unit count, unit-driven toolheads and fitted nozzles, shows the full picture and fills fields only after you confirm — never overwrites nozzle diameters</li>
+      <li>"Send to multiACE" (under the print dropdown) uploads the sliced file straight to the machine's inbox · exported G-code always carries the machine's physical nozzle diameters in the header (fos_physical_nozzle_diameter) so the supply system can match demand against fitted hardware · map pins labelled U#S# (unit/slot; a pin means a unit in multi mode, a slot in head mode); a stored assignment that no longer fits is kept and drawn red as N/A, not silently discarded</li>
+    </ul>
+    <span class="tl-section-label">New: translucent filaments + hex colour entry</span>
+    <ul>
+      <li>Filaments can be marked Translucent with a 1–99 Translucency percentage (Filament page; percentage greyed until marked) · used in two visual-only places: the filament-to-nozzle map draws translucent swatches over a checker background, and the sliced preview can draw them see-through via a Solid | Translucent switch (defaults to Solid each launch, appears only when a translucent filament is in use) — no effect on slicing or G-code</li>
+      <li>Filament colour dialog gains a HEX field (#RRGGBB or RRGGBB), two-way with the picker/swatch/HSL/RGB boxes; sits where the disabled "Define Custom Colours" button was · Windows standard dialog with the field added; macOS native picker already has hex</li>
+    </ul>
+    <span class="tl-section-label">Mixed nozzle correctness + safety guards</span>
+    <ul>
+      <li>First layer line width now follows the nozzle — was a single value applied to every nozzle, so on a 0.2 + 0.8mm machine layer 1 extruded the same width through both; each preset's own first-layer width is now used for its nozzle including brim/skirt/support. Affected even the simplest 1:1 mapping — worth re-slicing anything printed on a mixed machine</li>
+      <li>Slicing stops when a used filament has no nozzle (previously it silently inherited nozzle 1's diameter/offsets) — the message names every unassigned filament and how it's used (painted, Filament-for-Features, object/part, height range, support, prime tower, custom-G-code change)</li>
+      <li>Slicing stops when map and hardware can't agree: no supply system → a filament must map to the nozzle that prints it or one of the same diameter; supply system without declared wiring → the sliced diameter must exist on some nozzle; wiring declared → additionally no more filaments may demand a diameter than the wiring can load at once (e.g. four filaments on one 0.2mm nozzle but only two units connected is refused with counts) · support and prime-tower filaments must be chosen explicitly on a mixed machine</li>
+    </ul>
+    <span class="tl-section-label">Performance and stability</span>
+    <ul>
+      <li>A permanent repaint loop is gone — two tab strips added in the 8.5 line re-invalidated themselves from inside their own paint handler, giving 300–400 repaints/second sustained, burning a full CPU core from when the print-settings pages were built until the app closed (made project loading slow, worsened the longer the app stayed open). Idle CPU is now zero · very likely the cause if 8.5.6 hung or crawled opening 3mf files · the same change fixes those strips in dark mode</li>
+      <li>Project import no longer fights the UI — the progress callback fired far more often than the displayed percentage changed and each update yielded to the event loop; now updates at most ten times a second</li>
+    </ul>
+    <span class="tl-section-label">Rolled up from the betas + notable bug fixes</span>
+    <ul>
+      <li>Includes per-nozzle presets for any nozzle count (beta.1), the four-settings preset-key save fix, update notification and Snapmaker bundle 02.02.55.02 with 20 duplicate files removed (beta.2)</li>
+      <li>Saving a project with more filaments than nozzles corrupted the printer on reopen (20 filaments on a 4-nozzle machine came back as a 20-nozzle printer, supply settings lost) — now records the printer as configured · filament-to-nozzle map no longer empty on fresh start · preset filtering no longer assumes filament number = nozzle number · nozzle panel no longer rebuilds repeatedly (flicker) · map window: theme changes refresh it, LAN IP field wide enough for a full address+port</li>
+    </ul>
+    <span class="tl-section-label">Upgrade notes</span>
+    <ul>
+      <li>From beta.2 with a supply system configured: re-enter the printer LAN IP once — beta.2 stored it per-extruder and it carries over as a joined string (127.0.0.1:7126,127.0.0.1:7126,...) that looks plausible but fails at send with "curl: URL using bad/illegal format"; retyping clears it. The supply-system dropdown resets to None on upgrade (expected — re-select)</li>
+      <li>Projects saved before this release carry one nozzle per filament — re-save once from this version (the embedded map reads correctly either way) · pre-four-settings-fix projects load those four at defaults until re-saved · duplicate profiles are not removed from existing installs (manual cleanup or fresh install)</li>
+    </ul>
+    <div class="tl-milestone">Milestone</div>
+    <ul>
+      <li>Filament-to-nozzle mapping, multiACE supply support, translucent filaments, hex colour entry, three mixed-nozzle safety guards, the repaint-loop fix, and both betas all shipped in 8.6.0 · only the U1 exercised on hardware (5- and 8-toolhead verified in software) · Windows installer + portable zip + universal macOS DMG · v2.3.2-fos.8.6.0 released</li>
+    </ul>
+  </div>
+</div>
+</div>
+
 <div class="tl-date">Outstanding / TODO</div>
 <div class="tl-row">
 <div class="tl-spine"><div class="tl-dot" style="background:#888780"></div><div class="tl-line"></div></div>
@@ -1375,7 +1485,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <li>Painting erase warning on OW change — implemented but commented out, pending testing</li>
       <li>PRP dropdown width not adaptive in mixed nozzle mode</li>
       <li>Nozzle-1 independent PRP selector not built — nozzle 1 is still the main Process preset (carried from 8.5.x)</li>
-      <li>initial_layer_line_width still global, not per-nozzle (carried from 8.5.x)</li>
       <li>_u8L → wxString mojibake trap may exist wherever a translated _u8L is passed to a wxString-only sink — only the nozzle-verify overlay was audited (8.5.4)</li>
       <li>Modifier/layer fallback icon reads "Global" though it semantically means "inherit parent" (shared icon) — revisit if per-type labels are wanted</li>
       <li>Per-nozzle FLP — full architecture deferred: requires per-slot speed overrides in PRP (OW/IW/infill/top surface speeds per nozzle)</li>
@@ -2707,6 +2816,116 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 </div>
 
+<div class="tl-date">第十六阶段 — 测试版：逐出口预设突破四出口上限 — 7月29日 · v2.3.2-fos.8.5.7-beta.1</div>
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#633806"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-amber">第16阶段 · 测试版</span><div><div class="tl-title">预发布 — 逐出口工艺预设不再限于四个出口 · v2.3.2-fos.8.5.7-beta.1</div><div class="tl-sub">PRP 行与逐出口标签页现跟随打印机出口数量，无上限 · 四出口 U1 切片结果与 8.5.6 一致</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-detail">
+    <span class="tl-section-label">任意出口数量的逐出口预设</span>
+    <ul>
+      <li>逐出口 PRP 行，以及 质量 &gt; 线宽 和 速度 中的逐出口标签页，此前按恰好四个槽位构建 — 出口数超过四个的打印机只得到四行，第五个及以后的槽位在切片时静默回退到出口 1 的数值</li>
+      <li>现在整套界面均跟随打印机预设的出口直径列表，无上限：每个槽位都有自己的 PRP 下拉框（按该槽位出口直径过滤）并将自己的线宽与速度解析进切片；切换到出口数较少的打印机时隐藏多余行，而非残留</li>
+    </ul>
+    <span class="tl-section-label">逐出口标签页不再需要切换页面才显示</span>
+    <ul>
+      <li>标签条此前在页面首次绘制时固定标签数量 — 添加 U1 预设后仅显示一个标签，须切换到其他页面再切回（即 8.5.6 的已知限制），切换到出口数不同的打印机时也保留旧标签数。两者均已修复：只要出口数量变化，标签条立即重建</li>
+    </ul>
+    <span class="tl-section-label">"关于"框说明</span>
+    <ul>
+      <li>"关于"中显示 "2.3.2-fos.8.5.7-beta"，不含 ".1" — 测试版序号只存在于标签和文件名中，后续测试版无需重新编译（属预期，非缺陷）</li>
+    </ul>
+    <div class="tl-milestone">里程碑</div>
+    <ul>
+      <li>已验证：U1 四出口经软件与实机验证 · Prusa XL 五工具头与自制八工具头机型经软件验证（PRP 指定、标签页行为、G-code 中解析出的线宽/速度）· macOS（Intel）标签页修复已确认 · 四出口 U1 切片输出与 8.5.6 一致，未改动切片器代码 · v2.3.2-fos.8.5.7-beta.1（预发布）已打标签</li>
+    </ul>
+  </div>
+</div>
+</div>
+
+<div class="tl-date">第16a阶段 — 测试版：预设键保存修复 + 更新提醒 + 配置包 — 8月13日 · v2.3.2-fos.8.5.7-beta.2</div>
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#633806"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-amber">第16a阶段 · 测试版</span><div><div class="tl-title">预发布 — 四项设置无法保存 · 更新提醒 · Snapmaker 配置包 02.02.55.02 · v2.3.2-fos.8.5.7-beta.2</div><div class="tl-sub">切片行为与 beta.1 一致 · 不包含正在开发的耗材/出口映射</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-detail">
+    <span class="tl-section-label">已修复：四项设置无法保存</span>
+    <ul>
+      <li>四个 FOS 选项已定义却从未注册到任何预设类型，因此预设下次加载时被剥离并静默恢复为默认值：色块启用 + 色块圈数（耗材）、外墙接缝位置 + 内墙最大层高（工艺）</li>
+      <li>同一缺陷还在每次启动时产生数百条 "contains incorrect keys ... which were removed" 日志错误 — 每个预设一条，自带配置与保存的配置皆受影响（预设多的机器每次启动可达九百余条）；程序在加载后自行插入这些键、随后又移除并归咎于文件 · 现四项均可完整往返、日志已干净 · 修复前保存的项目会以默认值加载，直到重新保存一次（与 8.2 修复一致）</li>
+    </ul>
+    <span class="tl-section-label">新增：更新提醒</span>
+    <ul>
+      <li>FOS 现在会在启动时及手动触发时检查新版本 · beta 通道复选框控制是否提示预发布，"跳过此版本" 可只屏蔽某一版本而不关闭检查，下载按钮在浏览器中打开发布页（FOS 自身绝不下载或安装任何内容）· 使用 GitHub，并在受限网络下回退到自建服务器 · 仅从本版本起生效 — 8.5.6 与 beta.1 无更新检查，故此次升级需手动 · "关于"框现显示完整的 "2.3.2-fos.8.5.7-beta.2"，因更新检查需精确比较该字符串</li>
+    </ul>
+    <span class="tl-section-label">Snapmaker 配置包 02.02.55.02 + 移除 20 个重复文件</span>
+    <ul>
+      <li>从 02.02.47.00 更新而来：许多耗材在 0.4 之外新增 0.2/0.6/0.8 逐口径变体（Generic/Snapmaker ABS + ASA、Generic PC、Support For PLA、PVA、PLA Silk/Wood/CF、TPU 90A + 95A HF），新增耗材（PETG/PLA Translucent、PLA Glow/Marble/Full Spectrum），改名映射使上游改名的 U1 预设（@U1 → @U1 0.4 nozzle）延续，G-code 转义修复，并识别（存储+保留、尚未生效）filament_is_high_temperature</li>
+      <li>从配置包中移除 20 个多余重名文件（19 个 "... copy.json" + 1 个 "..._old.json")— 该 _old.json 是 0.20 Standard @Snapmaker U1 (0.4 nozzle) 的陈旧副本，擦料塔参数不同且缺少质量设置 · 不会从已有安装中移除（FOS 从不删除已消失的配置）— 需手动删除 %APPDATA%\FOrcaSlicer\system\Snapmaker\process\ 中的 copy.json/_old.json，或全新安装</li>
+    </ul>
+    <div class="tl-milestone">里程碑</div>
+    <ul>
+      <li>已验证：四个选项在保存/重新加载后完整往返 · 色块切片（三个面上色）· 配置包加载干净、启动无预设错误（撰写时 macOS 构建尚未完成）· 未改动切片器代码 · v2.3.2-fos.8.5.7-beta.2（预发布）已打标签</li>
+    </ul>
+  </div>
+</div>
+</div>
+
+<div class="tl-date">第十七阶段 — 8.6 正式版 · 耗材到出口映射 + 多材料供料 — 8月23日 · v2.3.2-fos.8.6.0</div>
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#085041"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-teal">第17阶段</span><div><div class="tl-title">8.6 正式版 — 让混合喷嘴打印如实反映自身 · v2.3.2-fos.8.6.0</div><div class="tl-sub">任意耗材映射到任意喷嘴，按实际使用的喷嘴切片，组合物理上不成立时拒绝切片 · 取代两个 8.5.7 测试版</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-detail">
+    <div class="tl-decision">重大决策</div>
+    <span class="tl-section-label">8.6 更新线 — 取代 8.5.7-beta.1 与 beta.2，并包含两者全部内容</span>
+    <ul>
+      <li>主题：让混合喷嘴打印如实反映自身 — 任意耗材映射到任意喷嘴，按每种耗材实际使用的喷嘴切片，组合在物理上无法成立时硬性拒绝切片；并新增多材料供料系统支持（首先支持 multiACE）以及一项影响所有用户的重要性能修复</li>
+    </ul>
+    <span class="tl-section-label">新增：耗材到喷嘴映射</span>
+    <ul>
+      <li>打破耗材只能使用同编号喷嘴的旧假设（3 号耗材 → 3 号喷嘴）。从喷嘴面板打开映射，在接点间拖动把每种耗材接到任意喷嘴 — 耗材数多于喷嘴数亦可</li>
+      <li>每种耗材按它自己的喷嘴切片（线宽、速度、流量都跟随映射到的喷嘴而非编号）；下拉列表按所分配喷嘴口径过滤；未分配耗材显示为未连接，接好前切片停止 · 全新启动默认为直观的一一对应映射，直到用完打印机喷嘴数 · 映射保存在项目（3mf）中，而非打印机配置</li>
+    </ul>
+    <span class="tl-section-label">新增：多材料供料系统支持（multiACE）</span>
+    <ul>
+      <li>位于 打印机设置 &gt; 机器 &gt; 附件：供料系统（multiACE；Sidecar 已列出、未实现）、打印机局域网 IP:端口、模式（normal/multi/head，沿用 multiACE 术语 — 模式决定每喷嘴可装载多少耗材，属切片输入，须在切片前设定）、供料单元数 / 配备单元的工具头 · "从打印机读取" 查询模式、单元数、单元驱动的工具头与已装配喷嘴，完整展示、确认后才填入字段 — 绝不覆盖喷嘴口径</li>
+      <li>"发送到 multiACE"（打印下拉菜单中）将切片文件直接上传到机器收件目录 · 导出的 G-code 始终在文件头携带机器的物理喷嘴口径（fos_physical_nozzle_diameter），供料系统据此将需求与已装配硬件比对 · 映射接点标注 U#S#（单元/槽位；multi 模式下接点代表单元，head 模式下代表槽位）；不再匹配的已保存分配会被保留并以红色 N/A 绘出，不被静默丢弃</li>
+    </ul>
+    <span class="tl-section-label">新增：半透明耗材 + 十六进制颜色输入</span>
+    <ul>
+      <li>可将耗材标记为半透明并设 1–99 的半透明度百分比（耗材页；勾选前百分比灰显）· 用于两处纯视觉用途：耗材到喷嘴映射把半透明色块绘在棋盘格背景上，切片预览可通过 实心 | 半透明 开关将其绘成透视效果（每次启动默认实心，仅在实际使用半透明耗材时出现）— 不影响切片与 G-code</li>
+      <li>耗材颜色对话框新增 HEX 字段（#RRGGBB 或 RRGGBB），与拾色器/色块/HSL/RGB 双向同步；位于原禁用的"规定自定义颜色"按钮处 · Windows 标准对话框内嵌该字段；macOS 原生拾色器本已带十六进制</li>
+    </ul>
+    <span class="tl-section-label">混合喷嘴正确性 + 安全防护</span>
+    <ul>
+      <li>首层线宽现跟随喷嘴 — 此前是应用于所有喷嘴的单一数值，在 0.2 + 0.8mm 机器上第 1 层通过两者挤出相同宽度；现每个预设自身的首层线宽用于其喷嘴，边缘/裙边/支撑同样如此。即使最简单的一一映射也受影响 — 在混合机器上打印过的模型值得重新切片</li>
+      <li>已使用的耗材没有喷嘴时切片停止（此前静默继承 1 号喷嘴口径/偏移）— 提示列出每种未分配耗材及其使用方式（绘制、按特征指定耗材、物体/零件、高度范围、支撑、擦料塔、自定义 G-code 换料）</li>
+      <li>映射与硬件无法一致时切片停止：无供料系统 → 耗材必须映射到实际打印它的喷嘴或口径相同的喷嘴；有供料系统未声明接线 → 切片所用口径必须在某喷嘴上存在；已声明接线 → 此外某口径耗材数不得超过接线一次能装载的数量（如四种耗材都按单个 0.2mm 喷嘴切片但仅连两个单元，会带具体数量拒绝）· 混合机器上支撑与擦料塔耗材也须明确选择</li>
+    </ul>
+    <span class="tl-section-label">性能与稳定性</span>
+    <ul>
+      <li>持续重绘循环已消除 — 8.5 更新线加入的两处标签条使用的控件会在自身绘制处理函数内部再次让自己失效，导致每秒 300–400 次重绘、持续不断，从打印设置页面构建起占满一个 CPU 核心直到程序关闭（使项目加载变慢、开得越久越严重）。现空闲 CPU 占用为零 · 若 8.5.6 上打开 3mf 时卡死或极慢很可能就是此因 · 同一改动还修复了这些标签条在深色模式下的显示</li>
+      <li>项目导入不再与界面争抢 — 进度回调触发频率远高于显示百分比变化频率且每次更新都让出事件循环；现最多每秒更新十次</li>
+    </ul>
+    <span class="tl-section-label">自测试版并入 + 主要问题修复</span>
+    <ul>
+      <li>包含任意出口数量的逐出口预设（beta.1），四项设置的预设键保存修复、更新提醒、Snapmaker 配置包 02.02.55.02 及移除 20 个重复文件（beta.2）</li>
+      <li>保存耗材数多于喷嘴数的项目会在重新打开时损坏打印机配置（4 喷嘴机上 20 种耗材重开变成 20 喷嘴打印机、供料设置丢失）— 现按实际配置记录打印机 · 耗材到喷嘴映射不再在全新启动时为空 · 预设过滤不再假定耗材编号=喷嘴编号 · 喷嘴面板不再反复重建（闪烁）· 映射窗口：主题切换后刷新、LAN IP 字段宽度足以显示完整地址+端口</li>
+    </ul>
+    <span class="tl-section-label">升级说明</span>
+    <ul>
+      <li>从 beta.2 升级且已配置供料系统：请重新输入一次打印机局域网 IP — beta.2 按挤出机分别保存，升级后以拼接字符串形式沿用（127.0.0.1:7126,127.0.0.1:7126,...），看似合理但发送时报 "curl: URL using bad/illegal format"；重新输入即可清除。供料系统下拉在升级后重置为"无"（预期 — 重新选择）</li>
+      <li>本次发布前保存的项目携带每种耗材一个喷嘴 — 用本版本重新保存一次（内嵌映射无论如何都能正确读取）· 四项设置修复前保存的项目会以默认值加载这四项，直到重新保存 · 重复配置文件不会从已有安装中移除（需手动清理或全新安装）</li>
+    </ul>
+    <div class="tl-milestone">里程碑</div>
+    <ul>
+      <li>耗材到喷嘴映射、multiACE 供料支持、半透明耗材、十六进制颜色输入、三重混合喷嘴安全防护、重绘循环修复，以及两个测试版全部并入 8.6.0 · 仅 U1 经实机验证（5 与 8 工具头经软件验证）· Windows 安装包 + 便携版 zip + 通用 macOS DMG · v2.3.2-fos.8.6.0 已发布</li>
+    </ul>
+  </div>
+</div>
+</div>
+
 <div class="tl-date">待完成 / TODO</div>
 <div class="tl-row">
 <div class="tl-spine"><div class="tl-dot" style="background:#888780"></div><div class="tl-line"></div></div>
@@ -2719,7 +2938,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <li>外墙挤出口变更时的涂色擦除警告 — 已实现但注释，待测试后启用</li>
       <li>打印流程预设下拉框宽度在混直径模式下不自适应</li>
       <li>1 号挤出口的独立打印流程预设选择器尚未实现 — 1 号挤出口仍为主打印流程预设（自 8.5.x 延续）</li>
-      <li>initial_layer_line_width（首层线宽）仍为全局设置，非逐挤出口（自 8.5.x 延续）</li>
       <li>_u8L → wxString 乱码陷阱可能存在于任何将翻译后的 _u8L 传入仅接受 wxString 接收端之处 — 本轮仅审计了验证出口叠加层（8.5.4）</li>
       <li>修改器/层的回退图标显示 "Global"，但语义为"继承父级"（共享图标）— 若需要逐类型标签则重新审视</li>
       <li>逐挤出口耗材列表完整架构延后 — 需要在 PRP 中实现逐槽速度覆盖（各挤出口的外墙/内壁/填充/顶面速度）</li>
@@ -2765,10 +2983,10 @@ function setLang(lang){
   var s=document.getElementById('main-sub');
   if(lang==='zh'){
     t.textContent='FOrcaSlicer — 灵活版 OrcaSlicer 开发路线图';
-    s.textContent='Snapmaker U1 · OrcaSlicer 分支 · 2026年5月15日 – 7月27日 · 点击任意卡片展开';
+    s.textContent='Snapmaker U1 · OrcaSlicer 分支 · 2026年5月15日 – 8月23日 · 点击任意卡片展开';
   } else {
     t.textContent='FOrcaSlicer — Flexible OrcaSlicer dev roadmap';
-    s.textContent='Snapmaker U1 · OrcaSlicer fork · May 15 – Jul 27 2026 · click any card to expand';
+    s.textContent='Snapmaker U1 · OrcaSlicer fork · May 15 – Aug 23 2026 · click any card to expand';
   }
 }
 </script>
