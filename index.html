@@ -53,7 +53,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div class="tl-header">
   <div class="tl-header-left">
     <h2 id="main-title">FOrcaSlicer — Flexible OrcaSlicer dev roadmap</h2>
-    <span id="main-sub">Snapmaker U1 · OrcaSlicer fork · May 15 – Aug 23 2026 · click any card to expand</span>
+    <span id="main-sub">Snapmaker U1 · OrcaSlicer fork · May 15 – Sep 4 2026 · click any card to expand</span>
   </div>
   <div class="lang-toggle">
     <button class="lang-btn active" onclick="setLang('en')">EN</button>
@@ -1473,6 +1473,113 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 </div>
 
+<div class="tl-date">Phase 17a — Patch: profile fixes (0.18 preset + 27 stray duplicates) — Sep 1 · v2.3.2-fos.8.6.1</div>
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-purple">Phase 17a</span><div><div class="tl-title">Patch — bundled-profile fixes, both applied automatically on first launch · v2.3.2-fos.8.6.1</div><div class="tl-sub">8.6.0 unchanged · the manual-cleanup instruction from 8.6.0 is retired</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-detail">
+    <span class="tl-section-label">Fixed: 0.18 preset for the 0.6mm nozzle printed at 0.25mm</span>
+    <ul>
+      <li>0.18 Standard @Snapmaker U1 (0.6 nozzle) inherited a correct 0.18mm layer height then overrode it back to 0.25mm — a preset named 0.18 printing 39% thicker than its name (changing layer count, time, strength, finish); its five siblings (0.24/0.30/0.30 Strength/0.36/0.42) carry no such override, marking it a defect · upstream defect inherited from Snapmaker's own v2.3.5 · after upgrade the preset prints at 0.18mm (longer print, finer finish for the same settings)</li>
+    </ul>
+    <span class="tl-section-label">Fixed: installer shipped 27 stray duplicate profiles</span>
+    <ul>
+      <li>27 profile files deleted from the project were still written by the installer (19 process presets ending in " copy.json"/"_old.json", 7 renamed filament profiles) — the packaging step only ever added/updated files, never removed one, so every build carried them forward; showed as duplicate-looking entries on fresh installs as well as upgrades · the packaged payload is now rebuilt from scratch and verified file-by-file against the source tree (10696 files, none missing/extra/differing)</li>
+    </ul>
+    <span class="tl-section-label">Under the hood</span>
+    <ul>
+      <li>Snapmaker bundle version → 02.02.55.03 (this is what lets existing installs take both fixes on first launch) · macOS build tooling reports per-stage/total build time, consistent staging dir name, dep cache accounts for local patches · a GUI media-state value held as a plain int for clean clang compile, OpenVDB patched for clang 16+ (no behavior change)</li>
+    </ul>
+    <div class="tl-milestone">Milestone</div>
+    <ul>
+      <li>Nothing to do by hand — on first launch the bundled profile folder is refreshed (corrected 0.18 arrives, 27 stray files removed), saved user presets untouched · one caveat: a user preset derived from the 0.18 one keeps its own stored layer height (including 0.25mm if inherited from the defect) — open it once and check · v2.3.2-fos.8.6.1 released</li>
+    </ul>
+  </div>
+</div>
+</div>
+
+<div class="tl-date">Phase 17b — Patch: filament choices vanished after changing a nozzle diameter — Sep 1 · v2.3.2-fos.8.6.2</div>
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-purple">Phase 17b</span><div><div class="tl-title">Patch — filament choices vanished after changing a non-outer-wall nozzle diameter · v2.3.2-fos.8.6.2</div><div class="tl-sub">Slicer fix, not profiles · no settings file touched</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-detail">
+    <span class="tl-section-label">Problem</span>
+    <ul>
+      <li>On a mixed-nozzle printer, changing a nozzle's diameter only re-evaluated which filaments fit if you changed the outer-wall nozzle; change any other and the list stayed filtered against the old diameter</li>
+      <li>Nothing looked wrong until the next rebuild (opening the filament-to-nozzle map + OK): the slot's dropdown collapsed to the single selected preset, new-diameter filaments unreachable and old-diameter ones correctly gone — both halves vanished at once, reading as "all my filaments are missing" · affects Mixed mode with more than one nozzle size; nothing saved was changed or lost</li>
+    </ul>
+    <span class="tl-section-label">Root cause + fix</span>
+    <ul>
+      <li>The nozzle-diameter handler called update_compatible() only when the changed nozzle was the outer-wall one, so compatibility was never recomputed for other nozzles; a duplicated copy ran synchronously before the new diameter was written to the printer config, so even the outer-wall nozzle had one path reading the old value · the refresh now runs for every nozzle and only after the new diameter is in place, and the duplicated block is gone · which parent profile the printer inherits still follows the outer-wall nozzle alone (that decides which process presets apply — not a per-nozzle question)</li>
+    </ul>
+    <div class="tl-milestone">Milestone</div>
+    <ul>
+      <li>Diameter changes on any nozzle re-filter filaments correctly, after the value is in place ✓ · bundled profile version unchanged from 8.6.1, settings folder not rewritten · v2.3.2-fos.8.6.2 released</li>
+    </ul>
+  </div>
+</div>
+</div>
+
+<div class="tl-date">Phase 17c — Nozzle panel: session verification, Synced/Desynced, layer-height limits + 4 fixes + zh — Sep 2 · v2.3.2-fos.8.6.3</div>
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-purple">Phase 17c</span><div><div class="tl-title">Nozzle-panel additions + four fixes + completed Chinese translation · v2.3.2-fos.8.6.3</div><div class="tl-sub">Three additions to the nozzle panel and printer settings</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-detail">
+    <span class="tl-section-label">New</span>
+    <ul>
+      <li>Verified until restart — a checkbox below Verify; tick it, click Verify, and you're not asked again until restart; switching printer profile clears it (verification is per-profile)</li>
+      <li>Synced / Desynced toggle (was "Mixed") — per-nozzle mode was previously inferred from diameters alone, so four identical nozzles couldn't have separate process presets; Desynced turns it on regardless, stored in the printer profile so it survives restart and printer switch</li>
+      <li>Layer-height limits follow the nozzle — entering a nozzle diameter in Printer Settings fills that nozzle's min/max layer height (still editable); narrowing passes silently, widening past the nozzle's range asks once</li>
+    </ul>
+    <span class="tl-section-label">Fixed</span>
+    <ul>
+      <li>Syncing nozzles could overwrite your own printer profile — switching to Synced and choosing Save at the unsaved-changes prompt wrote the synced diameters into your profile (a 0.2/0.4/0.4/0.6 profile came back as four 0.2 under the same name); now your profile is left untouched, the slicer switches to the matching stock profile and names which one first</li>
+      <li>The Synced/Desynced toggle could show the wrong state after saving a preset, discarding changes, or editing a diameter · per-nozzle process presets showed the globally selected preset name (incl. the modified marker) rather than their own — binding and slicing were correct, only the display was wrong · layer-height limits kept the previous nozzle's values when the diameter changed by anything other than typing</li>
+    </ul>
+    <span class="tl-section-label">Chinese translation</span>
+    <ul>
+      <li>The zh catalogue hadn't been rebuilt since Jul 25, so later translations never reached the app — fixed · 173 newly translated strings (filament-to-nozzle map, nozzle verification, filament pool, multi-material supply pages, parameter tabs, new warnings) · nozzle term now consistently 挤出口 · corrected 其它线宽 / 其它速度 / 外墙线数 / 预热温度差值 · Preferences mouse-button rows (Left/Middle/Right drag) translated</li>
+    </ul>
+    <div class="tl-milestone">Milestone</div>
+    <ul>
+      <li>Session verification, Synced/Desynced independent of diameter, and auto layer-height limits added; the four nozzle-panel/limit defects fixed; Chinese catalogue rebuilt and complete · v2.3.2-fos.8.6.3 released (Windows installer + portable, universal macOS DMG)</li>
+    </ul>
+  </div>
+</div>
+</div>
+
+<div class="tl-date">Phase 17d — Choose which nozzles print support + prime tower wall + per-nozzle PRP diameter fix — Sep 4 · v2.3.2-fos.8.6.4</div>
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-purple">Phase 17d</span><div><div class="tl-title">Choose which nozzles print support and the prime tower wall · per-nozzle PRP now follows diameter · v2.3.2-fos.8.6.4</div><div class="tl-sub">One feature, one fix, 20 Chinese strings</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-detail">
+    <span class="tl-section-label">New: choose which nozzles print support and the prime tower wall</span>
+    <ul>
+      <li>Support/raft base, Support/raft interface and Wipe tower wall each get a Custom entry at the top of their filament list — choosing it enables a nozzle list below (Base / Interface / Wipe tower wall nozzles), one row per physical nozzle + diameter; tick the allowed nozzles and the field reads back e.g. "1, 3 (0.4)"</li>
+      <li>The selection is over nozzles, not filaments, and works in both Synced and Desynced (built for the case of four same-diameter nozzles where one carries something you'd rather not spend on support)</li>
+      <li>All nozzles in one selection must share a diameter — support is generated with a single flow before the tool is chosen, and the tower wall prints at one width; ticking a nozzle greys out every different-diameter nozzle, and slicing refuses a selection that breaks this (naming the nozzles) · your choice outranks tool-change efficiency: a chosen nozzle is used every layer incl. first, and a tower-wall nozzle unused elsewhere still prints the tower</li>
+      <li>"Wipe tower" renamed to "Wipe tower wall" (the setting only ever controlled the wall); the two slicing messages reworded to match</li>
+    </ul>
+    <span class="tl-section-label">Fixed: per-nozzle process presets did not follow the nozzle diameter</span>
+    <ul>
+      <li>With Desynced on, changing a nozzle's diameter updated its filament list but left that nozzle's process preset on the old diameter until a printer preset was saved (Nozzle 1 → 0.6 filtered filaments to 0.6 while the preset stayed at 0.4) · now every nozzle (Nozzle 1 included) re-picks a matching process preset as soon as its diameter changes, and an earlier per-nozzle choice no longer outranks the current diameter · a note now appears above the Nozzle 1 row in Desynced mode: only Nozzle 1's process preset affects layer height</li>
+    </ul>
+    <span class="tl-section-label">Chinese translation</span>
+    <ul>
+      <li>20 new strings: the three nozzle-selection controls + tooltips, the Custom row in each picker, the nozzle rows, and the six slicing messages that refuse an invalid selection · terms follow the catalogue — 挤出口, 自定义, 擦塔外墙, 支撑/筏层主体, 支撑/筏层界面 · other languages fall back to English</li>
+    </ul>
+    <div class="tl-milestone">Milestone</div>
+    <ul>
+      <li>Per-nozzle support/tower-wall nozzle selection shipped (diameter-consistent, Synced or Desynced, honored on every layer); per-nozzle PRP now tracks the current diameter for every nozzle · v2.3.2-fos.8.6.4 released (Windows installer + portable, universal macOS DMG)</li>
+    </ul>
+  </div>
+</div>
+</div>
+
 <div class="tl-date">Outstanding / TODO</div>
 <div class="tl-row">
 <div class="tl-spine"><div class="tl-dot" style="background:#888780"></div><div class="tl-line"></div></div>
@@ -1483,12 +1590,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <ul>
       <li>Color patch FlowErrorNegativeSpacing with mixed nozzle sizes — not yet diagnosed</li>
       <li>Painting erase warning on OW change — implemented but commented out, pending testing</li>
-      <li>PRP dropdown width not adaptive in mixed nozzle mode</li>
-      <li>Nozzle-1 independent PRP selector not built — nozzle 1 is still the main Process preset (carried from 8.5.x)</li>
+      <li>Nozzle 1's process preset drives global layer height by design — per-nozzle process presets now exist (Synced/Desynced, 8.6.3) and PRP filtering is implemented, but only Nozzle 1's PRP affects layer height (noted in the UI, 8.6.4); true per-nozzle layer height still pending accumulator sync</li>
       <li>_u8L → wxString mojibake trap may exist wherever a translated _u8L is passed to a wxString-only sink — only the nozzle-verify overlay was audited (8.5.4)</li>
       <li>Modifier/layer fallback icon reads "Global" though it semantically means "inherit parent" (shared icon) — revisit if per-type labels are wanted</li>
       <li>Per-nozzle FLP — full architecture deferred: requires per-slot speed overrides in PRP (OW/IW/infill/top surface speeds per nozzle)</li>
-      <li>IW dropdown incorrect on absolute first launch — low priority, clicking refreshes</li>
       <li>GitHub wiki: mixed nozzle OW/IW behavior vs stock OrcaSlicer · wiki started in closed environment</li>
     </ul>
     <span class="tl-section-label">Beta test goal</span>
@@ -1498,16 +1603,19 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <li>PRP filtering by actual OW nozzle — deferred until accumulator layer height sync implemented</li>
       <li>Accumulator layer height sync (NozzleLayerPlanner) — not yet started</li>
       <li>Drag-and-drop STL after fresh install fails — workaround: run OrcaSlicer once; fix: investigate installer.nsi shell registration</li>
-      <li>Dark mode nozzle color bars — not yet tested</li>
       <li>Thick internal bridges: layer-height-aware clamp on bridge extrusion height (upstream Orca behavior, extreme under mixed nozzles — see fos.8.2 known issue)</li>
       <li>Support layer height clamp for large nozzles — support still follows nozzle 1's layer height; a 0.8mm nozzle can be asked to print 0.1mm support layers (new feature, deferred — see fos.8.4 known issue)</li>
       <li>Ramming-to-wipe Y alignment uses tower structure width — up to ~0.4mm off with per-tool widths; cosmetic (see fos.8.4 known issue)</li>
       <li>outer_wall_loops: no hard UI cap (label turns red as warning — accepted)</li>
       <li>CL slider max hardcoded to 10 in UI — increase if needed</li>
       <li>Per-object CL not exposed in Objects tab — only via gizmo</li>
+      <li>5- and 8-toolhead machines verified in software only — not yet exercised on hardware</li>
     </ul>
     <span class="tl-section-label">Future goal</span>
     <ul>
+      <li>Filament arrangement not auto-optimized — the slicer flags an unworkable map but choosing which filament goes on which nozzle (fewest changes) is still manual; automatic arrangement planned (8.6.0)</li>
+      <li>multiACE supply: Sidecar listed in the dropdown but not implemented (8.6.0)</li>
+      <li>filament_is_high_temperature stored and preserved but not acted on — chamber-cooling behavior not implemented (8.5.7-beta.2)</li>
       <li>Toolhead UID identity system — each toolhead needs factory-burned UID; blocked by hardware; software architecture planned (local registry JSON, PTP stores UID arrangement)</li>
       <li>Per-nozzle hardened steel toggle — allow marking individual nozzles as HS vs standard</li>
     </ul>
@@ -2926,6 +3034,113 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 </div>
 
+<div class="tl-date">第17a阶段 — 修订：配置文件修复（0.18 预设 + 27 个多余重复文件）— 9月1日 · v2.3.2-fos.8.6.1</div>
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-purple">第17a阶段</span><div><div class="tl-title">修订 — 随附配置文件修复，两处均在首次启动时自动修正 · v2.3.2-fos.8.6.1</div><div class="tl-sub">8.6.0 内容不变 · 8.6.0 说明中的手动清理步骤就此作废</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-detail">
+    <span class="tl-section-label">修复：0.6mm 喷嘴的 0.18 预设实际按 0.25mm 打印</span>
+    <ul>
+      <li>0.18 Standard @Snapmaker U1 (0.6 nozzle) 继承了正确的 0.18mm 层高却又覆盖回 0.25mm — 名为 0.18 的预设实际厚度高出 39%（改变层数、时间、强度、表面效果）；同喷嘴的另五个预设（0.24/0.30/0.30 Strength/0.36/0.42）均无此覆盖，说明是缺陷 · 继承自上游，Snapmaker 自己的 v2.3.5 同样存在 · 升级后该预设按 0.18mm 打印（同设置下打印更久、更细腻）</li>
+    </ul>
+    <span class="tl-section-label">修复：安装包夹带 27 个多余重复配置</span>
+    <ul>
+      <li>27 个早已从项目删除的配置文件仍被安装包写入（19 个以 " copy.json"/"_old.json" 结尾的工艺预设、7 个改名后的耗材配置）— 打包步骤只新增/更新、从不删除，故每次构建都带下去；在全新安装与升级中都表现为重复条目 · 现打包内容完全重建并在发布前与源码树逐文件比对（10696 个文件，无缺失/多余/差异）</li>
+    </ul>
+    <span class="tl-section-label">内部改动</span>
+    <ul>
+      <li>Snapmaker 配置包版本 → 02.02.55.03（正是它让已有安装在首次启动时获得上述两项修复）· macOS 构建工具可报告各阶段/总耗时、暂存目录命名统一、依赖缓存计入本地补丁 · 一个 GUI 媒体状态值改为普通整数以便在 clang 下干净编译，OpenVDB 增加 clang 16+ 补丁（均不改变行为）</li>
+    </ul>
+    <div class="tl-milestone">里程碑</div>
+    <ul>
+      <li>无需手动操作 — 首次启动刷新随附配置目录（写入修正后的 0.18、移除 27 个多余文件），保存的用户预设不受影响 · 一处需留意：基于 0.18 派生的用户预设会保留自己存储的层高（若继承自缺陷则为 0.25mm）— 请打开确认一次 · v2.3.2-fos.8.6.1 已发布</li>
+    </ul>
+  </div>
+</div>
+</div>
+
+<div class="tl-date">第17b阶段 — 修订：修改喷嘴直径后耗材选项消失 — 9月1日 · v2.3.2-fos.8.6.2</div>
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-purple">第17b阶段</span><div><div class="tl-title">修订 — 修改非外墙喷嘴直径后耗材选项消失 · v2.3.2-fos.8.6.2</div><div class="tl-sub">切片软件修复，非配置文件 · 不修改任何设置文件</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-detail">
+    <span class="tl-section-label">问题</span>
+    <ul>
+      <li>混合喷嘴打印机上，只有修改打印外墙的喷嘴时才会重新判断哪些耗材可用；修改其他喷嘴时列表仍按旧直径过滤</li>
+      <li>当时看不出异常，直到下一次触发重建（打开耗材-喷嘴映射窗口并点确定）：该插槽下拉菜单收缩到只剩已选中的一个预设，新直径耗材无法选择、旧直径耗材已正确移除 — 两部分同时消失，看起来像"所有耗材都没了" · 影响装配多种尺寸喷嘴的混合模式；保存的内容不会被修改或丢失</li>
+    </ul>
+    <span class="tl-section-label">根本原因 + 修复</span>
+    <ul>
+      <li>喷嘴直径处理函数只在所改为外墙喷嘴时调用 update_compatible()，其他喷嘴的耗材兼容性从未重算；同一逻辑还有一份重复副本在新直径写入打印机配置之前同步执行，故即便外墙喷嘴也总有一条路径读到旧值 · 现刷新对每个喷嘴都执行且一定在新直径写入之后，重复副本已删除 · 打印机继承哪个父配置仍只跟随外墙喷嘴（决定适用哪套工艺预设 — 非逐喷嘴问题）</li>
+    </ul>
+    <div class="tl-milestone">里程碑</div>
+    <ul>
+      <li>任意喷嘴的直径变化都会在数值写入后正确重新过滤耗材 ✓ · 内置配置版本与 8.6.1 相同，设置文件夹不被重写 · v2.3.2-fos.8.6.2 已发布</li>
+    </ul>
+  </div>
+</div>
+</div>
+
+<div class="tl-date">第17c阶段 — 喷嘴面板：会话内验证、同步/独立、层高范围 + 4 处修复 + 中文补全 — 9月2日 · v2.3.2-fos.8.6.3</div>
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-purple">第17c阶段</span><div><div class="tl-title">喷嘴面板新增 + 四处修复 + 补全中文翻译 · v2.3.2-fos.8.6.3</div><div class="tl-sub">为喷嘴面板和打印机设置新增三项</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-detail">
+    <span class="tl-section-label">新增</span>
+    <ul>
+      <li>重启前不再确认 — 验证按钮下方的复选框；勾选并点验证后，重启前不再提示；切换打印机配置会清除（验证按配置区分）</li>
+      <li>同步 / 独立 开关（原为"混合"）— 此前是否分喷嘴完全由直径推断，故四个相同直径喷嘴无法分别用不同工艺预设；选"独立"即可启用，保存在打印机配置中，重启和切换打印机后仍有效</li>
+      <li>层高范围随喷嘴直径自动填写 — 在打印机设置中输入喷嘴直径即填入该喷嘴的层高上下限（仍可自行输入）；缩小范围无提示，超出该直径适用范围时先询问一次</li>
+    </ul>
+    <span class="tl-section-label">修复</span>
+    <ul>
+      <li>同步喷嘴可能覆盖您自己的打印机配置 — 切到"同步"并在未保存更改提示中选保存，会把同步后的直径写入您的配置（0.2/0.4/0.4/0.6 变成同名的四个 0.2）；现在配置不被改动，软件切换到对应内置配置并先告知是哪一个</li>
+      <li>同步/独立开关在保存预设后、放弃更改后、修改直径后可能显示错误状态 · 分喷嘴工艺预设显示的是全局选中的预设名（含修改标记）而非各自的 — 绑定与切片正确，仅显示有误 · 层高范围在直径以非手动输入方式变化时仍保留上一个喷嘴的数值</li>
+    </ul>
+    <span class="tl-section-label">中文翻译</span>
+    <ul>
+      <li>中文语言包自 7 月 25 日起未重新生成，此后新增翻译从未进入软件 — 已修复 · 新增 173 条翻译（耗材-喷嘴映射对话框、喷嘴验证、耗材池、多材料供料页面、参数选项卡、新增提示）· 喷嘴术语统一为 挤出口 · 修正 其它线宽 / 其它速度 / 外墙线数 / 预热温度差值 · 偏好设置鼠标按键行（左/中/右键拖动）已翻译</li>
+    </ul>
+    <div class="tl-milestone">里程碑</div>
+    <ul>
+      <li>新增会话内验证、独立于直径的同步/独立、层高范围自动填写；修复四处喷嘴面板/范围缺陷；中文语言包重建并补全 · v2.3.2-fos.8.6.3 已发布（Windows 安装版 + 便携版、通用 macOS DMG）</li>
+    </ul>
+  </div>
+</div>
+</div>
+
+<div class="tl-date">第17d阶段 — 指定由哪些喷嘴打印支撑与擦塔外墙 + 分喷嘴 PRP 跟随直径修复 — 9月4日 · v2.3.2-fos.8.6.4</div>
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-purple">第17d阶段</span><div><div class="tl-title">指定由哪些挤出口打印支撑和擦塔外墙 · 分挤出口工艺预设现跟随直径 · v2.3.2-fos.8.6.4</div><div class="tl-sub">一项功能、一处修复、20 条中文翻译</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-detail">
+    <span class="tl-section-label">新增：指定由哪些挤出口打印支撑和擦塔外墙</span>
+    <ul>
+      <li>支撑/筏层主体、支撑/筏层界面、擦塔外墙的耗材下拉列表顶部新增"自定义"选项 — 选择后启用下方对应的挤出口列表（主体/界面/擦塔外墙挤出口），每个实际挤出口占一行并标注直径；勾选允许的挤出口后输入框回显如 "1, 3 (0.4)"</li>
+      <li>选择对象是挤出口而非耗材，同步和独立模式下均可用（为四个相同直径挤出口中某一个装着不愿用于支撑的耗材而设计）</li>
+      <li>同一处所选挤出口必须直径相同 — 支撑在选定工具前按单一流量生成、擦塔外墙整个打印只用一个线宽；勾选一个后其余不同直径挤出口变灰，选择不满足时切片被拒绝（指明涉及的挤出口）· 您的选择优先于换料效率：被选中的挤出口每层（含首层）都使用，为擦塔外墙选定但盘面别处未用的挤出口仍会打印擦塔</li>
+      <li>"擦拭塔"更名为"擦塔外墙"（该设置一直只控制外墙）；相关两条切片提示同步调整</li>
+    </ul>
+    <span class="tl-section-label">修复：分挤出口工艺预设不跟随挤出口直径</span>
+    <ul>
+      <li>启用"独立"后，修改某挤出口直径只更新其耗材列表，该挤出口的工艺预设仍停留在旧直径直到保存打印机预设（1 号改成 0.6 后耗材按 0.6 过滤，而工艺预设仍是 0.4）· 现包括 1 号在内每个挤出口在直径变化时立即重新选取匹配的工艺预设，此前保存的单挤出口选择不再覆盖当前直径 · 独立模式下 1 号挤出口行上方新增说明：目前只有 1 号挤出口的工艺预设会影响层高</li>
+    </ul>
+    <span class="tl-section-label">中文翻译</span>
+    <ul>
+      <li>新增 20 条：三个挤出口选择控件及提示、各下拉列表的"自定义"行、下拉列表中的挤出口行，以及拒绝无效选择的六条切片提示 · 术语沿用语言包 — 挤出口、自定义、擦塔外墙、支撑/筏层主体、支撑/筏层界面 · 其他语言回退英文</li>
+    </ul>
+    <div class="tl-milestone">里程碑</div>
+    <ul>
+      <li>分挤出口的支撑/擦塔外墙挤出口选择已发布（直径一致、同步或独立、每层生效）；分挤出口工艺预设现对每个挤出口跟随当前直径 · v2.3.2-fos.8.6.4 已发布（Windows 安装版 + 便携版、通用 macOS DMG）</li>
+    </ul>
+  </div>
+</div>
+</div>
+
 <div class="tl-date">待完成 / TODO</div>
 <div class="tl-row">
 <div class="tl-spine"><div class="tl-dot" style="background:#888780"></div><div class="tl-line"></div></div>
@@ -2936,12 +3151,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <ul>
       <li>混合挤出口尺寸下仅外壳着色 FlowErrorNegativeSpacing — 尚未诊断</li>
       <li>外墙挤出口变更时的涂色擦除警告 — 已实现但注释，待测试后启用</li>
-      <li>打印流程预设下拉框宽度在混直径模式下不自适应</li>
-      <li>1 号挤出口的独立打印流程预设选择器尚未实现 — 1 号挤出口仍为主打印流程预设（自 8.5.x 延续）</li>
+      <li>1 号挤出口的打印流程预设按设计驱动全局层高 — 现已支持分挤出口工艺预设（同步/独立，8.6.3）且 PRP 过滤已实现，但只有 1 号挤出口的 PRP 影响层高（8.6.4 已在界面注明）；真正的逐挤出口层高仍待累加器同步实现</li>
       <li>_u8L → wxString 乱码陷阱可能存在于任何将翻译后的 _u8L 传入仅接受 wxString 接收端之处 — 本轮仅审计了验证出口叠加层（8.5.4）</li>
       <li>修改器/层的回退图标显示 "Global"，但语义为"继承父级"（共享图标）— 若需要逐类型标签则重新审视</li>
       <li>逐挤出口耗材列表完整架构延后 — 需要在 PRP 中实现逐槽速度覆盖（各挤出口的外墙/内壁/填充/顶面速度）</li>
-      <li>绝对首次启动时内壁下拉框显示异常 — 优先级低，点击可刷新</li>
       <li>GitHub Wiki：说明混合挤出口外墙/内壁行为与原版 OrcaSlicer 的区别 · wiki 已在封闭环境中启动</li>
     </ul>
     <span class="tl-section-label">公测版目标</span>
@@ -2951,16 +3164,19 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <li>按实际外墙挤出口过滤打印流程预设 — 延迟至累加器层高同步实现</li>
       <li>累加器层高同步（NozzleLayerPlanner）— 尚未开始</li>
       <li>全新安装后拖拽 STL 文件失败 — 变通方法：先运行一次 OrcaSlicer 再切换；修复方向：排查 installer.nsi 的 shell 注册</li>
-      <li>深色模式挤出口颜色条 — 尚未测试</li>
       <li>厚内部桥接：为桥接挤出高度添加层高感知钳制（上游 Orca 行为，混合挤出口下尤为极端 — 见 fos.8.2 已知问题）</li>
       <li>大口径挤出口的支撑层高钳制 — 支撑仍跟随 1 号挤出口的层高；0.8mm 挤出口可能被要求打印 0.1mm 支撑层（属新功能，延后 — 见 fos.8.4 已知问题）</li>
       <li>冲料块与擦拭线的 Y 对齐仍用塔结构线宽 — 逐工具线宽下偏差可达约 0.4mm；仅外观问题（见 fos.8.4 已知问题）</li>
       <li>outer_wall_loops：UI 无硬性上限（标签变红作为警告 — 已接受）</li>
       <li>CL 滑块最大值在 UI 中硬编码为 10 — 如有需要可调高</li>
       <li>逐对象 CL 仅可通过操作工具设置，未在对象属性面板（Objects 标签）中开放</li>
+      <li>5 与 8 工具头机型仅经软件验证 — 尚未实机验证</li>
     </ul>
     <span class="tl-section-label">未来目标</span>
     <ul>
+      <li>耗材排布不自动优化 — 软件会在映射不可行时提示，但为尽量减少换料而决定哪种耗材放哪个挤出口仍需手动；自动编排已规划（8.6.0）</li>
+      <li>multiACE 供料：下拉列表中已列出 Sidecar 但尚未实现（8.6.0）</li>
+      <li>filament_is_high_temperature 已存储并保留但尚未生效 — 腔体冷却行为未实现（8.5.7-beta.2）</li>
       <li>工作头 UID 身份识别系统 — 每个工作头需要出厂烧录 UID；受硬件阻塞；软件架构已规划（本地注册表 JSON，PTP 存储 UID 排列）</li>
       <li>逐挤出口钢化钢（HS）切换 — 允许单独标记各挤出口为 HS 或标准型</li>
     </ul>
@@ -2983,10 +3199,10 @@ function setLang(lang){
   var s=document.getElementById('main-sub');
   if(lang==='zh'){
     t.textContent='FOrcaSlicer — 灵活版 OrcaSlicer 开发路线图';
-    s.textContent='Snapmaker U1 · OrcaSlicer 分支 · 2026年5月15日 – 8月23日 · 点击任意卡片展开';
+    s.textContent='Snapmaker U1 · OrcaSlicer 分支 · 2026年5月15日 – 9月4日 · 点击任意卡片展开';
   } else {
     t.textContent='FOrcaSlicer — Flexible OrcaSlicer dev roadmap';
-    s.textContent='Snapmaker U1 · OrcaSlicer fork · May 15 – Aug 23 2026 · click any card to expand';
+    s.textContent='Snapmaker U1 · OrcaSlicer fork · May 15 – Sep 4 2026 · click any card to expand';
   }
 }
 </script>
