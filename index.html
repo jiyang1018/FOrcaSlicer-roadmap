@@ -53,7 +53,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div class="tl-header">
   <div class="tl-header-left">
     <h2 id="main-title">FOrcaSlicer — Flexible OrcaSlicer dev roadmap</h2>
-    <span id="main-sub">Snapmaker U1 · OrcaSlicer fork · May 15 – Sep 4 2026 · click any card to expand</span>
+    <span id="main-sub">Snapmaker U1 · OrcaSlicer fork · May 15 – Sep 23 2026 · click any card to expand</span>
   </div>
   <div class="lang-toggle">
     <button class="lang-btn active" onclick="setLang('en')">EN</button>
@@ -1580,6 +1580,90 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 </div>
 
+<div class="tl-date">Phase 17e — Patch: object filament identity (7 fixes) + color patch crash + false tower-wall requests — Sep 10 · v2.3.2-fos.8.6.5</div>
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-purple">Phase 17e</span><div><div class="tl-title">Patch — how an object's filament is set and shown, one crash, three false prime-tower requests · v2.3.2-fos.8.6.5</div><div class="tl-sub">No new features · one bug report traced to a family of defects</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-detail">
+    <span class="tl-section-label">Root cause</span>
+    <ul>
+      <li>One report — unify a cube to filament 4, open Color Painting, the cube shows filament 1 — was one visible symptom of a family left behind when object identity moved to the object's own outer-wall setting (Jul 22): four controls set an object's filament and they disagreed with each other</li>
+    </ul>
+    <span class="tl-section-label">Fixed: object filament set and shown consistently</span>
+    <ul>
+      <li>Color Painting read the outer-wall filament from global settings only; it now resolves part → object → global like everything else, so the gizmo, the 3D scene and the Multimaterial tab agree</li>
+      <li>The object list's Fila. dropdown set only the outer wall, leaving IW, sparse and solid infill on the old filament (an outer skin in one color over an interior in another) — it now sets the whole group, matching Unify Object Filaments and the Object/part setting table</li>
+      <li>A pick in that dropdown did nothing until Enter, a click elsewhere or a view move · Filament for Features rows in the Multimaterial tab showed the previous filament until the object was reselected</li>
+    </ul>
+    <span class="tl-section-label">Fixed: color patch</span>
+    <ul>
+      <li>Slicing could crash inside color patch processing depending on where patched layers fell (a use-after-free) — looked intermittent and model-dependent · in the same place, the downward-facing-surface check had never run, so a patch bottom can now slice differently than before (intended behavior finally taking effect)</li>
+      <li>A color patch painted in the object's own outer-wall filament collapsed the object to a single perimeter and turned sparse infill solid — patch and body were matched by filament number, not identity; such a patch is now invisible and nothing else changes</li>
+    </ul>
+    <span class="tl-section-label">Fixed: slicing refused for a tower-wall nozzle when no tower is needed</span>
+    <ul>
+      <li>Desynced on a single-diameter machine demanded a tower-wall nozzle selection — Desynced means per-nozzle settings, not different diameters · a single-filament plate counted as needing a tower because several filaments were loaded · an unused filament could appear in a plate's filament list (a stray second color in the tower preview) · a machine with genuinely different diameters still asks, correctly</li>
+    </ul>
+    <span class="tl-section-label">Known limitations</span>
+    <ul>
+      <li>The plater still draws a prime-tower placeholder on single-filament plates although none is generated — cosmetic, deferred</li>
+    </ul>
+    <div class="tl-milestone">Milestone</div>
+    <ul>
+      <li>All four filament controls, the painting gizmo and the Multimaterial tab agree on an object's filament; color patch crash and own-filament patch defect fixed; tower-wall requests only when a tower is actually printed · v2.3.2-fos.8.6.5 released (Windows installer + portable, universal macOS DMG)</li>
+    </ul>
+  </div>
+</div>
+</div>
+
+<div class="tl-date">Phase 17f — Linux AppImage + Align to First, Distribute First to Last, Nest + support interface Z distance — Sep 23 · v2.3.2-fos.8.6.6</div>
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-purple">Phase 17f</span><div><div class="tl-title">First Linux build · three multi-object layout tools · automatic support Z distance · v2.3.2-fos.8.6.6</div><div class="tl-sub">Right-click a multi-selection in Prepare · 35 new Chinese strings</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-detail">
+    <span class="tl-section-label">New: Linux</span>
+    <ul>
+      <li>First Linux release — a single self-contained AppImage built on Ubuntu 22.04 (glibc 2.35+, needs FUSE 2 / libfuse2) · a very minimal system may need mkdir -p ~/.config once before first launch</li>
+      <li>Getting there fixed three build defects that meant nobody had built this fork's AppImage since the app rename: a cmake 3.22 empty-argument bug that configured the wrong source directory, the app command set to two different values in two scopes (packaging looked for a binary that did not exist yet the build reported success), and a missing 192px icon</li>
+    </ul>
+    <span class="tl-section-label">New: Align to First</span>
+    <ul>
+      <li>Select two or more objects, right-click → Align to First → Top / Left / Bottom / Right — the first-selected object stays put and the others line up with its edge (Top = back of the plate from above) · no collision check: objects in the same row or column can overlap</li>
+    </ul>
+    <span class="tl-section-label">New: Distribute First to Last</span>
+    <ul>
+      <li>Three or more objects — the first and last selected stay in place, the ones between are spaced evenly: left / horizontal center / right / top / vertical center / bottom space the chosen edges or centers; horizontal and vertical spacing equalize the gaps · both tools follow Ctrl-click order in the 3D view or object list; a box selection uses object-list order</li>
+    </ul>
+    <span class="tl-section-label">New: Nest</span>
+    <ul>
+      <li>Nest → Close (2mm gap) / Loose (3.5mm gap) packs the selected objects onto the plate, moving them and turning them in 90° steps; unselected objects stay exactly where they are and are packed around; whatever does not fit goes to a new plate</li>
+      <li>Nests by the real outline seen from above, not a bounding box, so a pocket in a C or U shape can take other objects · counts support and brim — exact from the last slice (tree support often spreads well past the model at the base), otherwise estimated from the model and settings with a notification to slice and nest again · an object with no overhangs gets no support room</li>
+      <li>Keeps objects at least 3.5 mm from the plate edge so the spiral-lift boundary warning does not fire · tries many packing orders within a few seconds and keeps the best</li>
+    </ul>
+    <span class="tl-section-label">New: support interface in a different material</span>
+    <ul>
+      <li>When the support interface filament is a different material type from the outer wall (e.g. PETG interface under PLA), Top and Bottom Z distance under Support → Advanced are set to 0 and a message shows the previous values — a dissimilar interface only releases cleanly when it touches the part · two slots of the same material do not trigger it</li>
+    </ul>
+    <span class="tl-section-label">Chinese translation</span>
+    <ul>
+      <li>35 new strings: the three layout menus and their options, the Nest notification, and the support Z distance prompt · terms follow the catalogue — 对齐到首个, 首尾之间均匀分布, 排样, 紧密/宽松, 加固边沿, 支撑面</li>
+    </ul>
+    <span class="tl-section-label">Known limitations</span>
+    <ul>
+      <li>Nest places objects one at a time and never goes back to rearrange earlier ones — a very full plate can leave room a person could still use by hand · support/brim room is exact only after slicing</li>
+      <li>Linux has no in-app update check yet — AppImage users check Releases themselves</li>
+      <li>The Z distance adjustment is not reached from the Unify menu or Object Table, and does not re-check when a filament's material type changes</li>
+    </ul>
+    <div class="tl-milestone">Milestone</div>
+    <ul>
+      <li>Linux joins Windows and macOS; multi-object Align to First, Distribute First to Last and support/brim-aware outline Nest shipped; support Z distance follows interface material · v2.3.2-fos.8.6.6 released (Windows installer + portable, universal macOS DMG, Linux AppImage)</li>
+    </ul>
+  </div>
+</div>
+</div>
+
 <div class="tl-date">Outstanding / TODO</div>
 <div class="tl-row">
 <div class="tl-spine"><div class="tl-dot" style="background:#888780"></div><div class="tl-line"></div></div>
@@ -1594,7 +1678,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <li>_u8L → wxString mojibake trap may exist wherever a translated _u8L is passed to a wxString-only sink — only the nozzle-verify overlay was audited (8.5.4)</li>
       <li>Modifier/layer fallback icon reads "Global" though it semantically means "inherit parent" (shared icon) — revisit if per-type labels are wanted</li>
       <li>Per-nozzle FLP — full architecture deferred: requires per-slot speed overrides in PRP (OW/IW/infill/top surface speeds per nozzle)</li>
-      <li>GitHub wiki: mixed nozzle OW/IW behavior vs stock OrcaSlicer · wiki started in closed environment</li>
     </ul>
     <span class="tl-section-label">Beta test goal</span>
     <ul>
@@ -1610,6 +1693,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <li>CL slider max hardcoded to 10 in UI — increase if needed</li>
       <li>Per-object CL not exposed in Objects tab — only via gizmo</li>
       <li>5- and 8-toolhead machines verified in software only — not yet exercised on hardware</li>
+      <li>Prime-tower placeholder drawn on single-filament plates though none is generated — cosmetic; fix needs a usage-aware has_wipe_tower() (8.6.5)</li>
+      <li>Linux in-app update check — the AppImage requests a linux update page but the checker accepts only Windows/macOS; fix in the app first, then publish the linux pages (8.6.6)</li>
+      <li>Nest is greedy — a full plate can leave hand-fillable room (3 of 53 cubes in testing); next step would be a local-improvement pass or grid-snapping identical items (8.6.6)</li>
+      <li>Support Z distance adjustment not reached from the Unify menu / Object Table, and not re-checked on a filament material-type change (8.6.6)</li>
     </ul>
     <span class="tl-section-label">Future goal</span>
     <ul>
@@ -3141,6 +3228,90 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 </div>
 
+<div class="tl-date">第17e阶段 — 修订：对象耗材身份（7 处修复）+ 着色区域崩溃 + 误要求擦塔外墙挤出口 — 9月10日 · v2.3.2-fos.8.6.5</div>
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-purple">第17e阶段</span><div><div class="tl-title">修订 — 对象耗材的设置与显示、一处崩溃、三种误要求擦拭塔的情况 · v2.3.2-fos.8.6.5</div><div class="tl-sub">不新增功能 · 由一个问题报告追出的一组缺陷</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-detail">
+    <span class="tl-section-label">根本原因</span>
+    <ul>
+      <li>一个报告 — 把立方体统一为 4 号耗材后打开涂色工具，立方体显示为 1 号 — 只是一组缺陷的可见症状：对象身份在 7月22日 改为由对象自身的外墙设置决定后，设置对象耗材的四个控件彼此不一致</li>
+    </ul>
+    <span class="tl-section-label">修复：对象耗材的设置与显示保持一致</span>
+    <ul>
+      <li>涂色工具只读取全局设置中的外墙耗材；现按 零件 → 对象 → 全局 的顺序解析，与其他各处一致，涂色工具、3D 视图和多材料标签页显示相同</li>
+      <li>对象列表 Fila. 列的下拉框只修改外墙，内壁、稀疏填充和实心填充仍停留在原耗材（外皮一种颜色、内部另一种）— 现设置整组耗材，与"统一此物体耗材"和对象/零件设置表一致</li>
+      <li>在该下拉框中选择后，需按回车、点击别处或转动视图才生效 · 多材料标签页的"特征对应的耗材"各行显示旧耗材，直到重新选中对象</li>
+    </ul>
+    <span class="tl-section-label">修复：着色区域</span>
+    <ul>
+      <li>切片可能在着色区域处理中崩溃，是否触发取决于着色层落在对象的什么位置（释放后使用）— 表现为时有时无、与模型相关 · 同一处判断着色区域是否位于朝下表面的检查此前从未执行，因此着色区域底部的切片结果可能与旧版本不同（这是预期行为终于生效）</li>
+      <li>用对象自身外墙耗材涂出的着色区域会使整个对象只剩一圈外墙、稀疏填充变为实心 — 着色区域与对象本体按耗材编号而非身份匹配而被混淆；现在这样的着色区域不产生任何效果，对象其他部分不受影响</li>
+    </ul>
+    <span class="tl-section-label">修复：无需擦拭塔时仍被要求指定擦塔外墙挤出口</span>
+    <ul>
+      <li>单一直径机器上开启"独立"会要求指定擦塔外墙挤出口 — 独立指每个挤出口拥有各自设置，不代表直径不同 · 只用一种耗材的盘面因装载了多种耗材被当作需要擦拭塔 · 未参与打印的耗材可能出现在盘面耗材列表中（擦拭塔预览中多出一种颜色）· 直径确实不同的机器仍会询问，这是正确的</li>
+    </ul>
+    <span class="tl-section-label">已知限制</span>
+    <ul>
+      <li>单耗材盘面上，准备视图仍会画出擦拭塔占位，但实际不会生成 — 仅外观问题，延后处理</li>
+    </ul>
+    <div class="tl-milestone">里程碑</div>
+    <ul>
+      <li>四个耗材控件、涂色工具和多材料标签页对对象耗材的判断一致；着色区域崩溃及自身耗材着色缺陷已修复；只有真正打印擦拭塔时才要求指定擦塔外墙挤出口 · v2.3.2-fos.8.6.5 已发布（Windows 安装版 + 便携版、通用 macOS DMG）</li>
+    </ul>
+  </div>
+</div>
+</div>
+
+<div class="tl-date">第17f阶段 — Linux AppImage + 对齐到首个、首尾之间均匀分布、排样 + 支撑面 Z 距离 — 9月23日 · v2.3.2-fos.8.6.6</div>
+<div class="tl-row">
+<div class="tl-spine"><div class="tl-dot" style="background:#534AB7"></div><div class="tl-line"></div></div>
+<div class="tl-card" onclick="toggle(this)">
+  <div class="tl-card-head"><div class="tl-card-left"><span class="tl-badge badge-purple">第17f阶段</span><div><div class="tl-title">首个 Linux 版本 · 三个多对象布局工具 · 支撑 Z 距离自动调整 · v2.3.2-fos.8.6.6</div><div class="tl-sub">在准备视图中右键多选对象 · 新增 35 条中文翻译</div></div></div><span class="tl-chevron">▾</span></div>
+  <div class="tl-detail">
+    <span class="tl-section-label">新增：Linux</span>
+    <ul>
+      <li>首个 Linux 版本 — 单个自包含 AppImage，基于 Ubuntu 22.04 构建（需 glibc 2.35 及以上、FUSE 2 / libfuse2）· 极简系统首次启动前可能需要执行一次 mkdir -p ~/.config</li>
+      <li>为此修复了三处构建缺陷，说明自应用改名以来从未有人成功构建过本分支的 AppImage：cmake 3.22 空参数导致配置到错误的源码目录；应用命令在两个作用域中被设为两个不同的值（打包去找一个不存在的程序，构建却报告成功）；缺少 192px 图标</li>
+    </ul>
+    <span class="tl-section-label">新增：对齐到首个</span>
+    <ul>
+      <li>选中两个或以上对象，右键 → 对齐到首个 → 上 / 左 / 下 / 右 — 首个选中的对象保持不动，其余对象与它的边缘对齐（俯视时"上"为盘面后方）· 不检查碰撞：同一行或同一列的对象可能重叠</li>
+    </ul>
+    <span class="tl-section-label">新增：首尾之间均匀分布</span>
+    <ul>
+      <li>三个或以上对象 — 首个和最后选中的对象保持不动，中间的对象均匀分布：左 / 水平居中 / 右 / 上 / 垂直居中 / 下 使所选边缘或中心等距；水平间距和垂直间距使对象之间的空隙相等 · 两个工具都遵循在 3D 视图或对象列表中 Ctrl+单击的顺序；框选没有单击顺序，按对象列表顺序</li>
+    </ul>
+    <span class="tl-section-label">新增：排样</span>
+    <ul>
+      <li>排样 → 紧密（2mm 间隙）/ 宽松（3.5mm 间隙）把选中的对象尽量紧密地排到盘面上，可移动并以 90° 为步长旋转；未选中的对象原地不动，排样绕开它们；放不下的对象移到新盘</li>
+      <li>按俯视的真实轮廓而非包围盒排样，C 形或 U 形的凹口里可以放入其他对象 · 计入支撑和加固边沿 — 切片后使用上次切片的实际范围（树状支撑在底部常远超模型本身），未切片时根据模型和设置估算，并通知建议切片后再排样一次 · 无悬垂的对象不预留支撑空间</li>
+      <li>对象与盘面边缘至少保持 3.5 mm，不会触发螺旋抬升边界警告 · 在几秒内尝试多种排列顺序并保留最优结果</li>
+    </ul>
+    <span class="tl-section-label">新增：支撑面使用不同材料</span>
+    <ul>
+      <li>支撑面耗材与外墙耗材材料类型不同时（例如 PLA 下方用 PETG 支撑面），支撑 → 高级 中的顶部Z距离和底部Z距离会自动设为 0，并提示此前的数值 — 不同材料的支撑面只有贴合零件才能干净分离 · 同种材料的两个槽位不会触发</li>
+    </ul>
+    <span class="tl-section-label">中文翻译</span>
+    <ul>
+      <li>新增 35 条：三个布局菜单及其选项、排样通知和支撑 Z 距离提示 · 术语沿用语言包 — 对齐到首个、首尾之间均匀分布、排样、紧密/宽松、加固边沿、支撑面</li>
+    </ul>
+    <span class="tl-section-label">已知限制</span>
+    <ul>
+      <li>排样逐个放置对象，不会回头重排已放置的对象 — 很满的盘面可能仍留有可手动利用的空间 · 支撑/加固边沿的预留空间只有切片后才精确</li>
+      <li>Linux 版暂无软件内更新检查 — AppImage 用户需自行查看发布页</li>
+      <li>通过统一耗材菜单或对象表修改时不会触发 Z 距离调整，耗材材料类型改变时也不会重新检查</li>
+    </ul>
+    <div class="tl-milestone">里程碑</div>
+    <ul>
+      <li>Linux 加入 Windows 和 macOS 行列；多对象对齐到首个、首尾之间均匀分布，以及计入支撑/加固边沿的轮廓排样已发布；支撑 Z 距离跟随支撑面材料 · v2.3.2-fos.8.6.6 已发布（Windows 安装版 + 便携版、通用 macOS DMG、Linux AppImage）</li>
+    </ul>
+  </div>
+</div>
+</div>
+
 <div class="tl-date">待完成 / TODO</div>
 <div class="tl-row">
 <div class="tl-spine"><div class="tl-dot" style="background:#888780"></div><div class="tl-line"></div></div>
@@ -3155,7 +3326,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <li>_u8L → wxString 乱码陷阱可能存在于任何将翻译后的 _u8L 传入仅接受 wxString 接收端之处 — 本轮仅审计了验证出口叠加层（8.5.4）</li>
       <li>修改器/层的回退图标显示 "Global"，但语义为"继承父级"（共享图标）— 若需要逐类型标签则重新审视</li>
       <li>逐挤出口耗材列表完整架构延后 — 需要在 PRP 中实现逐槽速度覆盖（各挤出口的外墙/内壁/填充/顶面速度）</li>
-      <li>GitHub Wiki：说明混合挤出口外墙/内壁行为与原版 OrcaSlicer 的区别 · wiki 已在封闭环境中启动</li>
     </ul>
     <span class="tl-section-label">公测版目标</span>
     <ul>
@@ -3171,6 +3341,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <li>CL 滑块最大值在 UI 中硬编码为 10 — 如有需要可调高</li>
       <li>逐对象 CL 仅可通过操作工具设置，未在对象属性面板（Objects 标签）中开放</li>
       <li>5 与 8 工具头机型仅经软件验证 — 尚未实机验证</li>
+      <li>单耗材盘面上仍画出擦拭塔占位但实际不生成 — 仅外观问题；修复需让 has_wipe_tower() 感知实际用量（8.6.5）</li>
+      <li>Linux 软件内更新检查 — AppImage 会请求 linux 更新页，但检查逻辑只接受 Windows/macOS；需先在软件中修复，再发布 linux 更新页（8.6.6）</li>
+      <li>排样为贪心算法 — 很满的盘面可能仍留有可手动填充的空间（测试中 53 个立方体有 3 个放不下）；下一步可做局部优化或相同对象网格对齐（8.6.6）</li>
+      <li>通过统一耗材菜单 / 对象表修改时不会触发支撑 Z 距离调整，耗材材料类型改变时也不重新检查（8.6.6）</li>
     </ul>
     <span class="tl-section-label">未来目标</span>
     <ul>
@@ -3199,10 +3373,10 @@ function setLang(lang){
   var s=document.getElementById('main-sub');
   if(lang==='zh'){
     t.textContent='FOrcaSlicer — 灵活版 OrcaSlicer 开发路线图';
-    s.textContent='Snapmaker U1 · OrcaSlicer 分支 · 2026年5月15日 – 9月4日 · 点击任意卡片展开';
+    s.textContent='Snapmaker U1 · OrcaSlicer 分支 · 2026年5月15日 – 9月23日 · 点击任意卡片展开';
   } else {
     t.textContent='FOrcaSlicer — Flexible OrcaSlicer dev roadmap';
-    s.textContent='Snapmaker U1 · OrcaSlicer fork · May 15 – Sep 4 2026 · click any card to expand';
+    s.textContent='Snapmaker U1 · OrcaSlicer fork · May 15 – Sep 23 2026 · click any card to expand';
   }
 }
 </script>
